@@ -28,6 +28,12 @@ function Wordlist(){
         });
     }
 
+    function postWordsAI(){
+        fetch("http://localhost:8000/discover", {method: "POST"})
+        .then((res) => res.json())
+        .then((data) => setWords(data))
+    }
+
 
 
 
@@ -71,6 +77,9 @@ function Wordlist(){
                 <button onClick={() => postWords(storedhanzi,storedpinyin,storedmeaning,storedstrokec)}>
                     Submit
                 </button>
+            </div>
+            <div className="aiexplorewords">
+                <button onClick={postWordsAI}>Click to discover new words using AI</button>
             </div>
         </div>
         

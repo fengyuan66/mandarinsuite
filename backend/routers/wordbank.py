@@ -22,4 +22,7 @@ def get_word():
     with Session(engine) as session:
         words = session.exec(select(Word)).all()
         return words
-    
+
+def get_hanzi() -> list[str]:
+    with Session(engine) as session:
+        return session.exec(select(Word.hanzi)).all()

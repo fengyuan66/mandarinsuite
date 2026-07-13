@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from database import engine_create_tables
 from routers import wordbank
+from routers import discover
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(wordbank.router)
+app.include_router(discover.router)
+
 
 @app.on_event("startup")
 def on_startup():
