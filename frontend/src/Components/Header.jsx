@@ -55,7 +55,7 @@ function Header(){
                 }}>
                     Convo
                 </NavLink>
-                <NavLink to="/wordbank" className={({ isActive }) => {
+                <NavLink to="/characterbank" className={({ isActive }) => {
                     if (isActive){
                         return "active";
                     }
@@ -63,7 +63,7 @@ function Header(){
                         return "false";
                     }
                 }}>
-                    Wordlist
+                    Characterlist
                 </NavLink>
             </nav>
         </div>

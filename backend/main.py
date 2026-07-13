@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from database import engine_create_tables
-from routers import wordbank
+from routers import characterbank
 from routers import discover
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.include_router(wordbank.router)
+app.include_router(characterbank.router)
 app.include_router(discover.router)
 
 

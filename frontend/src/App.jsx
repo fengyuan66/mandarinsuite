@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 //components import
 import Header from "./Components/Header.jsx"
 //pages import
-import Wordlist from "./Pages/Wordlist.jsx"
+import Characterlist from "./Pages/Characterlist.jsx"
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,7 +13,7 @@ function App() {
     <>
     <Header />
     <Routes>
-      <Route path="/wordbank" element={<Wordlist />} />
+      <Route path="/characterbank" element={<Characterlist />} />
     </Routes>
     </>
     
