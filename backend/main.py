@@ -4,7 +4,7 @@ from routers import wordbank
 
 
 app = FastAPI()
-app.include_router(vocab.router)
+app.include_router(wordbank.router)
 
 @app.on_event("startup")
 def on_startup():

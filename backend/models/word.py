@@ -1,6 +1,9 @@
+from sqlmodel import SQLModel, Field
+from typing import Optional
+
 # Wordbank Database Model:
 
-class Word(WordBase):
+class WordBase(SQLModel):
     
     hanzi: str
     pinyin: str
