@@ -1,6 +1,7 @@
 import {NavLink, useLocation} from 'react-router-dom'
 import { useRef, useState, useEffect } from 'react'
 function Header(){
+    const navRef = useRef(null);
     return(
         <div className="header">
             <nav ref={navRef}>
@@ -54,7 +55,7 @@ function Header(){
                 }}>
                     Convo
                 </NavLink>
-                <NavLink to="/wordlist" className={({ isActive }) => {
+                <NavLink to="/wordbank" className={({ isActive }) => {
                     if (isActive){
                         return "active";
                     }

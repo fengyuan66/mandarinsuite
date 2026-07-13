@@ -15,8 +15,6 @@ function App() {
     <Routes>
       <Route path="/wordbank" element={<Wordlist />} />
     </Routes>
-    
-
     </>
     
   )
