@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 
-@router.post("/explore")
+@router.post("/discover")
 def ai_add_words():
     existing_hanzi_list = get_hanzi()
     explore_prompt = f"""Generate 5 new Mandarin vocabulary words suitable for a learner.
