@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from database import engine
 from models.cohort import Cohort, CohortCharacter
 from models.character import Character
-
+router = APIRouter()
 
 def deactivate_all_cohorts(session: Session):
     active_cohorts = session.exec(select(Cohort).where(Cohort.is_active==True)).all() #select all cohorts
@@ -12,13 +12,22 @@ def deactivate_all_cohorts(session: Session):
         session.add(cohort)
 
 @router.post("/cohort")
-def create_cohort():
-    with Session(engine) as session:
-        new_cohort = Cohort()
-        session.add(new_cohort)
-        session.commit()
-        session.refresh(new_cohort)
-        return new_cohort
+def create_cohort(active: bool = True):
+    if (active):
+        with Session(engine) as session:
+            new_cohort = Cohort()
+            new_cohort.is_active = True
+            session.add(new_cohort)
+            session.commit()
+            session.refresh(new_cohort)
+            return new_cohort
+    else:
+        with Session(engine) as session:
+            new_cohort = Cohort()
+            session.add(new_cohort)
+            session.commit()
+            session.refresh(new_cohort)
+            return new_cohort
     
 @router.post("/cohort/{cohort_id}/character/{character_id}")
 def cohort_add_character(cohort_id: int, character_id: int):
@@ -43,7 +52,7 @@ def cohort_add_character(cohort_id: int, character_id: int):
 
 
 @router.post("/cohort/active/character/{character_id}")
-def cohort_add_character(character_id: int):
+def activecohort_add_character(character_id: int):
     
     with Session(engine) as session:
         activecohort = session.exec(
@@ -82,16 +91,16 @@ def get_current_cohort():
             select(CohortCharacter).where(CohortCharacter.cohort_id == active_cohort.id)
         ).all()
 
-        for link in links:
-            character_ids = [link.character_id]
+        
+        character_ids = [link.character_id for link in links]
         
         characters = session.exec(
             select(Character).where(Character.id.in_(character_ids))
-        ).all
+        ).all()
 
         return{"cohort": active_cohort, "characters": characters}
     
-@router.get(".cohort/archive")
+@router.get("/cohort/archive")
 def get_archive_cohort(target_cohort: Cohort):
     with Session(engine) as session:
 
@@ -101,8 +110,8 @@ def get_archive_cohort(target_cohort: Cohort):
             select(Cohort).where(Cohort.is_active == True)
         ).first()
 
-        if active_cohort == target_cohort:
-            return get_current_cohort
+        if active_cohort.id == target_cohort.id:
+            return get_current_cohort()
         
         #link = CohortCharacter objs linked to cohort via cohort_id field's property
         links = session.exec(
@@ -113,6 +122,6 @@ def get_archive_cohort(target_cohort: Cohort):
         
         characters = session.exec(
             select(Character).where(Character.id.in_(character_ids))
-        ).all
+        ).all()
 
         return{"cohort": target_cohort, "characters": characters}

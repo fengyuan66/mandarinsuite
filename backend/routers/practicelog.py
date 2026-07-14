@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from sqlmodel import Session, select
 from database import engine
 from models.practicelog import PracticeLog, PracticeEntry
-
+router = APIRouter()
 
 @router.post("/practicelog")
 def create_practicelog():

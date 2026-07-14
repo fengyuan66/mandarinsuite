@@ -2,11 +2,15 @@ from fastapi import FastAPI
 from database import engine_create_tables
 from routers import characterbank
 from routers import discover
+from routers import cohort
+from routers import practicelog
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(characterbank.router)
 app.include_router(discover.router)
+app.include_router(cohort.router)
+app.include_router(practicelog.router)
 
 
 @app.on_event("startup")

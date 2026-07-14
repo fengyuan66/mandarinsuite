@@ -4,6 +4,9 @@ function Characterlist(){
     //characters is the data (FRONTEND-SIDE), setCharacters is the setter
     const [characters, setCharacters] = useState([]);
 
+    const[currentCohort, setCurrentCohort] = useState(null);
+    const [cohortCharacters, setCohortCharacters] = useState([]);
+
     //input setup
     const [storedhanzi, setstoredhanzi] = useState("");
     const [storedpinyin, setstoredpinyin] = useState("");
@@ -11,7 +14,7 @@ function Characterlist(){
     const [storedstrokec, setstoredstrokec] = useState("");
 
     useEffect(() => {
-
+        fetchCurrentCohort();
     }, []);
 
     function fetchCharacters(){
@@ -28,13 +31,24 @@ function Characterlist(){
         });
     }
 
-    function postCharactersAI(){
+    function postCharactersAI(True){
         fetch("http://localhost:8000/discover", {method: "POST"})
         .then((res) => res.json())
         .then((data) => setCharacters((prev) => [...prev, ...data.created]))
     }
 
 
+
+    function fetchCurrentCohort(){
+        fetch("http://localhost:8000/cohort/current")
+        .then((res)=> res.json())
+        .then((data) => {
+            setCurrentCohort(data.cohort);
+            setCohortCharacters(data.characters);
+        })
+    }
+
+    
 
 
     return(
@@ -80,6 +94,37 @@ function Characterlist(){
             </div>
             <div className="aiexplorecharacters">
                 <button onClick={postCharactersAI}>Click to discover new characters using AI</button>
+            </div>
+
+            <div className="cohort display">
+                {
+                
+                    currentCohort == null ? (
+                        <p>No active cohort!</p>
+                    ) : (
+                        <>
+                            <p>Cohort ID: {currentCohort.id}</p>
+                            <ul>
+                                {cohortCharacters.map(character => {
+                                    return (
+                                        <li key={character.id}>
+                                            {character. hanzi}
+                                            {" | "}
+                                            {character.pinyin}
+                                            {" | "}
+                                            {character.meaning}
+                                            {" | "}
+                                            {character.strokec}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </>
+                    )
+                    
+
+                
+                }
             </div>
         </div>
 
