@@ -65,3 +65,29 @@ def get_current_cohort():
         ).all
 
         return{"cohort": active_cohort, "characters": characters}
+    
+@router.get(".cohort/archive")
+def get_archive_cohort(target_cohort: Cohort):
+    with Session(engine) as session:
+
+        target_cohort_id = target_cohort.id
+
+        active_cohort = session.exec(
+            select(Cohort).where(Cohort.is_active == True)
+        ).first()
+
+        if active_cohort == target_cohort:
+            return get_current_cohort
+        
+        #link = CohortCharacter objs linked to cohort via cohort_id field's property
+        links = session.exec(
+            select(CohortCharacter).where(CohortCharacter.cohort_id == target_cohort_id)
+        ).all()
+
+        character_ids = [link.character_id for link in links]
+        
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all
+
+        return{"cohort": target_cohort, "characters": characters}
