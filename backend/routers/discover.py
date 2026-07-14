@@ -21,10 +21,21 @@ def ai_add_characters(cohort: bool = True):
         Do NOT include any of these existing characters: {existing_hanzi_list}.
         Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
         """
-        candidates = json.loads(ai("llama-3.1-8b-instant", explore_prompt))
+        raw_response = ai("llama-3.1-8b-instant", explore_prompt)
+        try:
+            candidates = json.loads(raw_response)
+        except json.JSONDecodeError:
+            return {"error": "AI response was not valid JSON!", "raw_response": raw_response}
+        
         created = []
         err = []
         skipped = []
+        newcohort = create_cohort()
+
+
+        print(f"[DEBUG] created cohort id={newcohort.id}, is_active={newcohort.is_active}")
+
+
 
         for hanzi in candidates:
             entry = lookup_hanzi(hanzi)
@@ -34,8 +45,12 @@ def ai_add_characters(cohort: bool = True):
             try:
                 character = Character(hanzi = hanzi, **entry)
                 created.append(add_character(character))
-                newcohort = create_cohort()
                 cohort_add_character(newcohort.id, character.id)
+
+                
+                print(f"[DEBUG] linked character {character.id} ({hanzi}) to cohort {newcohort.id}")
+            
+            
             except (ValidationError, TypeError):
                 skipped.append(hanzi)
 

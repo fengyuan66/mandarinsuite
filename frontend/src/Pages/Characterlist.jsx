@@ -34,7 +34,10 @@ function Characterlist(){
     function postCharactersAI(True){
         fetch("http://localhost:8000/discover", {method: "POST"})
         .then((res) => res.json())
-        .then((data) => setCharacters((prev) => [...prev, ...data.created]))
+        .then((data) => {
+            setCharacters((prev) => [...prev, ...data.created]);
+            fetchCurrentCohort();
+        });
     }
 
 
@@ -43,6 +46,9 @@ function Characterlist(){
         fetch("http://localhost:8000/cohort/current")
         .then((res)=> res.json())
         .then((data) => {
+
+            console.log("[DEBUG] /cohort/current response:", data);
+
             setCurrentCohort(data.cohort);
             setCohortCharacters(data.characters);
         })

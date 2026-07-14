@@ -79,9 +79,18 @@ def activecohort_add_character(character_id: int):
 @router.get("/cohort/current")
 def get_current_cohort():
     with Session(engine) as session:
+
+        all_active = session.exec(select(Cohort).where(Cohort.is_active == True)).all()
+        print(f"[DEBUG] all active cohorts: {[(c.id, c.is_active) for c in all_active]}")
+
+
+
         active_cohort = session.exec(
             select(Cohort).where(Cohort.is_active == True)
         ).first()
+
+        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
+
 
         if active_cohort is None:
             return {"cohort": None, "characters": []}
@@ -109,6 +118,12 @@ def get_archive_cohort(target_cohort: Cohort):
         active_cohort = session.exec(
             select(Cohort).where(Cohort.is_active == True)
         ).first()
+
+
+        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
+
+
+
 
         if active_cohort.id == target_cohort.id:
             return get_current_cohort()
