@@ -12,7 +12,7 @@ router = APIRouter()
 # AI DISCOVERY OF NEW CHARACTERS
 
 @router.post("/discover")
-def ai_add_characters(cohort: bool):
+def ai_add_characters(cohort: bool = True):
 
     if (cohort):
 
@@ -35,7 +35,7 @@ def ai_add_characters(cohort: bool):
                 character = Character(hanzi = hanzi, **entry)
                 created.append(add_character(character))
                 newcohort = create_cohort()
-                cohort_add_character(newcohort, character.id)
+                cohort_add_character(newcohort.id, character.id)
             except (ValidationError, TypeError):
                 skipped.append(hanzi)
 

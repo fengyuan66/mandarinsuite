@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from sqlmodel import Session, select
 from database import engine
 from models.character import Character
-from cohort import create_cohort, cohort_add_character
+from routers.cohort import create_cohort, cohort_add_character
 
 
 router = APIRouter()
