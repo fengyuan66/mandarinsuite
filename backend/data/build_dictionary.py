@@ -1,3 +1,5 @@
+#This is an AI-generated script to help parse the two raw data files
+
 import json
 from pathlib import Path
 
