@@ -31,7 +31,7 @@ function Characterlist(){
     function postCharactersAI(){
         fetch("http://localhost:8000/discover", {method: "POST"})
         .then((res) => res.json())
-        .then((data) => setCharacters(data))
+        .then((data) => setCharacters((prev) => [...prev, ...data.created]))
     }
 
 
