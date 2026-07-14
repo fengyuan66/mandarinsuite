@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
 
-#PracticeEntry is a subclass of PracticeLog. One PracticeLog can have many PracticeEntries.
+#PracticeEntry is a connected database of PracticeLog. One PracticeLog can have many PracticeEntries.
 #They are linked purely(?) by session_id: int = Field(foreign_key = "practicelog.id")
 
 class PracticeLog(SQLModel, table=True):
