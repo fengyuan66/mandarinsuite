@@ -15,6 +15,7 @@ def deactivate_all_cohorts(session: Session):
 def create_cohort(active: bool = True):
     if (active):
         with Session(engine) as session:
+            deactivate_all_cohorts(session)
             new_cohort = Cohort()
             new_cohort.is_active = True
             session.add(new_cohort)
@@ -24,6 +25,7 @@ def create_cohort(active: bool = True):
     else:
         with Session(engine) as session:
             new_cohort = Cohort()
+            new_cohort.is_active = False
             session.add(new_cohort)
             session.commit()
             session.refresh(new_cohort)
