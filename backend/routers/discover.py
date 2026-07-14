@@ -35,7 +35,6 @@ def ai_add_characters(cohort: bool):
                 character = Character(hanzi = hanzi, **entry)
                 created.append(add_character(character))
                 newcohort = create_cohort()
-                
                 cohort_add_character(newcohort, character.id)
             except (ValidationError, TypeError):
                 skipped.append(hanzi)

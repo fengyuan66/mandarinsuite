@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from sqlmodel import Session, select
 from database import engine
 from models.character import Character
+from cohort import create_cohort, cohort_add_character
+
 
 router = APIRouter()
 
@@ -16,6 +18,7 @@ def add_character(character: Character):
         #Sam: "teacher! May I see my notebook again?"
         session.refresh(character) #Sam/teacher needs to see the notebook again to see the sticker because it was updated by the principal
         return character #Sam sees the notebook + sticker
+    
 
 @router.get("/characterbank")
 def get_character():

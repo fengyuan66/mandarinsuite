@@ -42,6 +42,31 @@ def cohort_add_character(cohort_id: int, character_id: int):
 #todo: add report on frontend
 
 
+@router.post("/cohort/active/character/{character_id}")
+def cohort_add_character(character_id: int):
+    
+    with Session(engine) as session:
+        activecohort = session.exec(
+            select(Cohort).where(Cohort.is_active == True)
+        ).first()    
+
+        charexisting = session.exec(
+            select(CohortCharacter)
+            .where(CohortCharacter.cohort_id == activecohort.id)
+            .where(CohortCharacter.character_id == character_id)
+        ).first()
+
+        if charexisting is not None:
+            return charexisting
+    
+
+    link = CohortCharacter(cohort_id = activecohort.id, character_id = character_id)
+    session.add(link)
+    session.commit()
+    session.refresh(link)
+    return link
+
+
 @router.get("/cohort/current")
 def get_current_cohort():
     with Session(engine) as session:
