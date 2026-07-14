@@ -42,7 +42,7 @@ def cohort_add_character(cohort_id: int, character_id: int):
 #todo: add report on frontend
 
 
-@router.get(".cohort/current")
+@router.get("/cohort/current")
 def get_current_cohort():
     with Session(engine) as session:
         active_cohort = session.exec(
