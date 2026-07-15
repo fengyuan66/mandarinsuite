@@ -6,7 +6,7 @@ from groq import Groq
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 
-def ai(model, msg):
+def ai(msg, model: str = "openai/gpt-oss-120b"):
     client = Groq(api_key=groq_api_key)
 
     response = client.chat.completions.create(

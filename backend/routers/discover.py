@@ -21,7 +21,7 @@ def ai_add_characters(cohort: bool = True):
         Do NOT include any of these existing characters: {existing_hanzi_list}.
         Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
         """
-        raw_response = ai("llama-3.1-8b-instant", explore_prompt)
+        raw_response = ai(explore_prompt)
         try:
             candidates = json.loads(raw_response)
         except json.JSONDecodeError:
@@ -65,7 +65,7 @@ def ai_add_characters(cohort: bool = True):
         Do NOT include any of these existing characters: {existing_hanzi_list}.
         Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
         """
-        candidates = json.loads(ai("llama-3.1-8b-instant", explore_prompt))
+        candidates = json.loads(ai(explore_prompt))
         created = []
         err = []
         skipped = []
