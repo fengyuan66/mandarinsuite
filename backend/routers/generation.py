@@ -151,3 +151,26 @@ Respond with ONLY a JSON object, no other text, in this exact format:
             "paragraph": paragraph,
             "fib": fib_result,
         }
+    
+
+@router.post("/generation/free-write/{unit_id}")
+def generate_free_write(unit_id: int):
+    allowlist = get_characters_in_unit(unit_id)
+    prompt = f"""Write a short, friendly writing prompt in English that would naturally lead a Mandarin learner
+to write a ~100 word response using vocabulary they know. They know these characters: {allowlist}.
+Respond with ONLY the prompt text, no other commentary.
+"""
+    return {"prompt": ai(prompt)}
+
+
+@router.patch("/round/{round_id}/status")
+def advance_round_status(round_id: int, new_status: str):
+    with Session(engine) as session:
+        round = session.get(Round, round_id)
+        round.status = new_status
+        session.add(round)
+        session.commit()
+        session.refresh(round)
+        return round
+    
+    
