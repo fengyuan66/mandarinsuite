@@ -66,3 +66,14 @@ def create_round(unit_id: int):
         session.refresh(new_round)
         return new_round
     
+
+
+@router.get("/round")
+def get_round(id: int):
+    with Session(engine) as session:
+        round = session.exec(
+            select(Round).where(Round.id == id)
+        ).first()
+
+    return round
+    
