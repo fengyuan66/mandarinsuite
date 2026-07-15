@@ -10,10 +10,7 @@ def get_weakest_characters(limit: int = 6) -> list [int]:
         
         #Practice times filter so that its always valid
         
-        if func.sum(PracticeEntry.times_written) is None:
-            times_written = 0
-        else:
-            times_written = PracticeEntry.times_written
+        times_written = func.sum(PracticeEntry.times_written)
 
         
         operation = (
@@ -28,7 +25,7 @@ def get_weakest_characters(limit: int = 6) -> list [int]:
 
         )
 
-        rows = session.exec(operation).all
+        rows = session.exec(operation).all()
 
         # TECHNICAL DECISIONL r.total MAY NEED TO HAVE HIGHER PRIORITY IN TERMS OF MASTERY SORTING THAN r.last
 
