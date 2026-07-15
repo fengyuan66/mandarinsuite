@@ -8,3 +8,4 @@ class Round(SQLModel, table = True):
     cohort_id: int = Field(foreign_key = "cohort.id")
     status: str = Field(default = "cohort_ready")
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    
