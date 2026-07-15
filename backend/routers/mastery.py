@@ -10,7 +10,7 @@ def get_weakest_characters(limit: int = 6) -> list [int]:
         
         #Practice times filter so that its always valid
         
-        times_written = func.sum(PracticeEntry.times_written)
+        times_written = func.coalesce(func.sum(PracticeEntry.times_written), 0)
 
         
         operation = (
