@@ -4,9 +4,11 @@ from database import engine
 from models.round import Round
 from models.cohort import Cohort, CohortCharacter
 from fastapi import APIRouter
+from models.unit import Unit
+from routers.ai import ai
 
 
-@router.get("/known_hanzi/{unit_id}/{before_progress}")
+@router.get("generation/known_hanzi/{unit_id}/{before_progress}")
 def get_known_hanzi(unit_id: int, before_progress: int | None = None) -> list[str]:
     with Session(engine) as session:
 
@@ -52,3 +54,23 @@ def get_known_Characters(unit_id: int, before_progress: int | None = None) -> li
         ).all()
 
         return [character for character in characters]
+    
+
+@router.post("/generation/writing-dication/{round_id}")
+def generate_writing_dication(round_id: int):
+    with Session(engine) as session:
+        round = session.get((Round).where(Round.id == round_id)).first()
+        unit = session.get((Unit).where(Unit.id == round.unit_id).first())
+    
+    allowlist = get_known_hanzi(round.unit_id, before_progress=round.progress)
+    if len(allowlist) < 30:
+        return {"skipped": True, "reason": "not enough known vocab yet!"}
+    
+    prompt = f"""Write a short ~100 word paragraph in Mandarin, themed around "{unit.theme}".
+You may ONLY use these characters, no others: {allowlist}
+Respond with ONLY the paragraph text, no other commentary.
+"""
+    
+    paragraph = ai(prompt)
+    return {"skipped": False, "paragraph": paragraph}
+
