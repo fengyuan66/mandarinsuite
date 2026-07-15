@@ -12,3 +12,46 @@ def deactivate_all_units(session: Session):
     for unit in active_units:
         unit.is_active = False
         session.add(unit)
+
+@router.get("/unit")
+def get_unit():
+    with Session(engine) as session:
+        units = session.exec(select(Unit)).all()
+        return units
+
+@router.post("/unit")
+def create_unit(themechosen: str = None, roundcount: int = None):
+
+    if (themechosen is None and roundcount is None):
+        existing_unit_list = get_unit()
+        existing_themes = []
+        for unit in existing_unit_list:
+            existing_themes.append(unit.theme)
+
+        prompt = f"""Invent a learning theme for a Mandarin vocabulary unit
+        (e.g. "family", "food", "travel").
+        Do not choose any of these existing themes:
+        {existing_themes}
+        Choose a reasonable number of study rounds between 3 and 6.
+        Respond with ONLY a JSON object, no other text, in this exact format:
+        {{"theme": "food", "target_rounds": 4}}
+        """
+        response = json.loads(ai(prompt))
+
+        with Session(engine) as session:
+            deactivate_all_units(session)
+            new_unit = Unit(theme = response["theme"], target_rounds = response["target_rounds"])
+            session.add(new_unit)
+            session.commit()
+            session.refresh(new_unit)
+            return new_unit
+    
+    else:
+        with Session(engine) as session:
+            deactivate_all_units(session)
+            new_unit = Unit(theme = themechosen, target_rounds = roundcount)
+            session.add(new_unit)
+            session.commit()
+            session.refresh(new_unit)
+            return new_unit
+    
