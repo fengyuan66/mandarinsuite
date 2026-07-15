@@ -6,7 +6,7 @@ from models.cohort import Cohort, CohortCharacter
 from fastapi import APIRouter
 from models.unit import Unit
 from routers.ai import ai
-
+import json
 
 @router.get("generation/known_hanzi/{unit_id}/{before_progress}")
 def get_known_hanzi(unit_id: int, before_progress: int | None = None) -> list[str]:
@@ -55,6 +55,45 @@ def get_known_Characters(unit_id: int, before_progress: int | None = None) -> li
 
         return [character for character in characters]
     
+def get_characters_in_unit(unit_id: int) -> list[str]:
+    with Session(engine) as session:
+       
+        statement = select(Round).where(Round.unit_id == unit_id)
+        rounds = session.exec(statement).all()
+
+        cohort_ids = [round.cohort_id for round in rounds]
+
+        linkedchars = session.exec(
+            select(CohortCharacter).where(CohortCharacter.cohort_id.in_(cohort_ids))
+        ).all()
+        character_ids = [link.character_id for link in linkedchars]
+
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all()
+
+        return [character.hanzi for character in characters]
+    
+    
+def get_characters_in_round(round_id: int) -> list[str]:
+    with Session(engine) as session:
+       
+        statement = select(Round).where(Round.id == round_id)
+        rounds = session.exec(statement).all()
+
+        cohort_ids = [round.cohort_id for round in rounds]
+
+        linkedchars = session.exec(
+            select(CohortCharacter).where(CohortCharacter.cohort_id.in_(cohort_ids))
+        ).all()
+        character_ids = [link.character_id for link in linkedchars]
+
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all()
+
+        return [character.hanzi for character in characters]
+
 
 @router.post("/generation/writing-dication/{round_id}")
 def generate_writing_dication(round_id: int):
@@ -74,3 +113,14 @@ Respond with ONLY the paragraph text, no other commentary.
     paragraph = ai(prompt)
     return {"skipped": False, "paragraph": paragraph}
 
+@router.post("/generation/fib/{round_id}")
+def generate_fib(round_id: int):
+    allowlist = get_characters_in_round({round_id})
+
+    prompt = f"""Write one natural Mandarin sentence that uses some of these characters: {allowlist}.
+Then remove those characters from the sentence, replacing each with a blank ___.
+Respond with ONLY a JSON object, no other text, in this exact format:
+{{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
+"""
+    result = json.loads(ai(prompt))
+    return result
