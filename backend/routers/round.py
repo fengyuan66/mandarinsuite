@@ -5,6 +5,13 @@ from routers.ai import ai
 from data.lookup import lookup_hanzi
 from models.character import Character
 from pydantic import ValidationError
+from sqlmodel import Session, select
+from models.round import Round
+from database import engine
+from models.unit import Unit
+from routers.mastery import get_weakest_characters
+from routers.cohort import create_cohort, cohort_add_character
+
 
 router = APIRouter()
 
@@ -32,5 +39,30 @@ def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
     return new_char_ids
 
 
+@router.post("/round")
+def create_round(unit_id: int):
+    
+    
+    with Session(engine) as session:
+        existing_rounds = session.exec(
+            select(Round).where(Round.unit_id == unit_id)
+        ).all()
+        progress = len(existing_rounds) + 1 #PROGRESS OF ROUNDS
+    
+        unit = session.get(Unit, unit_id)
 
+    #Character types created here
+    review_ids = get_weakest_characters()
+    new_ids = discover_themed_characters(theme = unit.theme)       
 
+    newcohort = create_cohort()
+    for character_id in (review_ids + new_ids):
+        cohort_add_character(newcohort.id, character_id)
+
+    with Session(engine) as session:
+        new_round = Round(unit_id=unit_id, cohort_id = newcohort.id, progress=progress)
+        session.add(new_round)
+        session.commit()
+        session.refresh(new_round)
+        return new_round
+    
