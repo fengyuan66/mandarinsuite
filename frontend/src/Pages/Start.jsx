@@ -2,16 +2,7 @@ import { useEffect, useState } from "react";
 
 
 
-import {
-advanceRound,
-fetchCharacters,
-postCharacters,
-postCharactersAI,
-fetchCurrentCohort,
-fetchActiveUnit,
-fetchCurrentRound,
-createUnit,
-} from "../common/functions.js";
+const { activeUnit, currentRound, fetchActiveUnit, fetchCurrentRound } = useAppContext();
 
 import { NEXT_STATUS } from "../common/constants.js";
 
