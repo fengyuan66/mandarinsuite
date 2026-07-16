@@ -11,7 +11,17 @@ function Characterlist(){
     const[latestRound, setLatestRound] = useState(null);
     const[activeUnit, setActiveUnit] = useState(null);
 
+    //wizard (slideshow) setup
 
+    const [writingDictationContent, setWritingDictationContent] = useStatee(null);
+    const [fibContent, setFibContent] = useState(null);
+
+    const NEXT_STATUS = { //FIXED STATUS FOR WHAT STATUS COMES NEXT FOR SMOOTH CHAIN WORKFLOW
+        cohort_ready: "practicing",
+        practicing: "dictation_offered",
+        dictation_offered: "writing_dictation",
+        fib: "complete",
+    }
 
     //input setup
     const [storedhanzi, setstoredhanzi] = useState("");
@@ -24,6 +34,35 @@ function Characterlist(){
         fetchActiveUnit();
         
     }, []);
+
+
+    function advanceRound(){
+        currentRound = fetchCurrentRound()
+        const nextStatus = NEXT_STATUS[currentRound.status]
+
+        if (currentRound.status == "dictation_offered"){
+            fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST"})
+            .then((res) => res.json())
+            .then((data) => setWritingDictationContent(data))
+        
+        }
+
+        if (currentRound.status == "writing_dictation"){
+            fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST"})
+            .then((res) => res.json())
+            .then((data) => setWritingDictationContent(data))
+        
+        }
+
+        fetch(`http://localhost:8000/round/${currentRound.id}/status?new_status=${nextStatus}`, { method: "PATCH" })
+        .then((res) => res.json())
+        .then((data) => setCurrentRound(data))
+        
+
+    }
+
+
+
 
     function fetchCharacters(){
         fetch("http://localhost:8000/characterbank")
@@ -76,7 +115,7 @@ function Characterlist(){
 
 
     function fetchCurrentRound(){
-        fetch("http://localhost:8000/unit/${activeUnit.id}/round/current")
+        fetch(`http://localhost:8000/unit/${activeUnit.id}/round/current`)
         .then((res) => res.json())
         .then((data) => {
             setLatestRound(data)
