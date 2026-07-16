@@ -38,7 +38,7 @@ def get_active_unit():
 def create_unit(themechosen: str = None, roundcount: int = None):
 
     if (themechosen is None and roundcount is None):
-        existing_unit_list = get_unit()
+        existing_unit_list = get_all_units()
         existing_themes = []
         for unit in existing_unit_list:
             existing_themes.append(unit.theme)

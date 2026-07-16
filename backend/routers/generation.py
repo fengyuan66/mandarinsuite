@@ -100,8 +100,8 @@ def get_characters_in_round(round_id: int) -> list[str]:
 @router.post("/generation/writing-dication/{round_id}")
 def generate_writing_dictation(round_id: int):
     with Session(engine) as session:
-        round = session.get(Round, round_id).first()
-        unit = session.get(Unit, round.unit_id).first()
+        round = session.get(Round, round_id)
+        unit = session.get(Unit, round.unit_id)
     
     allowlist = get_known_hanzi(round.unit_id, before_progress=round.progress)
     if len(allowlist) < 30:
@@ -139,7 +139,7 @@ Respond with ONLY the paragraph text, no other commentary.
 """
         paragraph = ai(paragraph_prompt)
 
-        fib_prompt = f"""Write one natural Mandarin sentence that uses some of these characters: {known_hanzi}.
+        fib_prompt = f"""Write one natural Mandarin sentence that uses some of these characters: {allowlist}.
 Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}

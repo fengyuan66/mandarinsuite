@@ -68,7 +68,7 @@ def create_round(unit_id: int):
     
 
 
-@router.get("/round")
+@router.get("/round/{unit_id}")
 def get_round(id: int = None):
     
 
@@ -80,3 +80,12 @@ def get_round(id: int = None):
 
     return round
     
+@router.get("/unit/{unit_id}/round/latest")
+def get_latest_round(unit_id: int):
+    with Session(engine) as session:
+        latest_round = session.exec(
+            select(Round)
+            .where(Round.unit_id == unit_id)
+            .order_by(Round.progress.desc())
+        ).first()
+        return latest_round
