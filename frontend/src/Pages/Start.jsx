@@ -15,6 +15,14 @@ function Start(){
     
     return(
         <>
+
+        
+        <pre style={{ background: "#eee", padding: "8px", fontSize: "12px" }}>
+            {JSON.stringify({ currentRound, writingDictationContent, fibContent }, null, 2)}
+        </pre>
+
+
+
         {currentRound && (
 
             <div className="round_wizard">

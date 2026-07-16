@@ -130,10 +130,10 @@ export function AppProvider({ children }) {
     }
 
     const value = {
-        activeUnit, currentRound, currentCohort, cohortCharacters, characters,
-        writingDictationContent, fibContent,
-        fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit, advanceRound,
+    activeUnit, currentRound, currentCohort, cohortCharacters, characters,
+    writingDictationContent, fibContent,
+    fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
+    postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>
