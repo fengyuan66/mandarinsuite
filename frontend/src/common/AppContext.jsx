@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-
+import { NEXT_STATUS } from "./constants.js";
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
