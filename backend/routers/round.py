@@ -69,7 +69,10 @@ def create_round(unit_id: int):
 
 
 @router.get("/round")
-def get_round(id: int):
+def get_round(id: int = None):
+    
+
+
     with Session(engine) as session:
         round = session.exec(
             select(Round).where(Round.id == id)

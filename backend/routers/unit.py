@@ -13,11 +13,26 @@ def deactivate_all_units(session: Session):
         unit.is_active = False
         session.add(unit)
 
-@router.get("/unit")
-def get_unit():
+@router.get("/unit/all")
+def get_all_units():
     with Session(engine) as session:
         units = session.exec(select(Unit)).all()
         return units
+    
+@router.get("/unit/{unit_id}")
+def get_unit(unit_id):
+    with Session(engine) as session:
+        
+            unit = session.exec(select(Unit).where(Unit.id == unit_id)).first()
+            return unit
+        
+@router.get("/unit/active")
+def get_active_unit():
+    with Session(engine) as session:
+        active_unit = session.exec(
+            select(Unit).where(Unit.is_active == True)
+        ).first()
+        return active_unit
 
 @router.post("/unit")
 def create_unit(themechosen: str = None, roundcount: int = None):

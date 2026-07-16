@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 
 function Characterlist(){
+    //display setup
+    
     //characters is the data (FRONTEND-SIDE), setCharacters is the setter
     const [characters, setCharacters] = useState([]);
 
     const[currentCohort, setCurrentCohort] = useState(null);
     const [cohortCharacters, setCohortCharacters] = useState([]);
+    
+    const[activeUnit, setActiveUnit] = useState(null)
+
+
 
     //input setup
     const [storedhanzi, setstoredhanzi] = useState("");
@@ -15,6 +21,8 @@ function Characterlist(){
 
     useEffect(() => {
         fetchCurrentCohort();
+        fetchActiveUnit();
+        fetch("")
     }, []);
 
     function fetchCharacters(){
@@ -47,10 +55,31 @@ function Characterlist(){
         .then((res)=> res.json())
         .then((data) => {
 
-            console.log("[DEBUG] /cohort/current response:", data);
+            //console.log("[DEBUG] /cohort/current response:", data);
 
             setCurrentCohort(data.cohort);
             setCohortCharacters(data.characters);
+        })
+    }
+
+    function fetchActiveUnit(){
+        fetch("http://localhost:8000/unit/")
+        .then((res) => res.json())
+        .then((data) => {
+
+            console.log("[DEBUG] /unit/ current response:", data)
+
+            setActiveUnit(data)
+
+        })
+    }
+
+    function createUnit(){
+        method: "POST"
+        fetch("http://localhost:8000/unit")
+        .then((res => res.json()))
+        .then((data) => {
+            setActiveUnit(data)
         })
     }
 
@@ -101,7 +130,23 @@ function Characterlist(){
             <div className="aiexplorecharacters">
                 <button onClick={postCharactersAI}>Click to discover new characters using AI</button>
             </div>
-
+            <div className = "unit display">
+                <button onClick={createUnit}>Click to start a new unit!</button>
+                {
+                    activeUnit == null? (
+                        <p>No active unit!</p>
+                    ) : (
+                        <>
+                            <p>Unit ID: {activeUnit.id}</p>
+                            <p>Unit theme: {activeUnit.theme}</p>
+                            <p>Unit target rounds: {activeUnit.target_rounds}</p>
+                            <p>Unit created at: {activeUnit.created_at}</p>
+                            <p>Unit is active? {activeUnit.is_active}</p>
+                        </>
+                    )
+                }
+                
+            </div>
             <div className="cohort display">
                 {
                 
