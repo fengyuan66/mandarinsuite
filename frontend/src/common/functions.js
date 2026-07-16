@@ -1,6 +1,6 @@
 function advanceRound(){
     currentRound = fetchCurrentRound()
-    const nextStatus = NEXT_STATUS[currentRound.status]
+    const nextStatus = NEXT_STATUS[fetchCurrentRound().status]
 
     if (currentRound.status == "dictation_offered"){
         fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST"})
@@ -63,21 +63,9 @@ function fetchCurrentCohort(){
     })
 }
 
-function fetchActiveUnit(){
-    fetch("http://localhost:8000/unit/active")
-    .then((res) => res.json())
-    .then((data) => {
 
-        console.log("[DEBUG] /unit/ current response:", data)
-
-        setActiveUnit(data)
-
-    })
-}
-
-
-function fetchCurrentRound(){
-    fetch(`http://localhost:8000/unit/${activeUnit.id}/round/current`)
+function fetchCurrentRound(id = activeUnit.id){
+    fetch(`http://localhost:8000/unit/${id}/round/current`)
     .then((res) => res.json())
     .then((data) => {
         setCurrentRound(data)
@@ -90,7 +78,7 @@ function fetchActiveUnit(){
     .then((data) => {
         setActiveUnit(data)
         if (data != null){ //check for request URL formatting reasons
-            fetchCurrentRound()
+            fetchCurrentRound(data.id)
         }
     })
 }
