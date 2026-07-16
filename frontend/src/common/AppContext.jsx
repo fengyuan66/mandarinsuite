@@ -114,6 +114,12 @@ export function AppProvider({ children }) {
         })
     }
 
+    function createRound(){
+    fetch(`http://localhost:8000/round?unit_id=${activeUnit.id}`, { method: "POST" })
+    .then((res) => res.json())
+    .then((data) => setCurrentRound(data));
+    }
+
     function createUnit(){
         
         fetch("http://localhost:8000/unit", { method: "POST" })

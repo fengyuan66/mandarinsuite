@@ -19,7 +19,7 @@ function Characterlist(){
 
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
         fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit } = useAppContext();
+        postCharacters, postCharactersAI, createUnit, createRound } = useAppContext();
 
     const [storedhanzi, setstoredhanzi] = useState("");
     const [storedpinyin, setstoredpinyin] = useState("");
@@ -75,6 +75,7 @@ function Characterlist(){
             </div>
             <div className = "unit display">
                 <button onClick={createUnit}>Click to start a new unit!</button>
+                <button onClick={createRound} disabled={activeUnit == null}>Start new round</button>
                 {
                     activeUnit == null? (
                         <p>No active unit!</p>
