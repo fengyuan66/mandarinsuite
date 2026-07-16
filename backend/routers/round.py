@@ -80,7 +80,7 @@ def get_round(id: int = None):
 
     return round
     
-@router.get("/unit/{unit_id}/round/latest")
+@router.get("/unit/{unit_id}/round/current")
 def get_latest_round(unit_id: int):
     with Session(engine) as session:
         latest_round = session.exec(

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 
-const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
-        fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit } = useAppContext();
+import { useAppContext } from "../common/AppContext.jsx";
 
 import { NEXT_STATUS } from "../common/constants.js";
 
 function Characterlist(){
+
     //display setup
     
     //characters is the data (FRONTEND-SIDE), setCharacters is the setter
@@ -18,7 +17,14 @@ function Characterlist(){
     }, []);
 
 
-    
+    const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
+        fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
+        postCharacters, postCharactersAI, createUnit } = useAppContext();
+
+    const [storedhanzi, setstoredhanzi] = useState("");
+    const [storedpinyin, setstoredpinyin] = useState("");
+    const [storedmeaning, setstoredmeaning] = useState("");
+    const [storedstrokec, setstoredstrokec] = useState("");
 
     
 

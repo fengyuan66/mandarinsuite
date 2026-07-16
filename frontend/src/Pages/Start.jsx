@@ -1,35 +1,18 @@
 import { useEffect, useState } from "react";
 
+import { useAppContext } from "../common/AppContext.jsx";
 
 
-const { activeUnit, currentRound, fetchActiveUnit, fetchCurrentRound } = useAppContext();
 
 import { NEXT_STATUS } from "../common/constants.js";
 
 function Start(){
+   const { currentRound, writingDictationContent, fibContent, advanceRound, fetchActiveUnit } = useAppContext();
 
-
-
-    const [characters, setCharacters] = useState([]);
-
-    const[currentCohort, setCurrentCohort] = useState(null);
-    const [cohortCharacters, setCohortCharacters] = useState([]);
-    const[currentRound, setCurrentRound] = useState(null);
-    const[activeUnit, setActiveUnit] = useState(null);
-
-    //wizard (slideshow) setup
-
-    const [writingDictationContent, setWritingDictationContent] = useState(null);
-    const [fibContent, setFibContent] = useState(null);
-
+    useEffect(() => {
+        fetchActiveUnit();
+    }, []);
     
-
-    //input setup
-    const [storedhanzi, setstoredhanzi] = useState("");
-    const [storedpinyin, setstoredpinyin] = useState("");
-    const [storedmeaning, setstoredmeaning] = useState("");
-    const [storedstrokec, setstoredstrokec] = useState("");
-
     return(
         <>
         {currentRound && (

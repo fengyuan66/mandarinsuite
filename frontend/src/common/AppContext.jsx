@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import App from "../App";
 
 const AppContext = createContext(null);
 
@@ -11,7 +10,7 @@ export function AppProvider({ children }) {
     
     const[currentCohort, setCurrentCohort] = useState(null);
     const [cohortCharacters, setCohortCharacters] = useState([]);
-    const[latestRound, setLatestRound] = useState(null);
+    const[currentRound, setCurrentRound] = useState(null);
     const[activeUnit, setActiveUnit] = useState(null);
 
     //wizard (slideshow) setup
@@ -31,9 +30,8 @@ export function AppProvider({ children }) {
     
 
     
-    export function advanceRound(){
-        currentRound = fetchCurrentRound()
-        const nextStatus = NEXT_STATUS[fetchCurrentRound().status]
+    function advanceRound(){
+       const nextStatus = NEXT_STATUS[currentRound.status];
 
         if (currentRound.status == "dictation_offered"){
             fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST"})
@@ -45,7 +43,7 @@ export function AppProvider({ children }) {
         if (currentRound.status == "writing_dictation"){
             fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST"})
             .then((res) => res.json())
-            .then((data) => setWritingDictationContent(data))
+            .then((data) => setFibContent(data))
         
         }
 
@@ -59,21 +57,21 @@ export function AppProvider({ children }) {
 
 
 
-    export function fetchCharacters(){
+    function fetchCharacters(){
         fetch("http://localhost:8000/characterbank")
         .then((res) => res.json())
         .then((data) => setCharacters(data));    //use setter to store data to characters
     }
 
-    export function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
+    function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
         fetch("http://localhost:8000/characterbank", {
-            
+            method:"POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ hanzi: hanzi_in, pinyin: pinyin_in, meaning: meaning_in, strokec: strokec_in})
         });
     }
 
-    export function postCharactersAI(True){
+    function postCharactersAI(True){
         fetch("http://localhost:8000/discover", {method: "POST"})
         .then((res) => res.json())
         .then((data) => {
@@ -84,7 +82,7 @@ export function AppProvider({ children }) {
 
 
 
-    export function fetchCurrentCohort(){
+    function fetchCurrentCohort(){
         fetch("http://localhost:8000/cohort/current")
         .then((res)=> res.json())
         .then((data) => {
@@ -97,7 +95,7 @@ export function AppProvider({ children }) {
     }
 
 
-    export function fetchCurrentRound(id = activeUnit.id){
+    function fetchCurrentRound(id = activeUnit.id){
         fetch(`http://localhost:8000/unit/${id}/round/current`)
         .then((res) => res.json())
         .then((data) => {
@@ -105,7 +103,7 @@ export function AppProvider({ children }) {
         })
     }
 
-    export function fetchActiveUnit(){
+    function fetchActiveUnit(){
         fetch("http://localhost:8000/unit/active")
         .then((res) => res.json())
         .then((data) => {
@@ -116,7 +114,7 @@ export function AppProvider({ children }) {
         })
     }
 
-    export function createUnit(){
+    function createUnit(){
         
         fetch("http://localhost:8000/unit", { method: "POST" })
         .then((res => res.json()))
