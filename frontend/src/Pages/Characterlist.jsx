@@ -11,7 +11,7 @@ import {
   createUnit,
 } from "../common/functions.js";
 
-import { NEXTSTATUS } from "../common/constants.js"
+import { NEXT_STATUS } from "../common/constants.js";
 
 function Characterlist(){
     //display setup

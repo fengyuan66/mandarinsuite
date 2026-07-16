@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 
-import { useEffect, useState } from "react";
 
 import {
 advanceRound,
@@ -14,7 +13,7 @@ fetchCurrentRound,
 createUnit,
 } from "../common/functions.js";
 
-import { NEXTSTATUS } from "../common/constants.js";
+import { NEXT_STATUS } from "../common/constants.js";
 
 function Start(){
 
@@ -101,3 +100,5 @@ function Start(){
 
     )
 }
+
+export default Start

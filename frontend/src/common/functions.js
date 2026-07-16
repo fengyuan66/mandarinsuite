@@ -1,4 +1,4 @@
-function advanceRound(){
+export function advanceRound(){
     currentRound = fetchCurrentRound()
     const nextStatus = NEXT_STATUS[fetchCurrentRound().status]
 
@@ -26,13 +26,13 @@ function advanceRound(){
 
 
 
-function fetchCharacters(){
+export function fetchCharacters(){
     fetch("http://localhost:8000/characterbank")
     .then((res) => res.json())
     .then((data) => setCharacters(data));    //use setter to store data to characters
 }
 
-function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
+export function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
     fetch("http://localhost:8000/characterbank", {
         
         headers: { "Content-Type": "application/json" },
@@ -40,7 +40,7 @@ function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
     });
 }
 
-function postCharactersAI(True){
+export function postCharactersAI(True){
     fetch("http://localhost:8000/discover", {method: "POST"})
     .then((res) => res.json())
     .then((data) => {
@@ -51,7 +51,7 @@ function postCharactersAI(True){
 
 
 
-function fetchCurrentCohort(){
+export function fetchCurrentCohort(){
     fetch("http://localhost:8000/cohort/current")
     .then((res)=> res.json())
     .then((data) => {
@@ -64,7 +64,7 @@ function fetchCurrentCohort(){
 }
 
 
-function fetchCurrentRound(id = activeUnit.id){
+export function fetchCurrentRound(id = activeUnit.id){
     fetch(`http://localhost:8000/unit/${id}/round/current`)
     .then((res) => res.json())
     .then((data) => {
@@ -72,7 +72,7 @@ function fetchCurrentRound(id = activeUnit.id){
     })
 }
 
-function fetchActiveUnit(){
+export function fetchActiveUnit(){
     fetch("http://localhost:8000/unit/active")
     .then((res) => res.json())
     .then((data) => {
@@ -83,7 +83,7 @@ function fetchActiveUnit(){
     })
 }
 
-function createUnit(){
+export function createUnit(){
     
     fetch("http://localhost:8000/unit", { method: "POST" })
     .then((res => res.json()))
