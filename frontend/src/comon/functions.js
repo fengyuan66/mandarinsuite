@@ -80,7 +80,7 @@ function fetchCurrentRound(){
     fetch(`http://localhost:8000/unit/${activeUnit.id}/round/current`)
     .then((res) => res.json())
     .then((data) => {
-        setLatestRound(data)
+        setCurrentRound(data)
     })
 }
 
