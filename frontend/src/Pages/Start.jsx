@@ -144,10 +144,6 @@ function Start(){
                 {currentRound.status === "fib" && (
                     <div>
                         <h1>FIB</h1>
-                        <p>{fibContent && fibContent.sentence_with_blanks}</p>
-
-                        <button onClick={() => setShowFibAnswers(!showFibAnswers)}>Toggle answers</button>
-                        
                         
                         <p>
                             {showFibAnswers && fibContent
@@ -158,6 +154,8 @@ function Start(){
                                 : fibContent && fibContent.sentence_with_blanks
                             }
                         </p>
+                        
+                        <button onClick={() => setShowFibAnswers(!showFibAnswers)}>Toggle answers</button>
 
                         <button onClick={advanceRound}>Finish Round</button>
                     </div>

@@ -119,7 +119,7 @@ Respond with ONLY the paragraph text, no other commentary.
 def generate_fib(round_id: int):
     allowlist = get_characters_in_round(round_id)
 
-    prompt = f"""Write one natural Mandarin sentence that uses some of these characters: {allowlist}.
+    prompt = f"""For a fill-in-the-blank style question, write one natural Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. 
 Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
