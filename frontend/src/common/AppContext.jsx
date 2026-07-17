@@ -31,6 +31,21 @@ export function AppProvider({ children }) {
 
     //FUNCTIONS
 
+    function wipeAllData(){
+        fetch("http://localhost:8000/admin/wipe", { method: "DELETE" })
+        .then(() => {
+            setActiveUnit(null);
+            setCurrentRound(null);
+            setCurrentCohort(null);
+            setCohortCharacters([]);
+            setCharacters([]);
+            setWritingDictationContent(null);
+            setFibContent(null);
+            setUnitReviewContent(null);
+            setFreeWriteContent(null);
+        });
+    }
+
     function finishUnit(){
         fetch(`http://localhost:8000/generation/unit_review/${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())

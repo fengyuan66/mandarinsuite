@@ -33,6 +33,10 @@ function Characterlist(){
         <div className="characterbankPage">
             <div className="getcharacters">
             <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
+            <button onClick={() => { if (window.confirm("Wipe all data?")) wipeAllData(); }}>
+                Wipe all data
+            </button>
+            
             <ul>
                 {
                     characters.map((character) => (

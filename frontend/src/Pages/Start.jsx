@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useAppContext } from "../common/AppContext.jsx";
 
 
 import { NEXT_STATUS } from "../common/constants.js";
 
-import { useEffect, useRef } from "react";
+
 import HanziWriter from "hanzi-writer";
 
 function HanziDisplay({ hanzi }) {
@@ -24,10 +24,26 @@ function HanziDisplay({ hanzi }) {
 }
 
 function Start(){
-   const { createRound, startNextUnit, finishUnit, unitReviewContent, freeWriteContent, currentRound, writingDictationContent, fibContent, advanceRound, fetchActiveUnit } = useAppContext();
+    const { createRound, 
+        startNextUnit, 
+        finishUnit, 
+        unitReviewContent, 
+        freeWriteContent, 
+        currentRound, 
+        writingDictationContent, 
+        fibContent, 
+        advanceRound, 
+        fetchActiveUnit, 
+        fetchCurrentCohort,
+        activeUnit
+     } = useAppContext();
+
+    const appcontext = useAppContext();
+
 
     useEffect(() => {
         fetchActiveUnit();
+        appcontext.fetchCurrentCohort();
     }, []);
     
     return(
@@ -46,21 +62,27 @@ function Start(){
 
                 {currentRound.status === "cohort_ready" && (
                     <div>
-                        <p>COHORT ReaDY</p>
+                        <h1>COHORT ReaDY</h1>
                         <button onClick={advanceRound}>Start Practicing </button>
                     </div>
                 )}
 
                 {currentRound.status === "practicing" && (
                     <div>
-                        <p>Write each character 10-15 times and then a word with it</p>
+                        <h1>Write each character 10-15 times and then a word with it</h1>
+                        
+                        {appcontext.cohortCharacters.map((character) => (
+
+                            <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
+
+                        ))}
                         <button onClick={advanceRound}>Move on to dictation</button>
                     </div>
                 )}
 
                 {currentRound.status === "dictation_offered" && (
                     <div>
-                        <p>Listen and write down each character / word</p>
+                        <h1>Listen and write down each character / word</h1>
                         <button onClick={advanceRound}>Reveal answers and continue</button>
                     </div>
                 )}
@@ -68,8 +90,8 @@ function Start(){
                 {currentRound.status === "writing_dictation" && (
                     <div>
                         {writingDictationContent && writingDictationContent.skipped
-                            ?<p>Skipped! {writingDictationContent.reason}</p>
-                            :<p>{writingDictationContent && writingDictationContent.paragraph}</p>
+                            ?<h1>Skipped! {writingDictationContent.reason}</h1>
+                            :<h1>{writingDictationContent && writingDictationContent.paragraph}</h1>
                         }
 
                         <button onClick={advanceRound}>Continue to FIB</button>
@@ -79,28 +101,28 @@ function Start(){
             
                 {currentRound.status === "fib" && (
                     <div>
-                        <p>FIB</p>
+                        <h1>FIB</h1>
                         <button onClick={advanceRound}>Finish Round</button>
                     </div>
                 )}
 
-                {currentRound.status === "complete" && currentRound.progress < fetchActiveUnit.target_rounds &&(
+                {currentRound.status === "complete" && currentRound.progress < activeUnit.target_rounds &&(
                     <div>
-                        <p>Round complete!</p>
+                        <h1>Round complete!</h1>
                         <button onClick={createRound}>next round</button>
                     </div>
                 )}
 
-                {currentRound.status === "complete" && currentRound.progress >= fetchActiveUnit.target_rounds (
+                {currentRound.status === "complete" && currentRound.progress >= activeUnit.target_rounds && (
 
                     <div>
                         {!unitReviewContent && <button onClick={finishUnit}>Review this unit</button>}
                         {unitReviewContent && (
 
                             <>
-                                <p>{unitReviewContent.paragraph}</p>
-                                <p>{unitReviewContent.fib.sentence_with_blanks}</p>
-                                <p>{freeWriteContent && freeWriteContent.prompt}</p>
+                                <h1>{unitReviewContent.paragraph}</h1>
+                                <h1>{unitReviewContent.fib.sentence_with_blanks}</h1>
+                                <h1>{freeWriteContent && freeWriteContent.prompt}</h1>
                                 <button onClick={startNextUnit}>Start next unit!</button>
                             </>
 
