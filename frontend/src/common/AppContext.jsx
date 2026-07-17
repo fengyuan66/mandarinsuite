@@ -21,7 +21,8 @@ export function AppProvider({ children }) {
     const [writingDictationContent, setWritingDictationContent] = useState(null);
     const [fibContent, setFibContent] = useState(null);
 
-    
+        //loading accessory
+    const [isGenerating, setIsGenerating] = useState(false);
 
     //input setup
     const [storedhanzi, setstoredhanzi] = useState("");
@@ -38,12 +39,14 @@ export function AppProvider({ children }) {
         if (!currentRound) return;
 
         if (currentRound.status === "writing_dictation" && !writingDictationContent) {
+            setIsGenerating(true);
             fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
-            .then((data) => setWritingDictationContent(data));
+            .then((data) => { setWritingDictationContent(data); setIsGenerating(false);});
         }
 
         if (currentRound.status === "fib" && !fibContent) {
+            setIsGenerating(true);
             fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
             .then((data) => setFibContent(data));
@@ -96,7 +99,7 @@ export function AppProvider({ children }) {
     function advanceRound(){
        const nextStatus = NEXT_STATUS[currentRound.status];
 
-        if (currentRound.status == "dictation_offered"){
+        /*if (currentRound.status == "dictation_offered"){
             fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST"})
             .then((res) => res.json())
             .then((data) => setWritingDictationContent(data))
@@ -108,7 +111,7 @@ export function AppProvider({ children }) {
             .then((res) => res.json())
             .then((data) => setFibContent(data))
         
-        }
+        }*/
 
         fetch(`http://localhost:8000/round/${currentRound.id}/status?new_status=${nextStatus}`, { method: "PATCH" })
         .then((res) => res.json())
