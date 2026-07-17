@@ -8,6 +8,8 @@ import { NEXT_STATUS } from "../common/constants.js";
 
 import HanziWriter from "hanzi-writer";
 
+
+//HANZIWRITER SETUP
 function HanziDisplay({ hanzi }) {
     const targetRef = useRef(null);
 
@@ -22,6 +24,8 @@ function HanziDisplay({ hanzi }) {
 
     return <div ref={targetRef}></div>;
 }
+
+
 
 function displayCohortChars(){
     {appcontext.cohortCharacters.map((character) => (
@@ -51,12 +55,23 @@ function Start(){
      } = useAppContext();
 
     const appcontext = useAppContext();
-    const [showAnswers, setShowAnswers] = useState(false);
+    
+    //SHOW ANSWWER STATUSES
 
+    const [showAnswers, setShowAnswers] = useState(false);
+    const [showFibAnswers, setShowFibAnswers] = useState(false);
+    
+    
+    
+    
     useEffect(() => {
         fetchActiveUnit();
         appcontext.fetchCurrentCohort();
-    }, []);
+
+        setShowAnswers(false);
+        setShowFibAnswers(false);
+
+    }, [currentRound && currentRound.status]);
     
     return(
         <>
@@ -120,6 +135,13 @@ function Start(){
                 {currentRound.status === "fib" && (
                     <div>
                         <h1>FIB</h1>
+                        <p>{fibContent && fibContent.sentence_with_blanks}</p>
+
+                        <button onClick={() => setShowFibAnswers(true)}>Show answers</button>
+                        {showFibAnswers && fibContent && (
+                            <p>Answers: {fibContent.answers.join(", ")}</p>
+                        )}
+
                         <button onClick={advanceRound}>Finish Round</button>
                     </div>
                 )}

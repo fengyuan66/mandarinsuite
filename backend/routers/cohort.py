@@ -44,11 +44,11 @@ def cohort_add_character(cohort_id: int, character_id: int):
         if existing:
             return existing
         
-    link = CohortCharacter(cohort_id = cohort_id, character_id = character_id)
-    session.add(link)
-    session.commit()
-    session.refresh(link)
-    return link
+        link = CohortCharacter(cohort_id = cohort_id, character_id = character_id)
+        session.add(link)
+        session.commit()
+        session.refresh(link)
+        return link
 
 #todo: add report on frontend
 
@@ -71,11 +71,11 @@ def activecohort_add_character(character_id: int):
             return charexisting
     
 
-    link = CohortCharacter(cohort_id = activecohort.id, character_id = character_id)
-    session.add(link)
-    session.commit()
-    session.refresh(link)
-    return link
+        link = CohortCharacter(cohort_id = activecohort.id, character_id = character_id)
+        session.add(link)
+        session.commit()
+        session.refresh(link)
+        return link
 
 
 @router.get("/cohort/current")

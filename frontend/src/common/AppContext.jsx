@@ -1,5 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import { NEXT_STATUS } from "./constants.js";
+
+import { useEffect } from "react";
+
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
@@ -28,6 +31,25 @@ export function AppProvider({ children }) {
     
     const [unitReviewContent, setUnitReviewContent] = useState(null);
     const [freeWriteContent, setFreeWriteContent] = useState(null);
+
+
+    //REFRESHER
+    useEffect(() => {
+        if (!currentRound) return;
+
+        if (currentRound.status === "writing_dictation" && !writingDictationContent) {
+            fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST" })
+            .then((res) => res.json())
+            .then((data) => setWritingDictationContent(data));
+        }
+
+        if (currentRound.status === "fib" && !fibContent) {
+            fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST" })
+            .then((res) => res.json())
+            .then((data) => setFibContent(data));
+        }
+    }, [currentRound]);
+
 
     //FUNCTIONS
 
