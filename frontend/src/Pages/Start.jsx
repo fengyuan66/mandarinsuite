@@ -59,6 +59,9 @@ function Start(){
         fetchCurrentCohort,
         activeUnit,
         isGenerating,
+        createPracticeLog,
+        addPracticeEntry,
+        createPracticeLogRaw
         
      } = useAppContext();
 
@@ -70,7 +73,25 @@ function Start(){
     const [showFibAnswers, setShowFibAnswers] = useState(false);
     const [showUnitFibAnswers, setShowUnitFibAnswers] = useState(false);
     
-    
+    //input handle
+
+    const [timesWritten, setTimesWritten] = useState("");
+
+    function createCohortPracticeLog() {
+    const practiceEntries = appcontext.cohortCharacters.map((character) => ({
+        character_id: character.id,
+        times_written: Number(timesWritten)
+    }));
+
+        appcontext.createPracticeLog(practiceEntries);
+    }
+
+    function createPracticeLogRaw(characters, timesWritten){
+        appcontext.createPracticeLog(
+        characters,
+        timesWritten
+    );
+    }
     
     useEffect(() => {
         fetchActiveUnit();
@@ -114,6 +135,8 @@ function Start(){
                             <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
 
                         ))}
+                        <input type="number" value = {timesWritten} onChange = {(event) => setTimesWritten(event.target.value)} />
+                        <button onClick={createCohortPracticeLog}>Save practice log</button>
                         <button onClick={advanceRound}>Move on to dictation</button>
                     </div>
                 )}

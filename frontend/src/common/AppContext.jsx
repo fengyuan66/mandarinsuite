@@ -230,8 +230,24 @@ export function AppProvider({ children }) {
         }
         )
         
+    }
 
-        
+    function createPracticeLogRaw(characters, timesWritten) {
+        return fetch("http://localhost:8000/practicelog", {
+            method: "POST"
+        })
+        .then((res) => res.json())
+        .then((newPracticeLog) => {
+            const entryRequests = characters.map((character) =>
+                addPracticeEntry(
+                    newPracticeLog.id,
+                    character.id,
+                    Number(timesWritten)
+                )
+            );
+
+            return Promise.all(entryRequests);
+        });
     }
          
     
