@@ -26,9 +26,35 @@ export function AppProvider({ children }) {
     const [storedmeaning, setstoredmeaning] = useState("");
     const [storedstrokec, setstoredstrokec] = useState("");
     
-    //FUNCTIONS
-    
+    const [unitReviewContent, setUnitReviewContent] = useState(null);
+    const [freeWriteContent, setFreeWriteContent] = useState(null);
 
+    //FUNCTIONS
+
+    function finishUnit(){
+        fetch(`http://localhost:8000/generation/unit_review/${activeUnit.id}`, { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => setFreeWriteContent(data))
+
+        fetch(`http://localhost:8000/generation/free-write/${activeUnit.id}`, { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => setFreeWriteContent(data));
+
+    }
+    
+    function startNextUnit(){
+        fetch("http://localhost:8000/unit", {method: "POST"})
+        .then((res) => res.json())
+        .then((newUnit) => {
+            setActiveUnit(newUnit)
+            setUnitReviewContent(null)
+            setFreeWriteContent(null)
+
+            fetch(`http://localhost:8000/round?unit_id=${newUnit.id}`, { method: "POST" })
+            .then((res) => res.json())
+            .then((newRound) => setCurrentRound(newRound))
+        })
+    }
     
     function advanceRound(){
        const nextStatus = NEXT_STATUS[currentRound.status];
