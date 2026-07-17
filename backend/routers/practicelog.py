@@ -14,7 +14,7 @@ def create_practicelog():
         session.refresh(new_practicelog)
         return new_practicelog
 
-@router.post("/practicelog/practiceentry")
+@router.post("/practicelog/practiceentry/{session_id}/{character_id}/{times_written}")
 def add_practiceentry(session_id: int, character_id: int, times_written: int):
     with Session(engine) as session:
         staged = PracticeEntry(session_id = session_id, character_id = character_id, times_written = times_written)

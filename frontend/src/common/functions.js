@@ -17,6 +17,10 @@ export function advanceRound(){
     
     }
 
+    if (currentRound.status == "complete"){
+
+    }
+
     fetch(`http://localhost:8000/round/${currentRound.id}/status?new_status=${nextStatus}`, { method: "PATCH" })
     .then((res) => res.json())
     .then((data) => setCurrentRound(data))
@@ -91,4 +95,8 @@ export function createUnit(){
     .then((data) => {
         setActiveUnit(data)
     })
+}
+
+export function createRound(){
+    
 }

@@ -200,6 +200,25 @@ export function AppProvider({ children }) {
         })
     }
 
+    
+    function addPracticeEntry(session_id, character_id, times_written){
+        const response = await fetch(`http://localhost:8000/practicelog/practiceentry/${session_id}/${character_id}/${times_written}`, {method: "POST"})
+        return response.json();
+    }
+
+    function createPracticeLog(practiceEntries){
+        fetch("http://localhost:8000/practicelog", {method: "POST"})
+        .then((res => res.json()))
+        .then((data) => {
+            const practiceLog = data
+        })
+
+        const entryRequests = practiceEntries.map((entry) )
+    }
+         
+    
+
+
     const value = {
     activeUnit, currentRound, currentCohort, cohortCharacters, characters,
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
