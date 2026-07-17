@@ -57,6 +57,7 @@ function Start(){
         fetchActiveUnit, 
         fetchCurrentCohort,
         activeUnit,
+        isGenerating,
         
      } = useAppContext();
 
@@ -118,7 +119,7 @@ function Start(){
                 {currentRound.status === "dictation_offered" && (
                     <div>
                         <h1>Listen and write down each character / word</h1>
-                        <button onClick={() => setShowAnswers(true)}>show answers!</button>
+                        <button onClick={() => setShowAnswers(!showAnswers)}>show answers!</button>
                         
                         {showAnswers && appcontext.cohortCharacters.map((character) => (
                             <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
