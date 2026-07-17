@@ -37,6 +37,10 @@ function displayCohortChars(){
 ))}
 }
 
+function fillInBlanks(sentence, answers){
+    let i = 0;
+    return sentence.replace(/_+/g, () => answers[i++] ?? "___");
+}
 
 
 
@@ -141,10 +145,18 @@ function Start(){
                         <h1>FIB</h1>
                         <p>{fibContent && fibContent.sentence_with_blanks}</p>
 
-                        <button onClick={() => setShowFibAnswers(true)}>Show answers</button>
-                        {showFibAnswers && fibContent && (
-                            <p>Answers: {fibContent.answers.join(", ")}</p>
-                        )}
+                        <button onClick={() => setShowFibAnswers(!showFibAnswers)}>Toggle answers</button>
+                        
+                        
+                        <p>
+                            {showFibAnswers && fibContent
+                                ? fillInBlanks(
+                                    fibContent.sentence_with_blanks,
+                                    fibContent.answers
+                                )
+                                : fibContent && fibContent.sentence_with_blanks
+                            }
+                        </p>
 
                         <button onClick={advanceRound}>Finish Round</button>
                     </div>
