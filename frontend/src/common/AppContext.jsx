@@ -181,11 +181,12 @@ export function AppProvider({ children }) {
     }
 
     function createRound(){
-    
-    setIsGenerating(true);
-    fetch(`http://localhost:8000/round?unit_id=${activeUnit.id}`, { method: "POST" })
-    .then((res) => res.json())
-    .then((data) => {setCurrentRound(data); setIsGenerating(false);});
+        setIsGenerating(true);
+        setWritingDictationContent(null);
+        setFibContent(null);
+        fetch(`http://localhost:8000/round?unit_id=${activeUnit.id}`, { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => {setCurrentRound(data); setIsGenerating(false);});
     }
 
     function createUnit(){

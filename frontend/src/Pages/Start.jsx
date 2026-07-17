@@ -67,7 +67,7 @@ function Start(){
 
     const [showAnswers, setShowAnswers] = useState(false);
     const [showFibAnswers, setShowFibAnswers] = useState(false);
-    
+    const [showUnitFibAnswers, setShowUnitFibAnswers] = useState(false);
     
     
     
@@ -77,6 +77,7 @@ function Start(){
 
         setShowAnswers(false);
         setShowFibAnswers(false);
+        setShowUnitFibAnswers(false);
 
     }, [currentRound && currentRound.status]);
     
@@ -176,7 +177,14 @@ function Start(){
 
                             <>
                                 <h1>{unitReviewContent.paragraph}</h1>
-                                <h1>{unitReviewContent.fib.sentence_with_blanks}</h1>
+                                <p>
+                                    {showUnitFibAnswers
+                                        ? fillInBlanks(unitReviewContent.fib.sentence_with_blanks, unitReviewContent.fib.answers)
+                                        : unitReviewContent.fib.sentence_with_blanks}
+                                </p>
+                                <button onClick={() => setShowUnitFibAnswers(!showUnitFibAnswers)}>
+                                    {showUnitFibAnswers ? "Hide answers" : "Show answers"}
+                                </button>
                                 <h1>{freeWriteContent && freeWriteContent.prompt}</h1>
                                 <button onClick={startNextUnit}>Start next unit!</button>
                             </>
