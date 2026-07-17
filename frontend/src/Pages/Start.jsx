@@ -9,6 +9,8 @@ import { NEXT_STATUS } from "../common/constants.js";
 import HanziWriter from "hanzi-writer";
 
 
+
+
 //HANZIWRITER SETUP
 function HanziDisplay({ hanzi }) {
     const targetRef = useRef(null);
@@ -86,6 +88,8 @@ function Start(){
         {currentRound && (
 
             <div className="round_wizard">
+
+                {isGenerating && <p>LOADING...</p>}
 
                 {currentRound.status === "cohort_ready" && (
                     <div>

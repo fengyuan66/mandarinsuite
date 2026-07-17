@@ -49,7 +49,7 @@ export function AppProvider({ children }) {
             setIsGenerating(true);
             fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
-            .then((data) => setFibContent(data));
+            .then((data) => {setFibContent(data); setIsGenerating(false);});
         }
     }, [currentRound]);
 
@@ -181,17 +181,21 @@ export function AppProvider({ children }) {
     }
 
     function createRound(){
+    
+    setIsGenerating(true);
     fetch(`http://localhost:8000/round?unit_id=${activeUnit.id}`, { method: "POST" })
     .then((res) => res.json())
-    .then((data) => setCurrentRound(data));
+    .then((data) => {setCurrentRound(data); setIsGenerating(false);});
     }
 
     function createUnit(){
         
+        setIsGenerating(true);
         fetch("http://localhost:8000/unit", { method: "POST" })
         .then((res => res.json()))
         .then((data) => {
-            setActiveUnit(data)
+            setActiveUnit(data);
+            setIsGenerating(false);
         })
     }
 
@@ -200,7 +204,7 @@ export function AppProvider({ children }) {
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
-    finishUnit, startNextUnit, wipeAllData,
+    finishUnit, startNextUnit, wipeAllData, isGenerating,
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>
