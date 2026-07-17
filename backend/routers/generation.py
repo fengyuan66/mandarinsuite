@@ -102,16 +102,20 @@ def generate_writing_dictation(round_id: int):
     with Session(engine) as session:
         round = session.get(Round, round_id)
         unit = session.get(Unit, round.unit_id)
-    
+
     allowlist = get_known_hanzi(round.unit_id, before_progress=round.progress)
-    if len(allowlist) < 30:
+    if len(allowlist) < 75:
         return {"skipped": True, "reason": "not enough known vocab yet!"}
-    
-    prompt = f"""Write a short ~100 word paragraph in Mandarin, themed around "{unit.theme}".
-You may ONLY use these characters, no others: {allowlist}
+
+    prompt = f"""Write a short paragraph in Mandarin, themed around "{unit.theme}".
+Heavily prioritize using ONLY characters from this list: {allowlist}.
+Favor extremely common, basic characters to keep the sentences natural and easy to read.
+If a small number of other simple, very common characters are genuinely needed for the paragraph to read naturally, you may use them sparingly — but keep this to an absolute minimum.
+Aim for about 100 words, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length — write fewer words if that produces better quality.
+Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
-    
+
     paragraph = ai(prompt)
     return {"skipped": False, "paragraph": paragraph}
 
@@ -119,7 +123,7 @@ Respond with ONLY the paragraph text, no other commentary.
 def generate_fib(round_id: int):
     allowlist = get_characters_in_round(round_id)
 
-    prompt = f"""For a fill-in-the-blank style question, write one natural Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. 
+    prompt = f"""For a very simple fill-in-the-blank style question, write one natural, common Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. 
 Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
@@ -133,10 +137,15 @@ def generate_unit_review(unit_id: int):
     with Session(engine) as session:
         unit = session.get(Unit, unit_id)
         allowlist = get_characters_in_unit(unit_id)
-        paragraph_prompt = f"""Write a short ~100 word paragraph in Mandarin, themed around "{unit.theme}".
-You may ONLY use these characters, no others: {allowlist}
+        paragraph_prompt = f"""Write a short paragraph in Mandarin, themed around "{unit.theme}".
+Heavily prioritize using ONLY characters from this list: {allowlist}.
+Favor extremely common, basic characters to keep the sentences natural and easy to read.
+If a small number of other simple, very common characters are genuinely needed for the paragraph to read naturally, you may use them sparingly — but keep this to an absolute minimum.
+Prioritize cohesion and natural quality over length — a short, coherent paragraph is better than a longer broken one.
+Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
+
         paragraph = ai(paragraph_prompt)
 
         fib_prompt = f"""Write one natural Mandarin sentence that uses some of these characters: {allowlist}.
