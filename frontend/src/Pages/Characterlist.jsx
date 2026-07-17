@@ -19,7 +19,7 @@ function Characterlist(){
 
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
         fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit, createRound } = useAppContext();
+        postCharacters, postCharactersAI, createUnit, createRound, wipeAllData } = useAppContext();
 
     const [storedhanzi, setstoredhanzi] = useState("");
     const [storedpinyin, setstoredpinyin] = useState("");
@@ -33,7 +33,7 @@ function Characterlist(){
         <div className="characterbankPage">
             <div className="getcharacters">
             <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
-            <button onClick={() => { if (window.confirm("Wipe all data?")) wipeAllData(); }}>
+            <button onClick={wipeAllData}>
                 Wipe all data
             </button>
             

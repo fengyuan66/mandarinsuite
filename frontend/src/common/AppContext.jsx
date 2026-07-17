@@ -49,7 +49,7 @@ export function AppProvider({ children }) {
     function finishUnit(){
         fetch(`http://localhost:8000/generation/unit_review/${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
-        .then((data) => setFreeWriteContent(data))
+        .then((data) => setUnitReviewContent(data))
 
         fetch(`http://localhost:8000/generation/free-write/${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
@@ -172,9 +172,10 @@ export function AppProvider({ children }) {
 
     const value = {
     activeUnit, currentRound, currentCohort, cohortCharacters, characters,
-    writingDictationContent, fibContent,
+    writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
+    finishUnit, startNextUnit, wipeAllData,
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>
