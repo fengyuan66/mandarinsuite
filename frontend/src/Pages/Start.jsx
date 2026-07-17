@@ -23,6 +23,17 @@ function HanziDisplay({ hanzi }) {
     return <div ref={targetRef}></div>;
 }
 
+function displayCohortChars(){
+    {appcontext.cohortCharacters.map((character) => (
+
+    <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
+
+))}
+}
+
+
+
+
 function Start(){
     const { createRound, 
         startNextUnit, 
@@ -35,11 +46,12 @@ function Start(){
         advanceRound, 
         fetchActiveUnit, 
         fetchCurrentCohort,
-        activeUnit
+        activeUnit,
+        
      } = useAppContext();
 
     const appcontext = useAppContext();
-
+    const [showAnswers, setShowAnswers] = useState(false);
 
     useEffect(() => {
         fetchActiveUnit();
@@ -83,7 +95,13 @@ function Start(){
                 {currentRound.status === "dictation_offered" && (
                     <div>
                         <h1>Listen and write down each character / word</h1>
-                        <button onClick={advanceRound}>Reveal answers and continue</button>
+                        <button onClick={() => setShowAnswers(true)}>show answers!</button>
+                        
+                        {showAnswers && appcontext.cohortCharacters.map((character) => (
+                            <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
+                        ))}
+                        
+                        <button onClick={advanceRound}>continue</button>
                     </div>
                 )}
 
