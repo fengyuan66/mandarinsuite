@@ -5,6 +5,24 @@ import { useAppContext } from "../common/AppContext.jsx";
 
 import { NEXT_STATUS } from "../common/constants.js";
 
+import { useEffect, useRef } from "react";
+import HanziWriter from "hanzi-writer";
+
+function HanziDisplay({ hanzi }) {
+    const targetRef = useRef(null);
+
+    useEffect(() => {
+        targetRef.current.innerHTML = "";
+        HanziWriter.create(targetRef.current, hanzi, {
+            width: 150,
+            height: 150,
+            showOutline: true,
+        });
+    }, [hanzi]);
+
+    return <div ref={targetRef}></div>;
+}
+
 function Start(){
    const { createRound, startNextUnit, finishUnit, unitReviewContent, freeWriteContent, currentRound, writingDictationContent, fibContent, advanceRound, fetchActiveUnit } = useAppContext();
 
