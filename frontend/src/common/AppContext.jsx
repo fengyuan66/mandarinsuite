@@ -209,11 +209,29 @@ export function AppProvider({ children }) {
     function createPracticeLog(practiceEntries){
         fetch("http://localhost:8000/practicelog", {method: "POST"})
         .then((res => res.json()))
-        .then((data) => {
-            const practiceLog = data
-        })
+        .then((newPracticeLog) => {
+            
+            const entryRequests = practiceEntries.map((entry) => {
+                return addPracticeEntry(
+                    newPracticeLog.id,
+                    entry.character_id,
+                    entry.times_written
+                )
+            })
 
-        const entryRequests = practiceEntries.map((entry) )
+            return Promise.all(entryRequests)
+                .then((createdEntries) => {
+                    //copy entrydate and other fields from the new practiceLog (already handled here)
+                    const completedPracticeLog = Object.assign({}, newPracticeLog)
+                    
+                    completedPracticeLog.practiceEntries = createdEntries
+                    return completedPracticeLog
+                })
+        }
+        )
+        
+
+        
     }
          
     
