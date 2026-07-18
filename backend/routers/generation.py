@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from models.unit import Unit
 from routers.ai import ai
 import json
+from fastapi import Body
 
 router = APIRouter()
 
@@ -96,6 +97,36 @@ def get_characters_in_round(round_id: int) -> list[str]:
 
         return [character.hanzi for character in characters]
 
+@router.post("/generation/reading/{round_id}")
+def generate_reading(round_id: int):
+    with Session(engine) as session:
+        round = session.get(Round, round_id)
+        unit = session.get(Unit, round.unit_id)
+
+    allowlist = get_characters_in_round(round_id)
+    prompt = f"""Write a short, engaging Mandarin reading passage (a short story or article) for a language learner, themed around "{unit.theme}".
+Heavily emphasize and repeat these characters naturally throughout: {allowlist}.
+You may use other simple, common characters as needed for grammar and coherence.
+Aim for about 100-150 words. Prioritize being engaging and natural over strictly hitting a length.
+Use proper punctuation (，。！？).
+Respond with ONLY the passage text, no other commentary.
+"""
+    content = ai(prompt)
+    return {"content": content}
+
+
+@router.post("/generation/reading-custom")
+def generate_reading_custom(hanzi_list: list[str]):
+    prompt = f"""Write a short, engaging Mandarin reading passage (a short story or article) for a language learner.
+Heavily emphasize and repeat these characters naturally throughout: {hanzi_list}.
+You may use other simple, common characters as needed for grammar and coherence.
+Aim for about 100-150 words. Prioritize being engaging and natural over strictly hitting a length.
+Use proper punctuation (，。！？).
+Respond with ONLY the passage text, no other commentary.
+"""
+    passage = ai(prompt)
+    return {"passage": passage}
+
 
 @router.post("/generation/writing-dication/{round_id}")
 def generate_writing_dictation(round_id: int):
@@ -116,6 +147,30 @@ Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
 
+    paragraph = ai(prompt)
+    return {"skipped": False, "paragraph": paragraph}
+
+
+@router.post("/generation/fib-custom")
+def generate_fib_custom(hanzi_list: list[str]):
+    prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {hanzi_list}. One should be able to infer the context of the sentence even with those characters removed.
+Then remove those characters from the sentence, replacing each with a blank ___.
+Respond with ONLY a JSON object, no other text, in this exact format:
+{{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
+"""
+    result = json.loads(ai(prompt))
+    return result
+
+@router.post("/generation/writingdictation-custom")
+def generate_writing_dictation_custom(hanzi_list: list[str]):
+    prompt = f"""Write a short paragraph in Mandarin.
+Heavily prioritize using ONLY characters from this list: {hanzi_list}.
+Favor extremely common, basic characters to keep the sentences natural and easy to read.
+If a small number of other simple, very common characters are genuinely needed for the paragraph to read naturally, you may use them sparingly — but keep this to an absolute minimum.
+Aim for about 100 words, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length.
+Use proper punctuation (，。).
+Respond with ONLY the paragraph text, no other commentary.
+"""
     paragraph = ai(prompt)
     return {"skipped": False, "paragraph": paragraph}
 
