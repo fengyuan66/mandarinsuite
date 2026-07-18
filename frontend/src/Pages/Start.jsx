@@ -86,12 +86,7 @@ function Start(){
         appcontext.createPracticeLog(practiceEntries);
     }
 
-    function createPracticeLogRaw(characters, timesWritten){
-        appcontext.createPracticeLog(
-        characters,
-        timesWritten
-    );
-    }
+    
     
     useEffect(() => {
         fetchActiveUnit();
