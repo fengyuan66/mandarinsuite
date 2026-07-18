@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 import { NEXT_STATUS } from "../common/constants.js";
+import { apiFetch } from "../common/api.js";
 import HanziWriter from "hanzi-writer";
 
 
 function generate() {
     const url = useCohort
-        ? `http://localhost:8000/generation/fib/${currentRound.id}`
-        : `http://localhost:8000/generation/fib-custom`
+        ? `/generation/fib/${currentRound.id}`
+        : `/generation/fib-custom`
 
     const options = useCohort
         ? { method: "POST" }
@@ -17,7 +18,7 @@ function generate() {
             body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
         }
 
-    fetch(url, options)
+    apiFetch(url, options)
     .then((res) => res.json())
     .then((data) => setFibContent(data))
 }

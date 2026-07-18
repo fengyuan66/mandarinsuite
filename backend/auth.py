@@ -7,7 +7,7 @@ from database import engine
 from models.user import User
 
 load_dotenv()
-SECRET_KEY = os.getenvv("AUTH_SECRET_KEY")
+SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

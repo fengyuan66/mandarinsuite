@@ -6,7 +6,7 @@ from auth import manager
 
 router = APIRouter()
 
-ADMIN_EMAIL = "siyajing128@gmail.com"
+ADMIN_EMAIL = "fengyuan6666@gmail.com"
 
 @router.delete("/admin/wipe")
 def wipe_all_data(user: User = Depends(manager)):

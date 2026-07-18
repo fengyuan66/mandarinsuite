@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 import { NEXT_STATUS } from "../common/constants.js";
+import { apiFetch } from "../common/api.js";
 import HanziWriter from "hanzi-writer";
 
 
@@ -21,8 +22,8 @@ function Reading(){
         if (useCohort && !currentRound) return;
 
         const url = useCohort
-        ? `http://localhost:8000/generation/reading/${currentRound.id}`
-        : `http://localhost:8000/generation/reading-custom`
+        ? `/generation/reading/${currentRound.id}`
+        : `/generation/reading-custom`
 
         const options = useCohort
         ?{method: "POST"}
@@ -32,7 +33,7 @@ function Reading(){
             body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== ""))
         }
 
-        fetch(url, options)
+        apiFetch(url, options)
         .then((res) => res.json())
         .then((data) => setPassage(data.passage))
 

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { NEXT_STATUS } from "./constants.js";
+import { apiFetch } from "./api.js";
 
 import { useEffect } from "react";
 
@@ -40,14 +41,14 @@ export function AppProvider({ children }) {
 
         if (currentRound.status === "writing_dictation" && !writingDictationContent) {
             setIsGenerating(true);
-            fetch(`http://localhost:8000/generation/writing-dication/${currentRound.id}`, { method: "POST" })
+            apiFetch(`/generation/writing-dication/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
             .then((data) => { setWritingDictationContent(data); setIsGenerating(false);});
         }
 
         if (currentRound.status === "fib" && !fibContent) {
             setIsGenerating(true);
-            fetch(`http://localhost:8000/generation/fib/${currentRound.id}`, { method: "POST" })
+            apiFetch(`/generation/fib/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
             .then((data) => {setFibContent(data); setIsGenerating(false);});
         }
@@ -57,7 +58,7 @@ export function AppProvider({ children }) {
     //FUNCTIONS
 
     function wipeAllData(){
-        fetch("http://localhost:8000/admin/wipe", { method: "DELETE" })
+        apiFetch("/admin/wipe", { method: "DELETE" })
         .then(() => {
             setActiveUnit(null);
             setCurrentRound(null);
@@ -72,25 +73,25 @@ export function AppProvider({ children }) {
     }
 
     function finishUnit(){
-        fetch(`http://localhost:8000/generation/unit_review/${activeUnit.id}`, { method: "POST" })
+        apiFetch(`/generation/unit_review/${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
         .then((data) => setUnitReviewContent(data))
 
-        fetch(`http://localhost:8000/generation/free-write/${activeUnit.id}`, { method: "POST" })
+        apiFetch(`/generation/free-write/${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
         .then((data) => setFreeWriteContent(data));
 
     }
-    
+
     function startNextUnit(){
-        fetch("http://localhost:8000/unit", {method: "POST"})
+        apiFetch("/unit", {method: "POST"})
         .then((res) => res.json())
         .then((newUnit) => {
             setActiveUnit(newUnit)
             setUnitReviewContent(null)
             setFreeWriteContent(null)
 
-            fetch(`http://localhost:8000/round?unit_id=${newUnit.id}`, { method: "POST" })
+            apiFetch(`/round?unit_id=${newUnit.id}`, { method: "POST" })
             .then((res) => res.json())
             .then((newRound) => setCurrentRound(newRound))
         })
@@ -113,19 +114,19 @@ export function AppProvider({ children }) {
         
         }*/
 
-        fetch(`http://localhost:8000/round/${currentRound.id}/status?new_status=${nextStatus}`, { method: "PATCH" })
+        apiFetch(`/round/${currentRound.id}/status?new_status=${nextStatus}`, { method: "PATCH" })
         .then((res) => res.json())
         .then((data) => setCurrentRound(data))
-        
+
 
     }
 
     function fetchAllUnits(){
-        return fetch("http://localhost:8000/unit/all").then((res) => res.json());
+        return apiFetch("/unit/all").then((res) => res.json());
     }
 
     function loadUnit(unitId){
-        fetch(`http://localhost:8000/unit/${unitId}/activate`, { method: "PATCH" })
+        apiFetch(`/unit/${unitId}/activate`, { method: "PATCH" })
         .then((res) => res.json())
         .then((data) => {
             setActiveUnit(data);
@@ -150,13 +151,13 @@ export function AppProvider({ children }) {
 
 
     function fetchCharacters(){
-        fetch("http://localhost:8000/characterbank")
+        apiFetch("/characterbank")
         .then((res) => res.json())
         .then((data) => setCharacters(data));    //use setter to store data to characters
     }
 
     function postCharacters(hanzi_in, pinyin_in, meaning_in, strokec_in){
-        fetch("http://localhost:8000/characterbank", {
+        apiFetch("/characterbank", {
             method:"POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ hanzi: hanzi_in, pinyin: pinyin_in, meaning: meaning_in, strokec: strokec_in})
@@ -164,7 +165,7 @@ export function AppProvider({ children }) {
     }
 
     function postCharactersAI(True){
-        fetch("http://localhost:8000/discover", {method: "POST"})
+        apiFetch("/discover", {method: "POST"})
         .then((res) => res.json())
         .then((data) => {
             setCharacters((prev) => [...prev, ...data.created]);
@@ -175,7 +176,7 @@ export function AppProvider({ children }) {
 
 
     function fetchCurrentCohort(){
-        fetch("http://localhost:8000/cohort/current")
+        apiFetch("/cohort/current")
         .then((res)=> res.json())
         .then((data) => {
 
@@ -188,7 +189,7 @@ export function AppProvider({ children }) {
 
 
     function fetchCurrentRound(id = activeUnit.id){
-        fetch(`http://localhost:8000/unit/${id}/round/current`)
+        apiFetch(`/unit/${id}/round/current`)
         .then((res) => res.json())
         .then((data) => {
             setCurrentRound(data)
@@ -196,7 +197,7 @@ export function AppProvider({ children }) {
     }
 
     function fetchActiveUnit(){
-        fetch("http://localhost:8000/unit/active")
+        apiFetch("/unit/active")
         .then((res) => res.json())
         .then((data) => {
             setActiveUnit(data)
@@ -210,15 +211,15 @@ export function AppProvider({ children }) {
         setIsGenerating(true);
         setWritingDictationContent(null);
         setFibContent(null);
-        fetch(`http://localhost:8000/round?unit_id=${activeUnit.id}`, { method: "POST" })
+        apiFetch(`/round?unit_id=${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
         .then((data) => {setCurrentRound(data); setIsGenerating(false);});
     }
 
     function createUnit(){
-        
+
         setIsGenerating(true);
-        fetch("http://localhost:8000/unit", { method: "POST" })
+        apiFetch("/unit", { method: "POST" })
         .then((res => res.json()))
         .then((data) => {
             setActiveUnit(data);
@@ -228,13 +229,13 @@ export function AppProvider({ children }) {
 
     
     async function addPracticeEntry(session_id, character_id, times_written){
-        const response = await fetch(`http://localhost:8000/practicelog/practiceentry/${session_id}/${character_id}/${times_written}`, {method: "POST"})
+        const response = await apiFetch(`/practicelog/practiceentry/${session_id}/${character_id}/${times_written}`, {method: "POST"})
         return response.json();
     }
 
     function createPracticeLog(practiceEntries){
-        
-        return fetch("http://localhost:8000/practicelog", {method: "POST"})
+
+        return apiFetch("/practicelog", {method: "POST"})
         .then((res => res.json()))
         .then((newPracticeLog) => {
             
@@ -260,7 +261,7 @@ export function AppProvider({ children }) {
     }
 
     function createPracticeLogRaw(characters, timesWritten) {
-        return fetch("http://localhost:8000/practicelog", {
+        return apiFetch("/practicelog", {
             method: "POST"
         })
         .then((res) => res.json())

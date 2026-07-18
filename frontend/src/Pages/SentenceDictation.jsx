@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
+import { apiFetch } from "../common/api.js";
 
 function SentenceDictation(){
     const {currentRound, fetchActiveUnit} = useAppContext()
@@ -13,8 +14,8 @@ function SentenceDictation(){
 
     function generate() {
         const url = useCohort
-            ? `http://localhost:8000/generation/writing-dication/${currentRound.id}`
-            : `http://localhost:8000/generation/writingdictation-custom`;
+            ? `/generation/writing-dication/${currentRound.id}`
+            : `/generation/writingdictation-custom`;
 
         const options = useCohort
             ? { method: "POST" }
@@ -24,7 +25,7 @@ function SentenceDictation(){
                 body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
             };
 
-        fetch(url, options)
+        apiFetch(url, options)
         .then((res) => res.json())
         .then((data) => setContent(data));
     }

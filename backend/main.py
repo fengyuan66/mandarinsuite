@@ -8,6 +8,8 @@ from routers import round
 from routers import unit
 from routers import generation
 from routers import admin
+from routers import auth
+
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,6 +22,7 @@ app.include_router(round.router)
 app.include_router(unit.router)
 app.include_router(generation.router)
 app.include_router(admin.router)
+app.include_router(auth.router)
 
 @app.on_event("startup")
 def on_startup():

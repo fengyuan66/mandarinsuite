@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import {useAppContext} from "../common/AppContext.jsx";
+import {apiFetch} from "../common/api.js";
 
 function Stats(){
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
@@ -23,11 +24,11 @@ function Stats(){
 
     useEffect(() => {
         
-        fetch("http://localhost:8000/cohort/all").then((res) => res.json()).then(setCohorts);
+        apiFetch("/cohort/all").then((res) => res.json()).then(setCohorts);
     }, [])
 
     function viewCohort(cohortID){
-        fetch(`http://localhost:8000/cohort/${cohortID}`)
+        apiFetch(`/cohort/${cohortID}`)
         .then((res) => res.json())
         .then(setViewedCohort)
     }
