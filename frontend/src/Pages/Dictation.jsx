@@ -2,22 +2,38 @@ import { useEffect, useState, useRef } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 import { NEXT_STATUS } from "../common/constants.js";
 import HanziWriter from "hanzi-writer";
-import HanziDisplay from "../Components/HanziDisplay.jsx"
 
-function Reset(){
-    setShowAnswers(false);
-    setHanzi([""]);
+
+
+
+//HANZIWRITER SETUP
+function HanziDisplay({ hanzi }) {
+    const targetRef = useRef(null);
+
+    useEffect(() => {
+        targetRef.current.innerHTML = "";
+        HanziWriter.create(targetRef.current, hanzi, {
+            width: 150,
+            height: 150,
+            showOutline: true,
+        });
+    }, [hanzi]);
+
+    return <div ref={targetRef}></div>;
 }
 
+
+
 function Dictation(){
-    const {cohortCharacters} = useAppContext();
+    
+    
     const [showAnswers, setShowAnswers] = useState(false);
     const [hanzi, setHanzi] = useState("");
     const [useCohort, setUseCohort] = useState(true);
 
     useEffect(() => {
         
-
+        fetchCurrentCohort();
         setShowAnswers(false);
         
 
@@ -39,11 +55,20 @@ function Dictation(){
         createPracticeLog,
         addPracticeEntry,
         createPracticeLogRaw,
-        cohortCharacters
+        cohortCharacters,
+        HanziDisplay
         
      } = useAppContext();
 
     const appcontext = useAppContext();
+
+
+    function Reset(){
+        setShowAnswers(false);
+        setHanzi([""]);
+    }
+
+
     return(
         <div>
             <h1>Listen and write down each character / word</h1>
@@ -56,9 +81,14 @@ function Dictation(){
             )}
             <button onClick={() => setShowAnswers(!showAnswers)}>{showAnswers ? "hided answers" : "show answers"}</button>
             
-            {showAnswers && hanzi.map((character, i) => (
-                <HanziDisplay key={i} hanzi={character} />
-            ))}
+            {showAnswers && (useCohort
+                ? cohortCharacters.map((character) => (
+                    <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
+                ))
+                : Array.from(hanzi).map((character, i) => (
+                    <HanziDisplay key={i} hanzi={character} />
+                ))
+            )}
             
             <button onClick={Reset}>Reset!</button>
         </div>

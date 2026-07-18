@@ -31,6 +31,82 @@ def create_cohort(active: bool = True):
             session.refresh(new_cohort)
             return new_cohort
     
+
+
+
+@router.get("/cohort/all")
+def get_all_cohorts():
+    with Session(engine) as session:
+        return session.exec(select(Cohort)).all()
+
+
+@router.get("/cohort/archive")
+def get_archive_cohort(target_cohort: Cohort):
+    with Session(engine) as session:
+
+        target_cohort_id = target_cohort.id
+
+        active_cohort = session.exec(
+            select(Cohort).where(Cohort.is_active == True)
+        ).first()
+
+
+        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
+
+
+
+
+        if active_cohort.id == target_cohort.id:
+            return get_current_cohort()
+        
+        #link = CohortCharacter objs linked to cohort via cohort_id field's property
+        links = session.exec(
+            select(CohortCharacter).where(CohortCharacter.cohort_id == target_cohort_id)
+        ).all()
+
+        character_ids = [link.character_id for link in links]
+        
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all()
+
+        return{"cohort": target_cohort, "characters": characters}
+
+
+@router.get("/cohort/current")
+def get_current_cohort():
+    with Session(engine) as session:
+
+        all_active = session.exec(select(Cohort).where(Cohort.is_active == True)).all()
+        print(f"[DEBUG] all active cohorts: {[(c.id, c.is_active) for c in all_active]}")
+
+
+
+        active_cohort = session.exec(
+            select(Cohort).where(Cohort.is_active == True)
+        ).first()
+
+        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
+
+
+        if active_cohort is None:
+            return {"cohort": None, "characters": []}
+        
+        #link = linked to cohort via cohort_id field's property
+        links = session.exec(
+            select(CohortCharacter).where(CohortCharacter.cohort_id == active_cohort.id)
+        ).all()
+
+        
+        character_ids = [link.character_id for link in links]
+        
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all()
+
+        return{"cohort": active_cohort, "characters": characters}
+    
+
 @router.post("/cohort/{cohort_id}/character/{character_id}")
 def cohort_add_character(cohort_id: int, character_id: int):
 
@@ -78,11 +154,6 @@ def activecohort_add_character(character_id: int):
         return link
 
 
-@router.get("/cohort/all")
-def get_all_cohorts():
-    with Session(engine) as session:
-        return session.exec(select(Cohort)).all()
-
 @router.get("/cohort/{cohort_id}")
 def get_cohort_by_id(cohort_id: int):
     with Session(engine) as session:
@@ -92,67 +163,4 @@ def get_cohort_by_id(cohort_id: int):
         characters = session.exec(select(Character).where(Character.id.in_(character_ids))).all()
         return {"cohort": cohort, "characters": characters}
 
-@router.get("/cohort/current")
-def get_current_cohort():
-    with Session(engine) as session:
 
-        all_active = session.exec(select(Cohort).where(Cohort.is_active == True)).all()
-        print(f"[DEBUG] all active cohorts: {[(c.id, c.is_active) for c in all_active]}")
-
-
-
-        active_cohort = session.exec(
-            select(Cohort).where(Cohort.is_active == True)
-        ).first()
-
-        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
-
-
-        if active_cohort is None:
-            return {"cohort": None, "characters": []}
-        
-        #link = linked to cohort via cohort_id field's property
-        links = session.exec(
-            select(CohortCharacter).where(CohortCharacter.cohort_id == active_cohort.id)
-        ).all()
-
-        
-        character_ids = [link.character_id for link in links]
-        
-        characters = session.exec(
-            select(Character).where(Character.id.in_(character_ids))
-        ).all()
-
-        return{"cohort": active_cohort, "characters": characters}
-    
-@router.get("/cohort/archive")
-def get_archive_cohort(target_cohort: Cohort):
-    with Session(engine) as session:
-
-        target_cohort_id = target_cohort.id
-
-        active_cohort = session.exec(
-            select(Cohort).where(Cohort.is_active == True)
-        ).first()
-
-
-        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
-
-
-
-
-        if active_cohort.id == target_cohort.id:
-            return get_current_cohort()
-        
-        #link = CohortCharacter objs linked to cohort via cohort_id field's property
-        links = session.exec(
-            select(CohortCharacter).where(CohortCharacter.cohort_id == target_cohort_id)
-        ).all()
-
-        character_ids = [link.character_id for link in links]
-        
-        characters = session.exec(
-            select(Character).where(Character.id.in_(character_ids))
-        ).all()
-
-        return{"cohort": target_cohort, "characters": characters}

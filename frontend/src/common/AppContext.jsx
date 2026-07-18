@@ -133,6 +133,21 @@ export function AppProvider({ children }) {
         });
     }
 
+    function HanziDisplay({ hanzi }) {
+        const targetRef = useRef(null);
+
+        useEffect(() => {
+            targetRef.current.innerHTML = "";
+            HanziWriter.create(targetRef.current, hanzi, {
+                width: 150,
+                height: 150,
+                showOutline: true,
+            });
+        }, [hanzi]);
+
+        return <div ref={targetRef}></div>;
+    }
+
 
     function fetchCharacters(){
         fetch("http://localhost:8000/characterbank")
@@ -270,7 +285,7 @@ export function AppProvider({ children }) {
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
-    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw,
+    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw, HanziDisplay
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>

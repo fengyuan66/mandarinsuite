@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 
-function SetenceDiction(){
+function SentenceDictation(){
     const {currentRound} = useAppContext()
     const [useCohort, setUseCohort] = useState(true)
     const [manualInput, setManualInput] = useState("")
@@ -58,3 +58,5 @@ function SetenceDiction(){
     )
 
 }
+
+export default SentenceDictation
