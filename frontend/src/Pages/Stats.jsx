@@ -5,7 +5,7 @@ import {apiFetch} from "../common/api.js";
 function Stats(){
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
         fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit, createRound, wipeAllData, fetchAllUnits } = useAppContext();
+        postCharacters, postCharactersAI, createUnit, createRound, wipeAllData, fetchAllUnits, loadUnit} = useAppContext();
     const [units, setUnits] = useState([])
     const [cohorts, setCohorts] = useState([])
     const [viewedCohort, setViewedCohort] = useState(null)

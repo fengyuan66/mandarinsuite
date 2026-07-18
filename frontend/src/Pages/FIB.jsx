@@ -5,23 +5,7 @@ import { apiFetch } from "../common/api.js";
 import HanziWriter from "hanzi-writer";
 
 
-function generate() {
-    const url = useCohort
-        ? `/generation/fib/${currentRound.id}`
-        : `/generation/fib-custom`
 
-    const options = useCohort
-        ? { method: "POST" }
-        : {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
-        }
-
-    apiFetch(url, options)
-    .then((res) => res.json())
-    .then((data) => setFibContent(data))
-}
 
 function fillInBlanks(sentence, answers){
     let i = 0;
@@ -40,6 +24,24 @@ function FIB(){
     const [manualInput, setManualInput] = useState("")
     const [fibContent, setFibContent] = useState(null)
     const [showAnswers, setShowAnswers] = useState(false)
+
+    function generate() {
+        const url = useCohort
+            ? `/generation/fib/${currentRound.id}`
+            : `/generation/fib-custom`
+
+        const options = useCohort
+            ? { method: "POST" }
+            : {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
+            }
+
+        apiFetch(url, options)
+        .then((res) => res.json())
+        .then((data) => setFibContent(data))
+    }
 
     return(
         <div>
