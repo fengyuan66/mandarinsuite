@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 
 function SentenceDictation(){
-    const {currentRound} = useAppContext()
+    const {currentRound, fetchActiveUnit} = useAppContext()
     const [useCohort, setUseCohort] = useState(true)
     const [manualInput, setManualInput] = useState("")
     const [content, setContent] = useState(null)
 
+    useEffect(() => {
+        fetchActiveUnit()
+    }, [])
+
     function generate() {
         const url = useCohort
             ? `http://localhost:8000/generation/writing-dication/${currentRound.id}`
-            : `http://localhost:8000/generation/writing-dictation-custom`;
+            : `http://localhost:8000/generation/writingdictation-custom`;
 
         const options = useCohort
             ? { method: "POST" }

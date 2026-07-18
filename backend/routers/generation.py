@@ -167,10 +167,9 @@ def generate_writing_dictation(round_id: int):
         return {"skipped": True, "reason": "not enough known vocab yet!"}
 
     prompt = f"""Write a short paragraph in Mandarin, themed around "{unit.theme}".
-Heavily prioritize using ONLY characters from this list: {allowlist}.
-Favor extremely common, basic characters to keep the sentences natural and easy to read.
-If a small number of other simple, very common characters are genuinely needed for the paragraph to read naturally, you may use them sparingly — but keep this to an absolute minimum.
-Aim for about 100 words, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length — write fewer words if that produces better quality.
+Prioritize characters from this list: {allowlist}.
+Favor extremely common, basic characters to keep the sentences natural, grammatically correct, and easy to read.
+Aim for about 100 characters, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length — write fewer words if that produces better quality.
 Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
@@ -192,10 +191,9 @@ Respond with ONLY a JSON object, no other text, in this exact format:
 @router.post("/generation/writingdictation-custom")
 def generate_writing_dictation_custom(hanzi_list: list[str]):
     prompt = f"""Write a short paragraph in Mandarin.
-Heavily prioritize using ONLY characters from this list: {hanzi_list}.
-Favor extremely common, basic characters to keep the sentences natural and easy to read.
-If a small number of other simple, very common characters are genuinely needed for the paragraph to read naturally, you may use them sparingly — but keep this to an absolute minimum.
-Aim for about 100 words, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length.
+Prioritize characters from this list: {hanzi_list}.
+Favor extremely common, basic characters to keep the sentences natural, grammatically correct, and easy to read.
+Aim for about 100 characters, but it is far more important that the paragraph be coherent, grammatical, natural Mandarin than that it hit any specific length — write fewer words if that produces better quality.
 Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """

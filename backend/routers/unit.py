@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from database import engine
 from models.unit import Unit
 from routers.ai import ai
+from routers.round import create_round
 import json
 
 router = APIRouter()
@@ -72,6 +73,7 @@ def create_unit(themechosen: str = None, roundcount: int = None):
             session.add(new_unit)
             session.commit()
             session.refresh(new_unit)
+            create_round(unit_id = new_unit.id)
             return new_unit
     
     else:
@@ -81,5 +83,6 @@ def create_unit(themechosen: str = None, roundcount: int = None):
             session.add(new_unit)
             session.commit()
             session.refresh(new_unit)
+            create_round(unit_id = new_unit.id)
             return new_unit
     
