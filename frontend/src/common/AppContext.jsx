@@ -201,13 +201,14 @@ export function AppProvider({ children }) {
     }
 
     
-    function addPracticeEntry(session_id, character_id, times_written){
+    async function addPracticeEntry(session_id, character_id, times_written){
         const response = await fetch(`http://localhost:8000/practicelog/practiceentry/${session_id}/${character_id}/${times_written}`, {method: "POST"})
         return response.json();
     }
 
     function createPracticeLog(practiceEntries){
-        fetch("http://localhost:8000/practicelog", {method: "POST"})
+        
+        return fetch("http://localhost:8000/practicelog", {method: "POST"})
         .then((res => res.json()))
         .then((newPracticeLog) => {
             
@@ -258,7 +259,7 @@ export function AppProvider({ children }) {
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
-    finishUnit, startNextUnit, wipeAllData, isGenerating,
+    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw,
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>
