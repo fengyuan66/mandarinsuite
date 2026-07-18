@@ -1,15 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from database import engine
 from models.character import Character
 from routers.cohort import create_cohort, cohort_add_character
-
+from models.user import User
+from auth import manager
 
 router = APIRouter()
 
 # Characterbank Database
 @router.post("/characterbank")
-def add_character(character: Character):
+def add_character(character: Character, user: User = Depends(manager)):
     db_character = Character.model_validate(character)
     with Session(engine) as session:
         session.add(character) #teacher takes notebook from Sam
@@ -21,7 +22,7 @@ def add_character(character: Character):
     
 
 @router.get("/characterbank")
-def get_character():
+def get_character(user: User = Depends(manager)):
     with Session(engine) as session:
         characters = session.exec(select(Character)).all()
         return characters
