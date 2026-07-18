@@ -106,6 +106,25 @@ function Start(){
             {JSON.stringify({ currentRound, writingDictationContent, fibContent }, null, 2)}
         </pre>
 
+        {!isGenerating && !activeUnit && currentRound && (
+            <div className="empty-warning">
+                <h1>No active unit found, but a round is found! Likely data glitch, please copy and wipe data</h1>
+            </div>
+        )}
+
+        {!isGenerating && activeUnit && !currentRound && (
+            <div className="empty-warning">
+                <h1>Unit is found, but no active round found!</h1>
+            </div>
+        )}
+
+        {!isGenerating && !activeUnit && !currentRound && (
+            <div className="empty-warning">
+                <h1>No active unit nor round found!</h1>
+            </div>
+        )}
+
+
 
 
         {currentRound && (

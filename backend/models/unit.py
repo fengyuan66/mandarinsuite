@@ -2,9 +2,10 @@ from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
-user_id: int = Field(foreign_key="user.id", index=True)
+
 
 class Unit(SQLModel, table=True):
+    user_id: int = Field(foreign_key="user.id", index=True)
     id: Optional[int] = Field(default= None, primary_key = True)
     theme: str
     target_rounds: int
