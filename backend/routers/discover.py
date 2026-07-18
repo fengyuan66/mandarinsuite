@@ -1,8 +1,10 @@
 from routers.characterbank import get_hanzi, add_character
 from routers.cohort import create_cohort, cohort_add_character
 from models.character import Character
+from models.user import User
+from auth import manager
 from data.lookup import lookup_hanzi
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from routers.ai import ai
 import json
 from pydantic import ValidationError
@@ -12,7 +14,7 @@ router = APIRouter()
 # AI DISCOVERY OF NEW CHARACTERS
 
 @router.post("/discover")
-def ai_add_characters(cohort: bool = True):
+def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
 
     if (cohort):
 
@@ -26,11 +28,11 @@ def ai_add_characters(cohort: bool = True):
             candidates = json.loads(raw_response)
         except json.JSONDecodeError:
             return {"error": "AI response was not valid JSON!", "raw_response": raw_response}
-        
+
         created = []
         err = []
         skipped = []
-        newcohort = create_cohort()
+        newcohort = create_cohort(user_id = user.id)
 
 
         print(f"[DEBUG] created cohort id={newcohort.id}, is_active={newcohort.is_active}")
