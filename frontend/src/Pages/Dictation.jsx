@@ -56,7 +56,7 @@ function Dictation(){
         addPracticeEntry,
         createPracticeLogRaw,
         cohortCharacters,
-        HanziDisplay
+        
         
      } = useAppContext();
 

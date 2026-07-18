@@ -3,14 +3,23 @@ import { useAppContext } from "../common/AppContext.jsx";
 import { NEXT_STATUS } from "../common/constants.js";
 import HanziWriter from "hanzi-writer";
 
+
+
 function Reading(){
-    const { currentRound } = useAppContext();
+    
     const [useCohort, setUseCohort] = useState(true);
     const [manualInput, setManualInput] = useState("");
     const [passage, setPassage] = useState(null)
+    const { currentRound, fetchActiveUnit } = useAppContext();
 
+    useEffect(() => {
+        fetchActiveUnit();
+    }, []);
 
     function generate(){
+
+        if (useCohort && !currentRound) return;
+
         const url = useCohort
         ? `http://localhost:8000/generation/reading/${currentRound.id}`
         : `http://localhost:8000/generation/reading-custom`

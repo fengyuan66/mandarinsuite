@@ -15,7 +15,7 @@ function Stats(){
     }, [])
 
     function viewCohort(cohortID){
-        fetch(`http://localhost:8000/cohort/%{cohortId}`)
+        fetch(`http://localhost:8000/cohort/${cohortId}`)
         .then((res) => res.json())
         .then(setViewedCohort)
     }
@@ -45,9 +45,9 @@ function Stats(){
                 ))}
             </ul>
             
-            {viewCohort && (
+            {viewedCohort && (
                 <div>
-                    <h2>Cohort {viewCohort.cohort.id}</h2>
+                    <h2>Cohort {viewedCohort.cohort.id}</h2>
                     <ul>
                         {viewedCohort.characters.map((character) => (
                             <li key={character.id}>{character.hanzi} | {character.pinyin} | {character.meaning}</li>

@@ -45,7 +45,7 @@ function Header(){
                 }}>
                     Reading
                 </NavLink>
-                <NavLink to="/convo" className={({ isActive }) => {
+                <NavLink to="/sentencedictation" className={({ isActive }) => {
                     if (isActive){
                         return "active";
                     }
@@ -53,9 +53,9 @@ function Header(){
                         return "false";
                     }
                 }}>
-                    Convo
+                    Sentence-Dictation
                 </NavLink>
-                <NavLink to="/characterbank" className={({ isActive }) => {
+                <NavLink to="/stats" className={({ isActive }) => {
                     if (isActive){
                         return "active";
                     }
@@ -63,7 +63,7 @@ function Header(){
                         return "false";
                     }
                 }}>
-                    Characterlist
+                    Stats
                 </NavLink>
             </nav>
         </div>

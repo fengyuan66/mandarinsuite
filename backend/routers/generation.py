@@ -104,26 +104,54 @@ def generate_reading(round_id: int):
         unit = session.get(Unit, round.unit_id)
 
     allowlist = get_characters_in_round(round_id)
-    prompt = f"""Write a short, engaging Mandarin reading passage (a short story or article) for a language learner, themed around "{unit.theme}".
-Heavily emphasize and repeat these characters naturally throughout: {allowlist}.
-You may use other simple, common characters as needed for grammar and coherence.
-Aim for about 100-150 words. Prioritize being engaging and natural over strictly hitting a length.
-Use proper punctuation (，。！？).
-Respond with ONLY the passage text, no other commentary.
+    prompt = f"""
+Write a short, engaging Mandarin Chinese reading passage for a language learner, based on the theme "{unit.theme}".
+
+Target vocabulary or characters:
+{allowlist}
+
+Requirements:
+
+* Use the target items frequently, but only where they sound natural and grammatically correct.
+* Prefer using target characters inside common, meaningful words rather than inserting them individually.
+* Reuse important target words across the passage to reinforce recognition, but avoid awkward repetition or keyword stuffing.
+* Do not force every target item into the passage. Omit an item when using it would make the passage unnatural.
+* Use simple, beginner-friendly vocabulary and sentence structures.
+* Include a clear situation, event, or idea so the passage feels coherent and engaging.
+* Aim for approximately 100–150 Chinese characters, excluding punctuation.
+* Use Simplified Chinese and proper punctuation such as ，。！？
+* Check that every sentence is natural Mandarin before responding.
+
+Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
+
     content = ai(prompt)
-    return {"content": content}
+    return {"passage": content}
 
 
 @router.post("/generation/reading-custom")
 def generate_reading_custom(hanzi_list: list[str]):
-    prompt = f"""Write a short, engaging Mandarin reading passage (a short story or article) for a language learner.
-Heavily emphasize and repeat these characters naturally throughout: {hanzi_list}.
-You may use other simple, common characters as needed for grammar and coherence.
-Aim for about 100-150 words. Prioritize being engaging and natural over strictly hitting a length.
-Use proper punctuation (，。！？).
-Respond with ONLY the passage text, no other commentary.
+    prompt = f"""
+Write a short, engaging Mandarin Chinese reading passage for a beginner language learner.
+
+Target vocabulary or characters:
+{hanzi_list}
+
+Requirements:
+
+* Use the target items frequently, but only where they sound natural and grammatically correct.
+* Prefer using target characters inside common, meaningful words rather than inserting them individually.
+* Reuse important target vocabs across the passage to reinforce recognition, but avoid awkward repetition or keyword stuffing.
+* Do not force every target item into the passage. Omit an item when using it would make the passage unnatural.
+* Use simple, beginner-friendly vocabulary and sentence structures.
+* Include a clear situation, event, or idea so the passage feels coherent and engaging.
+* Aim for approximately 100–150 Chinese characters, excluding punctuation.
+* Use Simplified Chinese and proper punctuation such as ，。！？
+* Check that every sentence is natural Mandarin before responding.
+
+Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
+
     passage = ai(prompt)
     return {"passage": passage}
 

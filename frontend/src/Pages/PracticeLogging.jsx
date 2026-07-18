@@ -3,55 +3,49 @@ import {useAppContext} from "../common/AppContext.jsx"
 
 function PracticeLogging(){
     const {cohortCharacters, createPracticeLog} = useAppContext();
-    const [counts, setCounts] = useState({});
+    const [timesWritten, setTimesWritten] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
-    function updateCount(chracterID, value){
-        setCounts((prev) => ({ ...prev, [characterID]: value}))
-    }
-
     function handleSubmit(){
-        const entries = []
+        const count = Number(timesWritten) || 0
 
-        for(const character of cohortCharacters) {
-            const timesWritten = Number(counts[character.id]) || 0
+        if (count <= 0) return
 
-            if (timesWritten > 0){
-                entries.push({
-                    character_id: character.id,
-                    times_written: timesWritten
-                })
-            }
+        const entries = cohortCharacters.map((character) => ({
+            character_id: character.id,
+            times_written: count
+        }))
 
-        }
-        
         createPracticeLog(entries)
         .then(() => {
             setSubmitted(true)
         })
-
     }
 
     return (
         <div className = "practicePage">
             <h1>Log your practice!</h1>
+
             {cohortCharacters.map((character) => (
                 <div key={character.id} className="practiceRow">
                     <span>{character.hanzi} ({character.pinyin})</span>
-                    <input
-                        type="number"
-                        min= "0"
-                        value = {counts[character.id] ?? ""}
-                        onChange = {(change) => updateCount(character.id, change.target.value)}
-                    />
                 </div>
             ))}
-            
-            <button onClick = {handleSubmit}>Submit practice log</button>
+
+            <label htmlFor="timesWritten">Times written (applies to every character above):</label>
+            <input
+                id="timesWritten"
+                type="number"
+                min="0"
+                placeholder="0"
+                value={timesWritten}
+                onChange={(change) => setTimesWritten(change.target.value)}
+            />
+
+            <button onClick={handleSubmit}>Submit practice log</button>
             {submitted && <p>Logged!</p>}
         </div>
     )
-
 }
 
 export default PracticeLogging

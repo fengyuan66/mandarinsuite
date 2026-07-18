@@ -31,7 +31,7 @@ function SentenceDictation(){
 
     return(
         <div>
-            <h1>Writing dictation</h1>
+            <h1>Sentence dictation</h1>
 
             <label>
                 <input type="checkbox" checked={useCohort} onChange={(change) => setUseCohort(change.target.checked)} />
@@ -52,7 +52,7 @@ function SentenceDictation(){
                     : <p>{content.paragraph}</p>
             )}
 
-            <buton onClick={reset}>Reset</buton>
+            <button onClick={reset}>Reset</button>
 
         </div>
     )
