@@ -3,15 +3,16 @@ from sqlmodel import Session, select
 from database import engine
 from models.round import Round
 from models.cohort import Cohort, CohortCharacter
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from models.unit import Unit
+from models.user import User
+from auth import manager
 from routers.ai import ai
 import json
 from fastapi import Body
 
 router = APIRouter()
 
-@router.get("/generation/known_hanzi/{unit_id}/{before_progress}")
 def get_known_hanzi(unit_id: int, before_progress: int | None = None) -> list[str]:
     with Session(engine) as session:
 
@@ -34,7 +35,15 @@ def get_known_hanzi(unit_id: int, before_progress: int | None = None) -> list[st
         ).all()
 
         return [character.hanzi for character in characters]
-    
+
+@router.get("/generation/known_hanzi/{unit_id}/{before_progress}")
+def get_known_hanzi_route(unit_id: int, before_progress: int | None = None, user: User = Depends(manager)) -> list[str]:
+    with Session(engine) as session:
+        unit = session.exec(select(Unit).where(Unit.id == unit_id, Unit.user_id == user.id)).first()
+        if unit is None:
+            raise HTTPException(404, "Unit not found")
+    return get_known_hanzi(unit_id, before_progress)
+
 def get_known_Characters(unit_id: int, before_progress: int | None = None) -> list[Character]:
     with Session(engine) as session:
 
@@ -98,9 +107,11 @@ def get_characters_in_round(round_id: int) -> list[str]:
         return [character.hanzi for character in characters]
 
 @router.post("/generation/reading/{round_id}")
-def generate_reading(round_id: int):
+def generate_reading(round_id: int, user: User = Depends(manager)):
     with Session(engine) as session:
         round = session.get(Round, round_id)
+        if round is None or round.user_id != user.id:
+            raise HTTPException(404, "Round not found")
         unit = session.get(Unit, round.unit_id)
 
     allowlist = get_characters_in_round(round_id)
@@ -130,7 +141,7 @@ Respond with only the passage text and no commentary, title, translation, notes,
 
 
 @router.post("/generation/reading-custom")
-def generate_reading_custom(hanzi_list: list[str]):
+def generate_reading_custom(hanzi_list: list[str], user: User = Depends(manager)):
     prompt = f"""
 Write a short, engaging Mandarin Chinese reading passage for a beginner language learner.
 
@@ -157,9 +168,11 @@ Respond with only the passage text and no commentary, title, translation, notes,
 
 
 @router.post("/generation/writing-dication/{round_id}")
-def generate_writing_dictation(round_id: int):
+def generate_writing_dictation(round_id: int, user: User = Depends(manager)):
     with Session(engine) as session:
         round = session.get(Round, round_id)
+        if round is None or round.user_id != user.id:
+            raise HTTPException(404, "Round not found")
         unit = session.get(Unit, round.unit_id)
 
     allowlist = get_known_hanzi(round.unit_id, before_progress=round.progress)
@@ -179,7 +192,7 @@ Respond with ONLY the paragraph text, no other commentary.
 
 
 @router.post("/generation/fib-custom")
-def generate_fib_custom(hanzi_list: list[str]):
+def generate_fib_custom(hanzi_list: list[str], user: User = Depends(manager)):
     prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {hanzi_list}. One should be able to infer the context of the sentence even with those characters removed.
 Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
@@ -189,7 +202,7 @@ Respond with ONLY a JSON object, no other text, in this exact format:
     return result
 
 @router.post("/generation/writingdictation-custom")
-def generate_writing_dictation_custom(hanzi_list: list[str]):
+def generate_writing_dictation_custom(hanzi_list: list[str], user: User = Depends(manager)):
     prompt = f"""Write a short paragraph in Mandarin.
 Prioritize characters from this list: {hanzi_list}.
 Favor extremely common, basic characters to keep the sentences natural, grammatically correct, and easy to read.
@@ -201,7 +214,12 @@ Respond with ONLY the paragraph text, no other commentary.
     return {"skipped": False, "paragraph": paragraph}
 
 @router.post("/generation/fib/{round_id}")
-def generate_fib(round_id: int):
+def generate_fib(round_id: int, user: User = Depends(manager)):
+    with Session(engine) as session:
+        round = session.get(Round, round_id)
+        if round is None or round.user_id != user.id:
+            raise HTTPException(404, "Round not found")
+
     allowlist = get_characters_in_round(round_id)
 
     prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. One should be able to infer the context of the sentence even with those characters removed. 
@@ -214,9 +232,11 @@ Respond with ONLY a JSON object, no other text, in this exact format:
 
 
 @router.post("/generation/unit_review/{unit_id}")
-def generate_unit_review(unit_id: int):
+def generate_unit_review(unit_id: int, user: User = Depends(manager)):
     with Session(engine) as session:
         unit = session.get(Unit, unit_id)
+        if unit is None or unit.user_id != user.id:
+            raise HTTPException(404, "Unit not found")
         allowlist = get_characters_in_unit(unit_id)
         paragraph_prompt = f"""Write a short paragraph in Mandarin, themed around "{unit.theme}".
 Heavily prioritize using ONLY characters from this list: {allowlist}.
@@ -244,7 +264,11 @@ Respond with ONLY a JSON object, no other text, in this exact format:
     
 
 @router.post("/generation/free-write/{unit_id}")
-def generate_free_write(unit_id: int):
+def generate_free_write(unit_id: int, user: User = Depends(manager)):
+    with Session(engine) as session:
+        unit = session.get(Unit, unit_id)
+        if unit is None or unit.user_id != user.id:
+            raise HTTPException(404, "Unit not found")
     allowlist = get_characters_in_unit(unit_id)
     prompt = f"""Write a short, friendly writing prompt in English that would naturally lead a Mandarin learner
 to write a ~100 word response using vocabulary they know. They know these characters: {allowlist}.
@@ -254,9 +278,11 @@ Respond with ONLY the prompt text, no other commentary.
 
 
 @router.patch("/round/{round_id}/status")
-def advance_round_status(round_id: int, new_status: str):
+def advance_round_status(round_id: int, new_status: str, user: User = Depends(manager)):
     with Session(engine) as session:
         round = session.get(Round, round_id)
+        if round is None or round.user_id != user.id:
+            raise HTTPException(404, "Round not found")
         round.status = new_status
         session.add(round)
         session.commit()
