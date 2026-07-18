@@ -13,6 +13,17 @@ def deactivate_all_units(session: Session):
         unit.is_active = False
         session.add(unit)
 
+@router.patch("/unit/{unit_id}/activate")
+def activate_unit(unit_id: int):
+    with Session(engine) as session:
+        deactivate_all_units(session)
+        unit = session.get(Unit, unit_id)
+        unit.is_active = True
+        session.add(unit)
+        session.commit()
+        session.refresh(unit)
+        return unit
+
 @router.get("/unit/all")
 def get_all_units():
     with Session(engine) as session:

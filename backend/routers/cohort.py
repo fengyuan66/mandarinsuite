@@ -78,6 +78,20 @@ def activecohort_add_character(character_id: int):
         return link
 
 
+@router.get("/cohort/all")
+def get_all_cohorts():
+    with Session(engine) as session:
+        return session.exec(select(Cohort)).all()
+
+@router.get("/cohort/{cohort_id}")
+def get_cohort_by_id(cohort_id: int):
+    with Session(engine) as session:
+        cohort = session.get(Cohort, cohort_id)
+        links = session.exec(select(CohortCharacter).where(CohortCharacter.cohort_id == cohort_id)).all()
+        character_ids = [l.character_id for l in links]
+        characters = session.exec(select(Character).where(Character.id.in_(character_ids))).all()
+        return {"cohort": cohort, "characters": characters}
+
 @router.get("/cohort/current")
 def get_current_cohort():
     with Session(engine) as session:

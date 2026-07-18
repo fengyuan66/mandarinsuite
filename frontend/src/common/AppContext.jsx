@@ -120,7 +120,18 @@ export function AppProvider({ children }) {
 
     }
 
+    function fetchAllUnits(){
+        return fetch("http://localhost:8000/unit/all").then((res) => res.json());
+    }
 
+    function loadUnit(unitId){
+        fetch(`http://localhost:8000/unit/${unitId}/activate`, { method: "PATCH" })
+        .then((res) => res.json())
+        .then((data) => {
+            setActiveUnit(data);
+            fetchCurrentRound(data.id);
+        });
+    }
 
 
     function fetchCharacters(){
