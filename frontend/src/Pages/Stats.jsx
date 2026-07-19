@@ -1,23 +1,33 @@
 import {useState, useEffect} from "react";
 import {useAppContext} from "../common/AppContext.jsx";
 import {apiFetch} from "../common/api.js";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../common/AuthContext.jsx";
+
 
 function Stats(){
+
+
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
         fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
         postCharacters, postCharactersAI, createUnit, createRound, wipeAllData, fetchAllUnits, loadUnit, isGenerating} = useAppContext();
+    const {logout} = useAuth()
+    const navigate = useNavigate()
+
     const [units, setUnits] = useState([])
     const [cohorts, setCohorts] = useState([])
     const [viewedCohort, setViewedCohort] = useState(null)
-
+    
     const [username, setUsername] = useState("");
     
-    //Hanzi section setup
-    const [storedhanzi, setstoredhanzi] = useState("");
-    const [storedpinyin, setstoredpinyin] = useState("");
-    const [storedmeaning, setstoredmeaning] = useState("");
-    const [storedstrokec, setstoredstrokec] = useState("");
-   
+    // Archived: manual add-character form state. The form below (postCharacters)
+    // creates raw Character rows with no cohort/user linkage, so it doesn't show up
+    // in the user's characterbank. Disabled until that's reworked.
+    // const [storedhanzi, setstoredhanzi] = useState("");
+    // const [storedpinyin, setstoredpinyin] = useState("");
+    // const [storedmeaning, setstoredmeaning] = useState("");
+    // const [storedstrokec, setstoredstrokec] = useState("");
+
 
     useEffect(() => {
         fetchAllUnits().then(setUnits);
@@ -29,7 +39,9 @@ function Stats(){
         apiFetch("/cohort/all").then((res) => res.json()).then(setCohorts);
     }, [])
 
-    
+    function handleLogout(){
+        logout().then(() => navigate("/login")) 
+    }
 
     function viewCohort(cohortID){
         apiFetch(`/cohort/${cohortID}`)
@@ -59,6 +71,7 @@ function Stats(){
         .then((username) => {setUsername(username)})
     }
 
+
     const [practiceLogs, setPracticeLogs] = useState([]);
     const [viewedLog, setViewedLog] = useState(null);
 
@@ -77,6 +90,7 @@ function Stats(){
 
             <div>
                 <p>Currently logged in as: {username}</p>
+                <button onClick = {handleLogout}>Log out</button>
             </div>
 
             <div>
@@ -151,7 +165,7 @@ function Stats(){
             <div className="characterbankPage">
             <div className="getcharacters">
             <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
-            <button onClick={() => { setViewedLog(null); wipeAllData().then(refreshCohorts).then(refreshUnits).then(refreshPracticeLogs); }}>
+            <button onClick={() => { setViewedLog(null); setViewedCohort(null); wipeAllData().then(refreshCohorts).then(refreshUnits).then(refreshPracticeLogs); }}>
                 Wipe all data
             </button>
             
@@ -165,6 +179,9 @@ function Stats(){
                 }
             </ul>
             </div>
+            {/* Archived: manual add-character form. Creates raw Character rows with no
+                cohort/user linkage, so entries never show up in the user's characterbank.
+                Disabled until that's reworked.
             <div className="addcharacters">
                 <input
                     type="text"
@@ -192,6 +209,7 @@ function Stats(){
                     Submit
                 </button>
             </div>
+            */}
             <div className="aiexplorecharacters">
                 <button onClick={postCharactersAI}>Click to discover new characters using AI</button>
             </div>

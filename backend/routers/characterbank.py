@@ -26,22 +26,29 @@ def add_character(character: Character, user: User = Depends(manager)):
 def lookup_characters(hanzi_list: list[str], user: User = Depends(manager)):
     with Session(engine) as session:
         results = {}
+        cohort = None
         for hanzi in hanzi_list:
             existing = session.exec(select(Character).where(Character.hanzi == hanzi)).first()
             if existing:
-                results[hanzi] = existing
-                continue
+                character = existing
+            else:
+                entry = lookup_hanzi(hanzi)
+                if entry is None:
+                    results[hanzi] = None
+                    continue
 
-            entry = lookup_hanzi(hanzi)
-            if entry is None:
-                results[hanzi] = None
-                continue
+                character = Character(hanzi=hanzi, **entry)
+                session.add(character)
+                session.commit()
+                session.refresh(character)
 
-            new_character = Character(hanzi=hanzi, **entry)
-            session.add(new_character)
-            session.commit()
-            session.refresh(new_character)
-            results[hanzi] = new_character
+            # Looked-up characters (from the universal dictionary in data/) still need
+            # to be linked into this user's own characterbank via a cohort, same as
+            # AI-discovered characters are.
+            if cohort is None:
+                cohort = create_cohort(user_id=user.id, active=False)
+            cohort_add_character(cohort.id, character.id)
+            results[hanzi] = character
 
         return results
 

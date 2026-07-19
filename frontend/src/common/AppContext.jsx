@@ -91,9 +91,9 @@ export function AppProvider({ children }) {
             setUnitReviewContent(null)
             setFreeWriteContent(null)
 
-            apiFetch(`/round?unit_id=${newUnit.id}`, { method: "POST" })
-            .then((res) => res.json())
-            .then((newRound) => setCurrentRound(newRound))
+            // POST /unit already creates the unit's first round server-side, so just
+            // fetch it rather than creating a second (orphaned) round here.
+            fetchCurrentRound(newUnit.id)
         })
     }
     
