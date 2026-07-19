@@ -54,3 +54,12 @@ def get_practicelog(id: int, user: User = Depends(manager)):
         }
 
         
+@router.get("/practicelog/all")
+def get_my_practicelogs(user: User = Depends(manager)):
+    with Session(engine) as session:
+        logs = session.exec(
+            select(PracticeLog)
+            .where(PracticeLog.user_id == user.id)
+            .order_by(PracticeLog.session_time.desc())
+        ).all()
+        return logs

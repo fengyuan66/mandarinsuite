@@ -24,7 +24,11 @@ def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
     Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
     """
 
-    candidates = json.loads(ai(prompt))
+    raw_response = ai(prompt)
+    try:
+        candidates = json.loads(raw_response)
+    except json.JSONDecodeError:
+        candidates = []
 
     new_char_ids = []
     for hanzi in candidates:

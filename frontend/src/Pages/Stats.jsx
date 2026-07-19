@@ -45,6 +45,7 @@ function Stats(){
         viewUser();
         refreshCohorts();
         refreshUnits();
+        refreshPracticeLogs();
     }, [])
 
     function refreshUnits(){
@@ -56,6 +57,19 @@ function Stats(){
         apiFetch("/generation/getuser")
         .then((res)=>res.json())
         .then((username) => {setUsername(username)})
+    }
+
+    const [practiceLogs, setPracticeLogs] = useState([]);
+    const [viewedLog, setViewedLog] = useState(null);
+
+    function refreshPracticeLogs(){
+        apiFetch("/practicelog/all").then((res) => res.json()).then(setPracticeLogs);
+    }
+
+    function viewPracticeLog(logId){
+        apiFetch(`/practicelog/archived?id=${logId}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then(setViewedLog);
     }
 
     return (
@@ -104,6 +118,29 @@ function Stats(){
 
             </div>
 
+            <div>
+                <h1>Your practice logs</h1>
+                    <ul>
+                        {practiceLogs.map((log) => (
+                            <li key={log.id}>
+                                {log.session_time.split("T")[0]}
+                                <button onClick={() => viewPracticeLog(log.id)}>View</button>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {viewedLog && (
+                        <div>
+                            <h2>Log {viewedLog.id} — {viewedLog.session_time.split("T")[0]}</h2>
+                            <ul>
+                                {viewedLog.entries.map((entry) => (
+                                    <li key={entry.id}>Character #{entry.character_id} — written {entry.times_written} times</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+            </div>
+
 
 
 
@@ -114,7 +151,7 @@ function Stats(){
             <div className="characterbankPage">
             <div className="getcharacters">
             <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
-            <button onClick={() => wipeAllData().then(refreshCohorts).then(refreshUnits)}>
+            <button onClick={() => { setViewedLog(null); wipeAllData().then(refreshCohorts).then(refreshUnits).then(refreshPracticeLogs); }}>
                 Wipe all data
             </button>
             
