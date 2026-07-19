@@ -1,17 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
-import HanziDisplay from "../Components/HanziDisplay.jsx";
+import HanziWriter from "hanzi-writer";
+
+function HanziDisplay({ hanzi }) {
+    const targetRef = useRef(null);
+
+    useEffect(() => {
+        targetRef.current.innerHTML = "";
+        HanziWriter.create(targetRef.current, hanzi, {
+            width: 150,
+            height: 150,
+            showOutline: true,
+        });
+    }, [hanzi]);
+
+    return <div ref={targetRef}></div>;
+}
 
 function Practice(){
-    const {cohortCharacters, createPracticeLog} = useAppContext();
+    const {cohortCharacters, createPracticeLog, characters, fetchCharacters} = useAppContext();
     const [useCohort, setUseCohort] = useState(true);
     const [manualInput, setManualInput] = useState("");
     const [counts, setCounts] = useState({});
     const [submitted, setSubmitted] = useState(false);
 
-    const activeCharacters = useCohort
-        ? cohortCharacters
-        : Array.from(manualInput).filter((ch) => ch.trim() !== "").map((hanzi) => ({ hanzi, id: null }));
+    useEffect(() => {
+        fetchCharacters()
+    }, [])
+
+   const activeCharacters = useCohort
+    ? cohortCharacters
+    : Array.from(manualInput).filter((ch) => ch.trim() !== "").map((hanzi) => {
+        const found = characters.find((c) => c.hanzi === hanzi);
+        return found ? found : { hanzi, id: null, notFound: true };
+    });
 
     function updateCount(characterId, value) {
         setCounts((prev) => ({ ...prev, [characterId]: value }));
@@ -30,6 +52,23 @@ function Practice(){
         setCounts({});
         setSubmitted(false);
         setManualInput("");
+    }
+
+
+
+    function HanziDisplay({ hanzi }) {
+        const targetRef = useRef(null);
+
+        useEffect(() => {
+            targetRef.current.innerHTML = "";
+            HanziWriter.create(targetRef.current, hanzi, {
+                width: 150,
+                height: 150,
+                showOutline: true,
+            });
+        }, [hanzi]);
+
+        return <div ref={targetRef}></div>;
     }
 
     return (
@@ -51,9 +90,12 @@ function Practice(){
             )}
 
             {activeCharacters.map((character, i) => (
-                <div key={character.id ?? i}>
-                    <HanziDisplay hanzi={character.hanzi} />
-                    {character.id !== null && (
+            <div key={character.id ?? i}>
+                {character.notFound ? (
+                    <p>⚠️WARNING⚠️: '{character.hanzi}' IS NOT IN OUR DATABASE YET... Apologies!</p>
+                ) : (
+                    <>
+                        <HanziDisplay hanzi={character.hanzi} />
                         <input
                             type="number"
                             min="0"
@@ -61,11 +103,12 @@ function Practice(){
                             onChange={(e) => updateCount(character.id, e.target.value)}
                             placeholder="times written"
                         />
-                    )}
-                </div>
-            ))}
+                    </>
+                )}
+            </div>
+        ))}
 
-            {useCohort && <button onClick={handleSubmit}>Submit practice log</button>}
+            {hasSubmittable && <button onClick={handleSubmit}>Submit practice log</button>}
             <button onClick={reset}>Reset</button>
             {submitted && <p>Logged!</p>}
         </div>

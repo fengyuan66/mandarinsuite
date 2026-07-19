@@ -6,6 +6,13 @@ import HanziWriter from "hanzi-writer";
 
 
 
+function speak(text){
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.75;
+    window.speechSynthesis.speak(utterance);
+}
+
 //HANZIWRITER SETUP
 function HanziDisplay({ hanzi }) {
     const targetRef = useRef(null);
@@ -77,7 +84,19 @@ function Dictation(){
                 type="text"
                 value = {hanzi}
                 onChange = {(change) => setHanzi(change.target.value)}
-                /> 
+                />
+            )}
+            {useCohort && (
+                <div>
+                    {cohortCharacters.map((character, i) => (
+                        <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
+                            🔊 Play #{i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
+            {!useCohort && (
+                <button onClick={() => speak(hanzi)}>🔊 Play</button>
             )}
             <button onClick={() => setShowAnswers(!showAnswers)}>{showAnswers ? "hided answers" : "show answers"}</button>
             

@@ -7,7 +7,7 @@ import Header from "./Components/Header.jsx"
 import Characterlist from "./Pages/Characterlist.jsx"
 import Start from "./Pages/Start.jsx"
 
-import Practice from "./Pages/PracticeLogging.jsx"
+import Practice from "./Pages/Practice.jsx"
 import PracticeLogging from './Pages/PracticeLogging.jsx'
 import Stats from './Pages/Stats.jsx'
 import SentenceDictation from './Pages/SentenceDictation.jsx'

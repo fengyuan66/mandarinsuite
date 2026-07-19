@@ -11,6 +11,13 @@ import HanziWriter from "hanzi-writer";
 
 
 
+function speak(text){
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.75;
+    window.speechSynthesis.speak(utterance);
+}
+
 //HANZIWRITER SETUP
 function HanziDisplay({ hanzi }) {
     const targetRef = useRef(null);
@@ -158,8 +165,13 @@ function Start(){
                 {currentRound.status === "dictation_offered" && (
                     <div>
                         <h1>Listen and write down each character / word</h1>
+                        {appcontext.cohortCharacters.map((character, i) => (
+                            <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
+                                🔊 Play #{i + 1}
+                            </button>
+                        ))}
                         <button onClick={() => setShowAnswers(!showAnswers)}>show answers!</button>
-                        
+
                         {showAnswers && appcontext.cohortCharacters.map((character) => (
                             <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
                         ))}
@@ -174,6 +186,9 @@ function Start(){
                             ?<h1>Skipped! {writingDictationContent.reason}</h1>
                             :<h1>{writingDictationContent && writingDictationContent.paragraph}</h1>
                         }
+                        {writingDictationContent && !writingDictationContent.skipped && (
+                            <button onClick={() => speak(writingDictationContent.paragraph)}>🔊 Play</button>
+                        )}
 
                         <button onClick={advanceRound}>Continue to FIB</button>
 

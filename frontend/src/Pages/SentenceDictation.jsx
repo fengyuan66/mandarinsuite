@@ -2,11 +2,26 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../common/AppContext.jsx";
 import { apiFetch } from "../common/api.js";
 
+function speak(text, rate = 1, onEnd = () => {}){
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "zh-CN";
+    utterance.rate = rate;
+    utterance.onend = onEnd;
+    utterance.onerror = onEnd;
+    window.speechSynthesis.speak(utterance);
+}
+
 function SentenceDictation(){
     const {currentRound, fetchActiveUnit} = useAppContext()
     const [useCohort, setUseCohort] = useState(true)
     const [manualInput, setManualInput] = useState("")
     const [content, setContent] = useState(null)
+    const [isSpeaking, setIsSpeaking] = useState(false)
+
+    function playAt(rate){
+        setIsSpeaking(true);
+        speak(content.paragraph, rate, () => setIsSpeaking(false));
+    }
 
     useEffect(() => {
         fetchActiveUnit()
@@ -54,7 +69,14 @@ function SentenceDictation(){
             {content && (
                 content.skipped
                     ? <p>Skipped: {content.reason}</p>
-                    : <p>{content.paragraph}</p>
+                    : (
+                        <>
+                            <p>{content.paragraph}</p>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.2)}>🔊 Slow</button>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.5)}>🔊 Normal</button>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.7)}>🔊 Fast</button>
+                        </>
+                    )
             )}
 
             <button onClick={reset}>Reset</button>

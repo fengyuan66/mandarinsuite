@@ -55,6 +55,16 @@ function Header(){
                 }}>
                     Sentence-Dictation
                 </NavLink>
+                <NavLink to="/practicelogging" className={({ isActive }) => {
+                    if (isActive){
+                        return "active";
+                    }
+                    else{
+                        return "false";
+                    }
+                }}>
+                    Practicelogging
+                </NavLink>
                 <NavLink to="/stats" className={({ isActive }) => {
                     if (isActive){
                         return "active";
