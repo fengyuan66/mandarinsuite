@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from database import engine
 from models.practicelog import PracticeLog, PracticeEntry
+from models.character import Character
 from models.user import User
 from auth import manager
 from fastapi import HTTPException
@@ -47,10 +48,26 @@ def get_practicelog(id: int, user: User = Depends(manager)):
             .where(PracticeEntry.session_id == selected.id)
         ).all()
 
+        character_ids = [entry.character_id for entry in entries]
+        characters = session.exec(
+            select(Character).where(Character.id.in_(character_ids))
+        ).all()
+        hanzi_by_id = {c.id: c.hanzi for c in characters}
+
+        enriched_entries = [
+            {
+                "id": entry.id,
+                "character_id": entry.character_id,
+                "hanzi": hanzi_by_id.get(entry.character_id, "?"),
+                "times_written": entry.times_written,
+            }
+            for entry in entries
+        ]
+
         return {
             "id": selected.id,
             "session_time": selected.session_time,
-            "entries": entries
+            "entries": enriched_entries
         }
 
         

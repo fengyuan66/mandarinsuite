@@ -134,7 +134,7 @@ function Stats(){
                             <h2>Log {viewedLog.id} — {viewedLog.session_time.split("T")[0]}</h2>
                             <ul>
                                 {viewedLog.entries.map((entry) => (
-                                    <li key={entry.id}>Character #{entry.character_id} — written {entry.times_written} times</li>
+                                    <li key={entry.id}>{entry.hanzi} — written {entry.times_written} times</li>
                                 ))}
                             </ul>
                         </div>

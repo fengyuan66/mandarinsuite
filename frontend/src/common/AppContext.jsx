@@ -121,6 +121,14 @@ export function AppProvider({ children }) {
 
     }
 
+    function lookupCharacters(hanziList){
+        return apiFetch("/characterbank/lookup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(hanziList),
+        }).then((res) => res.json());
+    }
+
     function fetchAllUnits(){
         return apiFetch("/unit/all").then((res) => res.json());
     }
@@ -286,7 +294,7 @@ export function AppProvider({ children }) {
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
-    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw, HanziDisplay, fetchAllUnits, loadUnit
+    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw, HanziDisplay, fetchAllUnits, loadUnit, lookupCharacters
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>
