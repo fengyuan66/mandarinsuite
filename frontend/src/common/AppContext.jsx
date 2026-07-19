@@ -58,7 +58,7 @@ export function AppProvider({ children }) {
     //FUNCTIONS
 
     function wipeAllData(){
-        apiFetch("/admin/wipe", { method: "DELETE" })
+        return apiFetch("/admin/wipe", { method: "DELETE" })
         .then(() => {
             setActiveUnit(null);
             setCurrentRound(null);

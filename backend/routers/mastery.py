@@ -2,11 +2,22 @@ from sqlalchemy import func
 from sqlmodel import Session, select
 from database import engine
 from models.character import Character
+from models.cohort import Cohort, CohortCharacter
 from models.practicelog import PracticeLog, PracticeEntry
 from datetime import datetime
 
 def get_weakest_characters(user_id: int, limit: int = 6) -> list [int]:
     with Session(engine) as session:
+
+        #Only consider characters this user has actually been shown before, via their own past cohorts
+        seen_character_ids = session.exec(
+            select(CohortCharacter.character_id)
+            .join(Cohort, CohortCharacter.cohort_id == Cohort.id)
+            .where(Cohort.user_id == user_id)
+        ).all()
+
+        if not seen_character_ids:
+            return []
 
         #Practice times filter so that its always valid
 
@@ -29,6 +40,7 @@ def get_weakest_characters(user_id: int, limit: int = 6) -> list [int]:
                 (times_written).label("total"),
                 func.max(user_entries.c.session_time).label("last"),
             )
+            .where(Character.id.in_(seen_character_ids))
             .outerjoin(user_entries, user_entries.c.character_id == Character.id)
             .group_by(Character.id)
 

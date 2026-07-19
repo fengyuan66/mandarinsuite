@@ -5,7 +5,7 @@ import {apiFetch} from "../common/api.js";
 function Stats(){
     const { characters, currentCohort, cohortCharacters, activeUnit, currentRound,
         fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
-        postCharacters, postCharactersAI, createUnit, createRound, wipeAllData, fetchAllUnits, loadUnit} = useAppContext();
+        postCharacters, postCharactersAI, createUnit, createRound, wipeAllData, fetchAllUnits, loadUnit, isGenerating} = useAppContext();
     const [units, setUnits] = useState([])
     const [cohorts, setCohorts] = useState([])
     const [viewedCohort, setViewedCohort] = useState(null)
@@ -37,6 +37,21 @@ function Stats(){
         .then(setViewedCohort)
     }
 
+    function refreshCohorts(){
+        apiFetch("/cohort/all").then((res) => res.json()).then(setCohorts);
+    }
+
+    useEffect(() => {
+        viewUser();
+        refreshCohorts();
+        refreshUnits();
+    }, [])
+
+    function refreshUnits(){
+        apiFetch("/unit/all").then((res) => res.json()).then(setUnits);
+    }
+
+
     function viewUser(){
         apiFetch("/generation/getuser")
         .then((res)=>res.json())
@@ -52,7 +67,9 @@ function Stats(){
 
             <div>
                 <h1>Units</h1>
-                <button onClick={createUnit}>Create a new unit!</button>
+                <button onClick={createUnit} disabled={isGenerating}>
+                    {isGenerating ? "Generating..." : "Create a new unit!"}
+                </button>
                 <ul>
                     {units.map((unit => (
                         <li key={unit.id}>
@@ -97,7 +114,7 @@ function Stats(){
             <div className="characterbankPage">
             <div className="getcharacters">
             <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
-            <button onClick={wipeAllData}>
+            <button onClick={() => wipeAllData().then(refreshCohorts).then(refreshUnits)}>
                 Wipe all data
             </button>
             
