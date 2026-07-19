@@ -55,7 +55,7 @@ def get_unit(unit_id, user: User = Depends(manager)):
 def create_unit(themechosen: str = None, roundcount: int = None, user: User = Depends(manager)):
 
     if (themechosen is None and roundcount is None):
-        existing_unit_list = get_all_units()
+        
         existing_themes = []
         with Session(engine) as session:
             existing_units = session.exec(select(Unit).where(Unit.user_id == user.id)).all()
@@ -82,7 +82,7 @@ def create_unit(themechosen: str = None, roundcount: int = None, user: User = De
     
     else:
         with Session(engine) as session:
-            deactivate_all_units(session)
+            deactivate_all_units(session, user.id)
             new_unit = Unit(theme = themechosen, target_rounds = roundcount, user_id = user.id)
             session.add(new_unit)
             session.commit()

@@ -9,6 +9,8 @@ function Stats(){
     const [units, setUnits] = useState([])
     const [cohorts, setCohorts] = useState([])
     const [viewedCohort, setViewedCohort] = useState(null)
+
+    const [username, setUsername] = useState("");
     
     //Hanzi section setup
     const [storedhanzi, setstoredhanzi] = useState("");
@@ -23,9 +25,11 @@ function Stats(){
     }, [activeUnit])
 
     useEffect(() => {
-        
+        viewUser();
         apiFetch("/cohort/all").then((res) => res.json()).then(setCohorts);
     }, [])
+
+    
 
     function viewCohort(cohortID){
         apiFetch(`/cohort/${cohortID}`)
@@ -33,8 +37,19 @@ function Stats(){
         .then(setViewedCohort)
     }
 
+    function viewUser(){
+        apiFetch("/generation/getuser")
+        .then((res)=>res.json())
+        .then((username) => {setUsername(username)})
+    }
+
     return (
         <div>
+
+            <div>
+                <p>Currently logged in as: {username}</p>
+            </div>
+
             <div>
                 <h1>Units</h1>
                 <button onClick={createUnit}>Create a new unit!</button>

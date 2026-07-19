@@ -34,7 +34,7 @@ function FIB(){
             ? { method: "POST" }
             : {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
             }
 

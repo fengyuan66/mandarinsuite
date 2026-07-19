@@ -106,6 +106,15 @@ def get_characters_in_round(round_id: int) -> list[str]:
 
         return [character.hanzi for character in characters]
 
+
+@router.get("/generation/getuser")
+def get_user(user: User = Depends(manager)):
+    return user.email
+
+@router.get("/generation/getuser/getcreate")
+def get_user_created(user: User = Depends(manager)):
+    return user.created_at
+
 @router.post("/generation/reading/{round_id}")
 def generate_reading(round_id: int, user: User = Depends(manager)):
     with Session(engine) as session:
