@@ -70,7 +70,7 @@ function Start(){
         addPracticeEntry,
         createPracticeLogRaw
         
-     } = useAppContext();
+    } = useAppContext();
 
     const appcontext = useAppContext();
     
@@ -84,14 +84,35 @@ function Start(){
 
     const [timesWritten, setTimesWritten] = useState("");
 
+    // input handle for individual # practiced boxes
+    const [counts, setCounts] = useState({}); 
+    function updateCount(characterId, value) {
+        setCounts((prev) => ({ ...prev, [characterId]: value }));
+    }
+
+    function applyMasterCount() {
+        const value = Number(timesWritten) || 0;
+        setCounts((prev) => {
+            const updated = { ...prev };
+            appcontext.cohortCharacters.forEach((character) => {
+                updated[character.id] = value;
+            });
+            return updated;
+        });
+    }
+
     function createCohortPracticeLog() {
-    const practiceEntries = appcontext.cohortCharacters.map((character) => ({
-        character_id: character.id,
-        times_written: Number(timesWritten)
-    }));
+        const practiceEntries = appcontext.cohortCharacters
+            .map((character) => ({
+                character_id: character.id,
+                times_written: Number(counts[character.id]) || 0
+            }))
+            .filter((e) => e.times_written > 0);
 
         appcontext.createPracticeLog(practiceEntries);
     }
+
+
 
     
     
@@ -133,7 +154,7 @@ function Start(){
 
 
 
-
+        
         {currentRound && (
 
             <div className="round_wizard">
@@ -150,24 +171,38 @@ function Start(){
                 {currentRound.status === "practicing" && (
                     <div>
                         <h1>Write each character 10-15 times and then a word with it</h1>
-                        
+
                         {appcontext.cohortCharacters.map((character) => (
-
-                            <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
-
+                            <div key={character.id ?? character.hanzi}>
+                                <HanziDisplay hanzi={character.hanzi} />
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={counts[character.id] ?? ""}
+                                    onChange={(e) => updateCount(character.id, e.target.value)}
+                                    placeholder="times written"
+                                />
+                            </div>
                         ))}
-                        <input type="number" value = {timesWritten} onChange = {(event) => setTimesWritten(event.target.value)} />
+
+                        <input
+                            type="number"
+                            value={timesWritten}
+                            onChange={(event) => setTimesWritten(event.target.value)}
+                            placeholder="times written (all characters)"
+                        />
+                        <button onClick={applyMasterCount}>Apply to all</button>
+
                         <button onClick={createCohortPracticeLog}>Save practice log</button>
                         <button onClick={advanceRound}>Move on to dictation</button>
                     </div>
                 )}
-
                 {currentRound.status === "dictation_offered" && (
                     <div>
                         <h1>Listen and write down each character / word</h1>
                         {appcontext.cohortCharacters.map((character, i) => (
                             <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
-                                🔊 Play #{i + 1}
+                                Play #{i + 1}
                             </button>
                         ))}
                         <button onClick={() => setShowAnswers(!showAnswers)}>show answers!</button>
