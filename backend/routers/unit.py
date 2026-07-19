@@ -5,10 +5,22 @@ from models.unit import Unit
 from routers.ai import ai
 from routers.round import create_round
 import json
+import random
 from models.user import User
 from auth import manager
 
 router = APIRouter()
+
+def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b"):
+    """Returns the AI's parsed JSON, or None if generation/parsing failed."""
+    try:
+        text = ai(prompt, model)
+    except Exception:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
 
 def deactivate_all_units(session: Session, user_id: int):
 
@@ -69,11 +81,13 @@ def create_unit(themechosen: str = None, roundcount: int = None, user: User = De
         Respond with ONLY a JSON object, no other text, in this exact format:
         {{"theme": "food", "target_rounds": 4}}
         """
-        response = json.loads(ai(prompt))
+        response = safe_ai_json(prompt) or {}
+        theme = response.get("theme") or random.choice(["family", "food", "travel", "daily life", "hobbies"])
+        target_rounds = response.get("target_rounds") or 4
 
         with Session(engine) as session:
             deactivate_all_units(session, user.id)
-            new_unit = Unit(theme = response["theme"], target_rounds = response["target_rounds"], user_id = user.id)
+            new_unit = Unit(theme = theme, target_rounds = target_rounds, user_id = user.id)
             session.add(new_unit)
             session.commit()
             session.refresh(new_unit)

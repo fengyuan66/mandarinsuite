@@ -43,14 +43,18 @@ export function AppProvider({ children }) {
             setIsGenerating(true);
             apiFetch(`/generation/writing-dication/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
-            .then((data) => { setWritingDictationContent(data); setIsGenerating(false);});
+            .then((data) => setWritingDictationContent(data))
+            .catch(() => {})
+            .finally(() => setIsGenerating(false));
         }
 
         if (currentRound.status === "fib" && !fibContent) {
             setIsGenerating(true);
             apiFetch(`/generation/fib/${currentRound.id}`, { method: "POST" })
             .then((res) => res.json())
-            .then((data) => {setFibContent(data); setIsGenerating(false);});
+            .then((data) => setFibContent(data))
+            .catch(() => {})
+            .finally(() => setIsGenerating(false));
         }
     }, [currentRound]);
 
@@ -176,7 +180,7 @@ export function AppProvider({ children }) {
         apiFetch("/discover", {method: "POST"})
         .then((res) => res.json())
         .then((data) => {
-            setCharacters((prev) => [...prev, ...data.created]);
+            setCharacters((prev) => [...prev, ...(data.created ?? [])]);
             fetchCurrentCohort();
         });
     }
@@ -221,7 +225,9 @@ export function AppProvider({ children }) {
         setFibContent(null);
         apiFetch(`/round?unit_id=${activeUnit.id}`, { method: "POST" })
         .then((res) => res.json())
-        .then((data) => {setCurrentRound(data); setIsGenerating(false);});
+        .then((data) => setCurrentRound(data))
+        .catch(() => {})
+        .finally(() => setIsGenerating(false));
     }
 
     function createUnit(){
@@ -229,10 +235,9 @@ export function AppProvider({ children }) {
         setIsGenerating(true);
         apiFetch("/unit", { method: "POST" })
         .then((res => res.json()))
-        .then((data) => {
-            setActiveUnit(data);
-            setIsGenerating(false);
-        })
+        .then((data) => setActiveUnit(data))
+        .catch(() => {})
+        .finally(() => setIsGenerating(false));
     }
 
     

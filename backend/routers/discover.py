@@ -5,7 +5,7 @@ from models.user import User
 from auth import manager
 from data.lookup import lookup_hanzi
 from fastapi import APIRouter, Depends
-from routers.ai import ai
+from routers.ai import ai, safe_ai_json
 import json
 from pydantic import ValidationError
 router = APIRouter()
@@ -23,11 +23,9 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
         Do NOT include any of these existing characters: {existing_hanzi_list}.
         Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
         """
-        raw_response = ai(explore_prompt)
-        try:
-            candidates = json.loads(raw_response)
-        except json.JSONDecodeError:
-            return {"error": "AI response was not valid JSON!", "raw_response": raw_response}
+        candidates = safe_ai_json(explore_prompt)
+        if not isinstance(candidates, list):
+            return {"created": [], "error": True, "message": "AI discovery temporarily unavailable, please try again."}
 
         created = []
         err = []
@@ -67,7 +65,11 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
         Do NOT include any of these existing characters: {existing_hanzi_list}.
         Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
         """
-        candidates = json.loads(ai(explore_prompt))
+
+        candidates = safe_ai_json(explore_prompt)
+        if not isinstance(candidates, list):
+            return {"created": [], "error": True, "message": "AI discovery temporarily unavailable, please try again."}
+        
         created = []
         err = []
         skipped = []

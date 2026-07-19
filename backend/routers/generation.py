@@ -13,6 +13,23 @@ from fastapi import Body
 
 router = APIRouter()
 
+def safe_ai(prompt, model: str = "openai/gpt-oss-120b"):
+    """Returns the AI's raw text, or None if generation failed for any reason."""
+    try:
+        return ai(prompt, model)
+    except Exception:
+        return None
+
+def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b"):
+    """Returns the AI's parsed JSON, or None if generation/parsing failed."""
+    text = safe_ai(prompt, model)
+    if text is None:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
+
 def get_known_hanzi(unit_id: int, before_progress: int | None = None) -> list[str]:
     with Session(engine) as session:
 
@@ -145,7 +162,9 @@ Requirements:
 Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
 
-    content = ai(prompt)
+    content = safe_ai(prompt)
+    if content is None:
+        content = "AI generation is temporarily unavailable. Please try again shortly."
     return {"passage": content}
 
 
@@ -172,7 +191,9 @@ Requirements:
 Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
 
-    passage = ai(prompt)
+    passage = safe_ai(prompt)
+    if passage is None:
+        passage = "AI generation is temporarily unavailable. Please try again shortly."
     return {"passage": passage}
 
 
@@ -196,7 +217,9 @@ Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
 
-    paragraph = ai(prompt)
+    paragraph = safe_ai(prompt)
+    if paragraph is None:
+        return {"skipped": True, "reason": "AI generation temporarily unavailable, please try again shortly"}
     return {"skipped": False, "paragraph": paragraph}
 
 
@@ -207,7 +230,12 @@ Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
 """
-    result = json.loads(ai(prompt))
+    result = safe_ai_json(prompt)
+    if not isinstance(result, dict) or "sentence_with_blanks" not in result or "answers" not in result:
+        result = {
+            "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
+            "answers": ["(unavailable)"],
+        }
     return result
 
 @router.post("/generation/writingdictation-custom")
@@ -219,7 +247,9 @@ Aim for about 100 characters, but it is far more important that the paragraph be
 Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
-    paragraph = ai(prompt)
+    paragraph = safe_ai(prompt)
+    if paragraph is None:
+        return {"skipped": True, "reason": "AI generation temporarily unavailable, please try again shortly"}
     return {"skipped": False, "paragraph": paragraph}
 
 @router.post("/generation/fib/{round_id}")
@@ -236,7 +266,12 @@ Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
 """
-    result = json.loads(ai(prompt))
+    result = safe_ai_json(prompt)
+    if not isinstance(result, dict) or "sentence_with_blanks" not in result or "answers" not in result:
+        result = {
+            "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
+            "answers": ["(unavailable)"],
+        }
     return result
 
 
@@ -256,14 +291,21 @@ Use proper punctuation (，。).
 Respond with ONLY the paragraph text, no other commentary.
 """
 
-        paragraph = ai(paragraph_prompt)
+        paragraph = safe_ai(paragraph_prompt)
+        if paragraph is None:
+            paragraph = "AI generation is temporarily unavailable. Please try again shortly."
 
         fib_prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. One should be able to infer the context of the sentence even with those characters removed.
 Then remove those characters from the sentence, replacing each with a blank ___.
 Respond with ONLY a JSON object, no other text, in this exact format:
 {{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
 """
-        fib_result = json.loads(ai(fib_prompt))
+        fib_result = safe_ai_json(fib_prompt)
+        if not isinstance(fib_result, dict) or "sentence_with_blanks" not in fib_result or "answers" not in fib_result:
+            fib_result = {
+                "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
+                "answers": ["(unavailable)"],
+            }
 
         return{
             "allowlist": allowlist,
@@ -283,7 +325,10 @@ def generate_free_write(unit_id: int, user: User = Depends(manager)):
 to write a ~100 word response using vocabulary they know. They know these characters: {allowlist}.
 Respond with ONLY the prompt text, no other commentary.
 """
-    return {"prompt": ai(prompt)}
+    content = safe_ai(prompt)
+    if content is None:
+        content = "AI generation is temporarily unavailable. Please try again shortly."
+    return {"prompt": content}
 
 
 @router.patch("/round/{round_id}/status")

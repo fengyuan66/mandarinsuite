@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from routers.characterbank import get_hanzi, add_character
 import json
-from routers.ai import ai
+from routers.ai import ai, safe_ai_json
 from data.lookup import lookup_hanzi
 from models.character import Character
 from pydantic import ValidationError
@@ -24,10 +24,8 @@ def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
     Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
     """
 
-    raw_response = ai(prompt)
-    try:
-        candidates = json.loads(raw_response)
-    except json.JSONDecodeError:
+    candidates = safe_ai_json(prompt)
+    if not isinstance(candidates, list):
         candidates = []
 
     new_char_ids = []
