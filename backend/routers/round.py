@@ -53,7 +53,7 @@ def create_round(unit_id: int, user_id: int):
         unit = session.get(Unit, unit_id)
 
     #Character types created here
-    review_ids = get_weakest_characters()
+    review_ids = get_weakest_characters(user_id)
     new_ids = discover_themed_characters(theme = unit.theme)
 
     newcohort = create_cohort(user_id = user_id)

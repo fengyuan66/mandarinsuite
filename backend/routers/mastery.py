@@ -5,22 +5,31 @@ from models.character import Character
 from models.practicelog import PracticeLog, PracticeEntry
 from datetime import datetime
 
-def get_weakest_characters(limit: int = 6) -> list [int]:
+def get_weakest_characters(user_id: int, limit: int = 6) -> list [int]:
     with Session(engine) as session:
-        
-        #Practice times filter so that its always valid
-        
-        times_written = func.coalesce(func.sum(PracticeEntry.times_written), 0)
 
-        
+        #Practice times filter so that its always valid
+
+        user_entries = (
+            select(
+                PracticeEntry.character_id.label("character_id"),
+                PracticeEntry.times_written.label("times_written"),
+                PracticeLog.session_time.label("session_time"),
+            )
+            .join(PracticeLog, PracticeEntry.session_id == PracticeLog.id)
+            .where(PracticeLog.user_id == user_id)
+            .subquery()
+        )
+
+        times_written = func.coalesce(func.sum(user_entries.c.times_written), 0)
+
         operation = (
             select(
                 Character.id,
                 (times_written).label("total"),
-                func.max(PracticeLog.session_time).label("last"),
+                func.max(user_entries.c.session_time).label("last"),
             )
-            .outerjoin(PracticeEntry, PracticeEntry.character_id == Character.id)
-            .outerjoin(PracticeLog, PracticeEntry.session_id == PracticeLog.id)
+            .outerjoin(user_entries, user_entries.c.character_id == Character.id)
             .group_by(Character.id)
 
         )
