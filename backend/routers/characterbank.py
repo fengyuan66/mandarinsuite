@@ -48,7 +48,11 @@ def lookup_characters(hanzi_list: list[str], user: User = Depends(manager)):
             if cohort is None:
                 cohort = create_cohort(user_id=user.id, active=False)
             cohort_add_character(cohort.id, character.id)
-            results[hanzi] = character
+            # Snapshot now: session.commit() on a later iteration expires every object
+            # this session has touched, so a live ORM reference here can end up
+            # serializing as {} once the session closes and this object hasn't been the
+            # most recently committed one.
+            results[hanzi] = character.model_dump()
 
         return results
 
