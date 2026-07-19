@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from database import engine
 from models.character import Character
+from models.cohort import Cohort, CohortCharacter
 from routers.cohort import create_cohort, cohort_add_character
 from models.user import User
 from auth import manager
@@ -24,7 +25,13 @@ def add_character(character: Character, user: User = Depends(manager)):
 @router.get("/characterbank")
 def get_character(user: User = Depends(manager)):
     with Session(engine) as session:
-        characters = session.exec(select(Character)).all()
+        characters = session.exec(
+            select(Character)
+            .join(CohortCharacter, CohortCharacter.character_id == Character.id)
+            .join(Cohort, Cohort.id == CohortCharacter.cohort_id)
+            .where(Cohort.user_id == user.id)
+            .distinct()
+        ).all()
         return characters
 
 def get_hanzi() -> list[str]:
