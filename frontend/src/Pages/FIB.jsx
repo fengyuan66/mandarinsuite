@@ -9,17 +9,21 @@ import HanziWriter from "hanzi-writer";
 
 function fillInBlanks(sentence, answers){
     let i = 0;
-    return sentence.replace(/_+/g, () => answers[i++] ?? "___");
+    return sentence.replace(/_{3}/g, () => answers[i++] ?? "___");
 }
 
 
 function FIB(){
 
-    const {currentRound, cohortCharacters} = useAppContext()
+    const {currentRound, cohortCharacters, fetchActiveUnit} = useAppContext()
     const [useCohort, setUseCohort] = useState(true)
     const [manualInput, setManualInput] = useState("")
     const [fibContent, setFibContent] = useState(null)
     const [showAnswers, setShowAnswers] = useState(false)
+
+    useEffect(() => {
+        fetchActiveUnit()
+    }, [])
 
     function reset(){
         setFibContent(null)
@@ -27,6 +31,13 @@ function FIB(){
     }
 
     function generate() {
+
+        if (useCohort && !currentRound) return
+
+        const url = useCohort
+            ? `/generation/fib/${currentRound.id}`
+            : `/generation/fib-custom`
+
         const options = useCohort
         ? { method: "POST" }
         : {

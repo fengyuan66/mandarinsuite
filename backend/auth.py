@@ -5,6 +5,7 @@ from fastapi_login import LoginManager
 from sqlmodel import Session, select
 from database import engine
 from models.user import User
+from datetime import timedelta
 
 load_dotenv()
 SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
@@ -17,7 +18,8 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-manager = LoginManager(SECRET_KEY, token_url="/auth/login", use_cookie=True)
+manager = LoginManager(SECRET_KEY, token_url="/auth/login", use_cookie=True,
+default_expiry = timedelta(hours = 12))
 manager.cookie_name = "mandarinsuite_auth"
 
 @manager.user_loader()

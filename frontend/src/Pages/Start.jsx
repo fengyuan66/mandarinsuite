@@ -46,7 +46,7 @@ function displayCohortChars(){
 
 function fillInBlanks(sentence, answers){
     let i = 0;
-    return sentence.replace(/_+/g, () => answers[i++] ?? "___");
+    return sentence.replace(/_{3}/g, () => answers[i++] ?? "___");
 }
 
 
@@ -54,6 +54,7 @@ function fillInBlanks(sentence, answers){
 
 function Start(){
     const { createRound, 
+        createUnit,
         startNextUnit, 
         finishUnit, 
         unitReviewContent, 
@@ -124,6 +125,10 @@ function Start(){
         setShowFibAnswers(false);
         setShowUnitFibAnswers(false);
 
+        setCounts({})
+        setTimesWritten("")
+
+
     }, [currentRound && currentRound.status]);
     
     return(
@@ -137,18 +142,25 @@ function Start(){
         {!isGenerating && !activeUnit && currentRound && (
             <div className="empty-warning">
                 <h1>No active unit found, but a round is found! Likely data glitch, please copy and wipe data</h1>
+                
             </div>
+        )}
+
+        {isGenerating && !currentRound && (
+            <p>Loading...</p>
         )}
 
         {!isGenerating && activeUnit && !currentRound && (
             <div className="empty-warning">
                 <h1>Unit is found, but no active round found!</h1>
+                <button onCLick={createRound}>Quickfix -- Create a new round for this unit</button>
             </div>
         )}
 
         {!isGenerating && !activeUnit && !currentRound && (
             <div className="empty-warning">
                 <h1>No active unit nor round found!</h1>
+                <button onClick={createUnit}>Quickstart -- create a new unit!</button>
             </div>
         )}
 
