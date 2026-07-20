@@ -14,7 +14,11 @@ def ai(msg, model: str = "openai/gpt-oss-120b"):
         messages=[{"role": "user", "content": msg}],
     )
 
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    print (f"[AI RAW INPUT] input = {msg}")
+    print(f"[AI RAW OUTPUT] model={model} output={content!r}")
+
+    return content
 
 
 def safe_ai(msg, model: str = "openai/gpt-oss-120b"):

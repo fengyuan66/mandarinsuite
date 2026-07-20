@@ -25,6 +25,7 @@ def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
     """
 
     candidates = safe_ai_json(prompt)
+    print(f"[DEBUG] discover_themed_characters raw candidates: {candidates!r}")
     if not isinstance(candidates, list):
         candidates = []
 
@@ -32,14 +33,17 @@ def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
     for hanzi in candidates:
         entry = lookup_hanzi(hanzi)
         if entry is None:
+            print(f"[DEBUG] discover_themed_characters: '{hanzi}' not found in dictionary, skipped")
             continue
         try:
             character = Character(hanzi = hanzi, **entry)
             saved = add_character(character)
             new_char_ids.append(saved.id)
-        except (ValidationError, TypeError):
+        except (ValidationError, TypeError) as e:
+            print(f"[DEBUG] discover_themed_characters: '{hanzi}' failed validation ({e}), skipped")
             continue
     
+    print(f"[DEBUG] discover_themed_characters final new_char_ids: {new_char_ids}")
     return new_char_ids
 
 

@@ -5,6 +5,8 @@ from models.character import Character
 from models.cohort import Cohort, CohortCharacter
 from models.practicelog import PracticeLog, PracticeEntry
 from datetime import datetime
+import random
+
 
 def get_weakest_characters(user_id: int, limit: int = 6) -> list [int]:
     with Session(engine) as session:
@@ -47,6 +49,8 @@ def get_weakest_characters(user_id: int, limit: int = 6) -> list [int]:
         )
 
         rows = session.exec(operation).all()
+
+        random.shuffle(rows)
 
         # TECHNICAL DECISIONL r.total MAY NEED TO HAVE HIGHER PRIORITY IN TERMS OF MASTERY SORTING THAN r.last
 
