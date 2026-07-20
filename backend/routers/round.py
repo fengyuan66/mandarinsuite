@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from routers.characterbank import get_hanzi, add_character
+from routers.characterbank import add_character
+from routers.generation import get_characters_in_unit
 import json
 from routers.ai import ai, safe_ai_json
 from data.lookup import lookup_hanzi
@@ -17,8 +18,11 @@ from routers.cohort import create_cohort, cohort_add_character
 
 router = APIRouter()
 
-def discover_themed_characters(theme: str, count: int = 15) -> list[int]:
-    existing_hanzi_list = get_hanzi()
+def discover_themed_characters(theme: str, unit_id: int, count: int = 15) -> list[int]:
+    # Scoped to this unit's own rounds rather than every character the user (or anyone)
+    # has ever seen — a unit only spans a few rounds, so this stays naturally small,
+    # unlike the old global/whole-history exclusion list.
+    existing_hanzi_list = get_characters_in_unit(unit_id)
     prompt = f"""Suggest {count} new single Mandarin characters related to the theme "{theme}", suitable for a learner.
     Do NOT include any of these existing characters: {existing_hanzi_list}.
     Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
@@ -60,7 +64,7 @@ def create_round(unit_id: int, user_id: int):
 
     #Character types created here
     review_ids = get_weakest_characters(user_id)
-    new_ids = discover_themed_characters(theme = unit.theme)
+    new_ids = discover_themed_characters(theme = unit.theme, unit_id = unit_id)
 
     newcohort = create_cohort(user_id = user_id)
     for character_id in (review_ids + new_ids):

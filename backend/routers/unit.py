@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from database import engine
 from models.unit import Unit
+from models.round import Round
+from models.cohort import Cohort
+from routers.cohort import deactivate_all_cohorts
 from routers.ai import ai
 from routers.round import create_round
 import json
@@ -36,6 +39,20 @@ def activate_unit(unit_id: int, user: User = Depends(manager)):
         unit = session.exec(select(Unit).where(Unit.id == unit_id, Unit.user_id == user.id)).first()
         unit.is_active = True
         session.add(unit)
+
+        latest_round = session.exec(
+            select(Round)
+            .where(Round.unit_id == unit_id, Round.user_id == user.id)
+            .order_by(Round.progress.desc())
+        ).first()
+
+        if latest_round is not None:
+            deactivate_all_cohorts(session, user.id)
+            cohort = session.get(Cohort, latest_round.cohort_id)
+            if cohort is not None:
+                cohort.is_active = True
+                session.add(cohort)
+
         session.commit()
         session.refresh(unit)
         return unit

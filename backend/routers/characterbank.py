@@ -68,6 +68,12 @@ def get_character(user: User = Depends(manager)):
         ).all()
         return characters
 
-def get_hanzi() -> list[str]:
+def get_hanzi(user_id: int) -> list[str]:
     with Session(engine) as session:
-        return session.exec(select(Character.hanzi)).all()
+        return session.exec(
+            select(Character.hanzi)
+            .join(CohortCharacter, CohortCharacter.character_id == Character.id)
+            .join(Cohort, Cohort.id == CohortCharacter.cohort_id)
+            .where(Cohort.user_id == user_id)
+            .distinct()
+        ).all()
