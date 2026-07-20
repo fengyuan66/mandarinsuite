@@ -42,7 +42,7 @@ def create_cohort_route(active: bool = True, user: User = Depends(manager)):
 @router.get("/cohort/all")
 def get_all_cohorts(user: User = Depends(manager)):
     with Session(engine) as session:
-        return session.exec(select(Cohort).where(Cohort.user_id == user.id)).all()
+        return session.exec(select(Cohort).where(Cohort.user_id == user.id).order_by(Cohort.id)).all()
 
 
 @router.get("/cohort/archive")

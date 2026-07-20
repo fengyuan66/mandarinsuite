@@ -111,9 +111,9 @@ function Stats(){
                 
                 
                 <ul>
-                    {cohorts.map((cohort) => (
+                    {cohorts.map((cohort, index) => (
                         <li key={cohort.id}>
-                            Cohort {cohort.id}
+                            Cohort {index + 1}
                             <button onClick={() => viewCohort(cohort.id)}>View cohort</button>
                         </li>
                     ))}
@@ -121,7 +121,7 @@ function Stats(){
                 
                 {viewedCohort && (
                     <div>
-                        <h2>Cohort {viewedCohort.cohort.id}</h2>
+                        <h2>Cohort {cohorts.findIndex(cohort => cohort.id === viewedCohort.cohort.id) + 1}</h2>
                         <ul>
                             {viewedCohort.characters.map((character) => (
                                 <li key={character.id}>{character.hanzi} | {character.pinyin} | {character.meaning}</li>
@@ -211,7 +211,7 @@ function Stats(){
             </div>
             */}
             <div className="aiexplorecharacters">
-                <button onClick={postCharactersAI}>Click to discover new characters using AI</button>
+                <button onClick={() => postCharactersAI().then(refreshCohorts)}>Click to discover new characters using AI</button>
             </div>
             
         </div>

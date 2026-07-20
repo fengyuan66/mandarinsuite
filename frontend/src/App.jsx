@@ -35,6 +35,7 @@ function App() {
     <>
     <Header />
     <Routes>
+      <Route path="/" element={<Navigate to="/start" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/characterbank" element={<RequireAuth><Characterlist /></RequireAuth>} />

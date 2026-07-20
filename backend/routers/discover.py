@@ -30,12 +30,7 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
         created = []
         err = []
         skipped = []
-        newcohort = create_cohort(user_id = user.id)
-
-
-        print(f"[DEBUG] created cohort id={newcohort.id}, is_active={newcohort.is_active}")
-
-
+        newcohort = None
 
         for hanzi in candidates:
             entry = lookup_hanzi(hanzi)
@@ -45,12 +40,13 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
             try:
                 character = Character(hanzi = hanzi, **entry)
                 created.append(add_character(character))
-                cohort_add_character(newcohort.id, character.id)
 
-                
+                if newcohort is None:
+                    newcohort = create_cohort(user_id = user.id)
+                    print(f"[DEBUG] created cohort id={newcohort.id}, is_active={newcohort.is_active}")
+
+                cohort_add_character(newcohort.id, character.id)
                 print(f"[DEBUG] linked character {character.id} ({hanzi}) to cohort {newcohort.id}")
-            
-            
             except (ValidationError, TypeError):
                 skipped.append(hanzi)
 

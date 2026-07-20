@@ -177,7 +177,7 @@ export function AppProvider({ children }) {
     }
 
     function postCharactersAI(True){
-        apiFetch("/discover", {method: "POST"})
+        return apiFetch("/discover", {method: "POST"})
         .then((res) => res.json())
         .then((data) => {
             setCharacters((prev) => [...prev, ...(data.created ?? [])]);
