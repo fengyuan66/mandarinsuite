@@ -1,1 +1,0 @@
-2026-07-13: LLM generating characters for discover is unreliable. I need to make it pull from a database instead!

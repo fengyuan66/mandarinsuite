@@ -31,7 +31,7 @@ function Stats(){
 
     useEffect(() => {
         fetchAllUnits().then(setUnits);
-        
+        refreshCohorts()
     }, [activeUnit])
 
     useEffect(() => {
@@ -179,9 +179,8 @@ function Stats(){
                 }
             </ul>
             </div>
-            {/* Archived: manual add-character form. Creates raw Character rows with no
-                cohort/user linkage, so entries never show up in the user's characterbank.
-                Disabled until that's reworked.
+            {/* Archived: manual add character form
+                Disabled until that's reworked...
             <div className="addcharacters">
                 <input
                     type="text"

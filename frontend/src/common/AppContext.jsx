@@ -235,7 +235,11 @@ export function AppProvider({ children }) {
         setIsGenerating(true);
         apiFetch("/unit", { method: "POST" })
         .then((res => res.json()))
-        .then((data) => setActiveUnit(data))
+        .then((data) => {
+            setActiveUnit(data)
+            fetchCurrentRound(data.id)
+            fetchCurrentCohort()
+        })
         .catch(() => {})
         .finally(() => setIsGenerating(false));
     }

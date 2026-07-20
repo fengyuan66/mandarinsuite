@@ -49,33 +49,23 @@ def get_all_cohorts(user: User = Depends(manager)):
 def get_archive_cohort(target_cohort: Cohort, user: User = Depends(manager)):
     with Session(engine) as session:
 
-        target_cohort_id = target_cohort.id
-
-        active_cohort = session.exec(
-            select(Cohort).where(Cohort.is_active == True, Cohort.user_id == user.id)
+        cohort = session.exec(
+            select(Cohort).where(Cohort.id == target_cohort.id, Cohort.user_id == user.id)
         ).first()
+        if cohort is None:
+            raise HTTPException(404, "Cohort not found")
 
-
-        print(f"[DEBUG] get_current_cohort found: {active_cohort}")
-
-
-
-
-        if active_cohort.id == target_cohort.id:
-            return get_current_cohort()
-        
-        #link = CohortCharacter objs linked to cohort via cohort_id field's property
         links = session.exec(
-            select(CohortCharacter).where(CohortCharacter.cohort_id == target_cohort_id)
+            select(CohortCharacter).where(CohortCharacter.cohort_id == cohort.id)
         ).all()
 
         character_ids = [link.character_id for link in links]
-        
+
         characters = session.exec(
             select(Character).where(Character.id.in_(character_ids))
         ).all()
 
-        return{"cohort": target_cohort, "characters": characters}
+        return {"cohort": cohort, "characters": characters}
 
 
 @router.get("/cohort/current")
@@ -148,6 +138,8 @@ def activecohort_add_character(character_id: int, user: User = Depends(manager))
         activecohort = session.exec(
             select(Cohort).where(Cohort.is_active == True, Cohort.user_id == user.id)
         ).first()
+        if activecohort is None:
+            raise HTTPException(404, "No active cohort found")
 
         charexisting = session.exec(
             select(CohortCharacter)

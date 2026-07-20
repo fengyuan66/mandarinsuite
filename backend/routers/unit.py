@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from database import engine
 from models.unit import Unit
@@ -9,6 +9,7 @@ from routers.ai import ai
 from routers.round import create_round
 import json
 import random
+
 from models.user import User
 from auth import manager
 
@@ -35,8 +36,12 @@ def deactivate_all_units(session: Session, user_id: int):
 @router.patch("/unit/{unit_id}/activate")
 def activate_unit(unit_id: int, user: User = Depends(manager)):
     with Session(engine) as session:
-        deactivate_all_units(session, user.id)
         unit = session.exec(select(Unit).where(Unit.id == unit_id, Unit.user_id == user.id)).first()
+        
+        if unit is None:
+            raise HTTPException(404, "Unit not found")
+
+        deactivate_all_units(session, user.id)
         unit.is_active = True
         session.add(unit)
 
