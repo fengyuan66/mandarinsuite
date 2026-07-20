@@ -12,10 +12,6 @@ function fillInBlanks(sentence, answers){
     return sentence.replace(/_+/g, () => answers[i++] ?? "___");
 }
 
-function reset(){
-    setFibContent(null)
-    setShowAnswers(false)
-}
 
 function FIB(){
 
@@ -25,18 +21,19 @@ function FIB(){
     const [fibContent, setFibContent] = useState(null)
     const [showAnswers, setShowAnswers] = useState(false)
 
-    function generate() {
-        const url = useCohort
-            ? `/generation/fib/${currentRound.id}`
-            : `/generation/fib-custom`
+    function reset(){
+        setFibContent(null)
+        setShowAnswers(false)
+    }
 
+    function generate() {
         const options = useCohort
-            ? { method: "POST" }
-            : {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== "")),
-            }
+        ? { method: "POST" }
+        : {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(Array.from(manualInput).filter((ch) => /[\u4e00-\u9fff]/.test(ch))),
+        }
 
         apiFetch(url, options)
         .then((res) => res.json())
@@ -55,7 +52,7 @@ function FIB(){
                     type="text"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
-                    placeholder="not yet supported by the backend — display only"
+                    placeholder="type characters to use (ex: 我爱你)"
                 />
             )}
 

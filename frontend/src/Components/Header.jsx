@@ -45,6 +45,16 @@ function Header(){
                 }}>
                     Reading
                 </NavLink>
+                <NavLink to="/fib" className={({ isActive }) => {
+                    if (isActive){
+                        return "active";
+                    }
+                    else{
+                        return "false";
+                    }
+                }}>
+                    FIB
+                </NavLink>
                 <NavLink to="/sentencedictation" className={({ isActive }) => {
                     if (isActive){
                         return "active";

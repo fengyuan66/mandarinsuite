@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { NEXT_STATUS } from "./constants.js";
 import { apiFetch } from "./api.js";
-
+import HanziWriter from "hanzi-writer";
 import { useEffect } from "react";
 
 const AppContext = createContext(null);

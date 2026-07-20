@@ -72,13 +72,23 @@ function Dictation(){
 
     function Reset(){
         setShowAnswers(false);
-        setHanzi([""]);
+        setHanzi("");
     }
 
 
     return(
         <div>
             <h1>Listen and write down each character / word</h1>
+            
+            <label>
+                <input
+                    type="checkbox"
+                    checked={useCohort}
+                    onChange={(state) => setUseCohort(state.target.checked)}
+                />
+                Use current cohort's characters
+            </label>
+            
             {!useCohort && (
                 <input
                 type="text"
@@ -90,13 +100,21 @@ function Dictation(){
                 <div>
                     {cohortCharacters.map((character, i) => (
                         <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
-                            🔊 Play #{i + 1}
+                            Play #{i + 1}
                         </button>
                     ))}
                 </div>
             )}
             {!useCohort && (
-                <button onClick={() => speak(hanzi)}>🔊 Play</button>
+                <div>
+                    
+                    {Array.from(hanzi).map((character, i) => (
+                        <button key={character.id ?? i} onClick={() => speak(character)}>Play #{i + 1}</button>
+                    ))}
+                    
+
+                </div>
+                
             )}
             <button onClick={() => setShowAnswers(!showAnswers)}>{showAnswers ? "hided answers" : "show answers"}</button>
             
