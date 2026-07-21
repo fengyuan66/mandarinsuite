@@ -1,8 +1,8 @@
     import { useState, useEffect, useRef } from "react";
     import { useAppContext } from "../common/AppContext.jsx";
     import HanziWriter from "hanzi-writer";
-
-
+    import "../css/Practice.css"
+    import "../common/theme.css"
 
     function Practice(){
     const {cohortCharacters, createPracticeLog, characters, fetchCharacters, lookupCharacters} = useAppContext();
@@ -86,55 +86,69 @@
 
     return (
     <div>
-        <h1>Write each character 10-15 times and then a word with it</h1>
+        <div className="drillpage-core">
+            <h1 className="page-title">Practice</h1>
+            <p className="page-subtitle">Write each character 10-15 times, then a word using it.</p>
+        </div>
+        
 
-        <label>
-            <input type="checkbox" checked={useCohort} onChange={(e) => setUseCohort(e.target.checked)} />
-            Use current cohort's characters
-        </label>
+        <div className="controls-bar">
+            <label className="toggle-label">
+                <input type="checkbox" className="toggle" checked={useCohort} onChange={(e) => setUseCohort(e.target.checked)} />
+                Use current cohort's characters
+            </label>
 
-        <div>
-            <input
-                type= "number"
-                min="0"
-                value= {masterCount}
-                onChange= {(e) => setMasterCount(e.target.value)}
-                placeholder = "times written (all characters)" 
-            />
+            <div className="divider" />
 
-            <button onClick={applyMasterCount}>Apply to all!</button>
+            <div className="bulk-apply">
+                <input
+                    type="number"
+                    min="0"
+                    className="bulk-input"
+                    value={masterCount}
+                    onChange={(e) => setMasterCount(e.target.value)}
+                    placeholder="times written (all characters)"
+                />
+                <button className="btn btn-secondary apply-btn" onClick={applyMasterCount}>Apply to all!</button>
+            </div>
         </div>
 
         {!useCohort && (
             <input
                 type="text"
+                className="manual-input"
                 value={manualInput}
                 onChange={(e) => setManualInput(e.target.value)}
-                placeholder="type characters to practice, e.g. 你好"
+                placeholder="type characters to practice, e.g: 我爱你"
             />
         )}
+        <div className="character-grid">
+            {activeCharacters.map((character, i) => {
+                const key = character.id ?? character.hanzi;
+                return (
+                    <div className="character-card" key={key ?? i}>
+                        <HanziDisplay hanzi={character.hanzi} />
+                        <input
+                            type="number"
+                            min="0"
+                            className="count-input"
+                            value={counts[key] ?? ""}
+                            onChange={(e) => updateCount(key, e.target.value)}
+                            placeholder="times written"
+                        />
+                    </div>
+                );
+            })}
+        </div>
+        
 
-    {activeCharacters.map((character, i) => {
-        const key = character.id ?? character.hanzi;
-        return (
-            <div key={key ?? i}>
-                <HanziDisplay hanzi={character.hanzi} />
-                <input
-                    type="number"
-                    min="0"
-                    value={counts[key] ?? ""}
-                    onChange={(e) => updateCount(key, e.target.value)}
-                    placeholder="times written"
-                />
-            </div>
-        );
-    })}
+        <div className="actions-row">
+            <button className="btn btn-primary submit-btn" onClick={handleSubmit}>Submit practice log</button>
+            <button className="link-quiet" onClick={reset}>Reset</button>
+            {submitted && <p className="success-popup">Logged!</p>}
+        </div>
 
-
-
-        <button onClick={handleSubmit}>Submit practice log</button>
-        <button onClick={reset}>Reset</button>
-        {submitted && <p>Logged!</p>}
+        
     </div>
     );
     }

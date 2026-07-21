@@ -2,6 +2,8 @@ import {NavLink, useLocation} from 'react-router-dom'
 import { useRef, useState, useEffect } from 'react'
 
 import "../css/Header.css"
+import "../common/theme.css"
+
 import RedDragon from "../assets/WhiteDragon.svg"
 
 function Header(){

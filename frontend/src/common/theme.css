@@ -4,7 +4,14 @@
     border-radius: 1.5vw;
     transition:
         opacity 100ms ease;
-
+    padding: 0vw 1vw;
+    
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height: 2.5vw;
+    
+    border: none;
 }
 
 .btn-primary:hover{
@@ -18,5 +25,124 @@
 .card {
     background: var(--white);
     border-radius: 1.5vw;
-    box-shadow: 0 0.28vw 1.11vw rgba(0,0,0,0.1);
+    box-shadow: 0 0.28vw 1.11vw black;
+}
+
+
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 3vw;
+  font-weight: 400;
+  color: var(--ink);
+
+}
+
+.page-subtitle {
+  font-family: var(--font-ui);
+  font-size: 1vw;
+  color: var(--ink);
+
+  opacity: 0.65;
+  
+}
+
+
+
+.btn-secondary {
+  background: var(--jade);
+  color: var(--white);
+
+  border: none;
+  border-radius: 1.5vw;
+  transition: opacity 100ms ease;
+}
+
+.btn-secondary:hover {
+  opacity: 80%;
+}
+
+
+
+.link-quiet {
+  background: none;
+  border: none;
+
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 1vw;
+  color: var(--ink);
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.link-quiet:hover {
+  opacity: 0.8;
+}
+
+
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  flex-wrap: wrap;
+  background: var(--white);
+  border-radius: 2vw;
+  padding: 1vw 2vw;
+  margin: 0vw 2vw;
+
+
+  box-shadow: 0 0.2vw 0.6vw black;
+  margin-bottom: 2vw;
+}
+
+.controls-bar .divider {
+  width: 0.1vw;
+  align-self: stretch;
+  background: var(--ink);
+  opacity: 0.2;
+}
+
+
+
+.toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3vw;
+  height: 1.5vw;
+  border-radius: 2vw;
+  background: black;
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+  transition: background 150ms ease;
+}
+
+.toggle:checked {
+  background: var(--red);
+}
+
+.toggle::before {
+
+  content: '';
+  position: absolute;
+
+  top: 0.25vw;
+  left: 0.25vw;
+  
+  width: 1vw;
+  height: 1vw;
+  border-radius: 50%;
+  background: var(--white);
+  transition: transform 150ms ease;
+}
+
+.toggle:checked::before {
+  transform: translateX(1.5vw);
+}
+
+.drillpage-core{
+    padding-top: 3vw;
+    padding-left: 2vw;
+    padding-bottom: 2vw;
 }
