@@ -188,7 +188,7 @@ export function AppProvider({ children }) {
 
 
     function fetchCurrentCohort(){
-        apiFetch("/cohort/current")
+        return apiFetch("/cohort/current")
         .then((res)=> res.json())
         .then((data) => {
 
@@ -201,7 +201,7 @@ export function AppProvider({ children }) {
 
 
     function fetchCurrentRound(id = activeUnit.id){
-        apiFetch(`/unit/${id}/round/current`)
+        return apiFetch(`/unit/${id}/round/current`)
         .then((res) => res.json())
         .then((data) => {
             setCurrentRound(data)
@@ -209,12 +209,12 @@ export function AppProvider({ children }) {
     }
 
     function fetchActiveUnit(){
-        apiFetch("/unit/active")
+        return apiFetch("/unit/active")
         .then((res) => res.json())
         .then((data) => {
             setActiveUnit(data)
             if (data != null){ //check for request URL formatting reasons
-                fetchCurrentRound(data.id)
+                return fetchCurrentRound(data.id)
             }
         })
     }
@@ -237,8 +237,10 @@ export function AppProvider({ children }) {
         .then((res => res.json()))
         .then((data) => {
             setActiveUnit(data)
-            fetchCurrentRound(data.id)
-            fetchCurrentCohort()
+            return Promise.all([
+                fetchCurrentRound(data.id),
+                fetchCurrentCohort()
+            ])
         })
         .catch(() => {})
         .finally(() => setIsGenerating(false));

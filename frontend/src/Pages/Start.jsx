@@ -87,6 +87,13 @@ function Start(){
 
     // input handle for individual # practiced boxes
     const [counts, setCounts] = useState({}); 
+
+
+
+    const[initialCheckDone, setInitialCheckDone] = useState(false)
+
+
+
     function updateCount(characterId, value) {
         setCounts((prev) => ({ ...prev, [characterId]: value }));
     }
@@ -118,7 +125,8 @@ function Start(){
     
     
     useEffect(() => {
-        fetchActiveUnit();
+        setInitialCheckDone(false)
+        fetchActiveUnit().finally(() => setInitialCheckDone(true))
         appcontext.fetchCurrentCohort();
 
         setShowAnswers(false);
@@ -135,9 +143,9 @@ function Start(){
         <>
 
         
-        <pre style={{ background: "#eee", padding: "8px", fontSize: "12px" }}>
+        {/*<pre style={{ background: "#eee", padding: "8px", fontSize: "12px" }}>
             {JSON.stringify({ currentRound, writingDictationContent, fibContent }, null, 2)}
-        </pre>
+        </pre>*/}
 
         {!isGenerating && !activeUnit && currentRound && (
             <div className="empty-warning">
@@ -146,18 +154,18 @@ function Start(){
             </div>
         )}
 
-        {isGenerating && !currentRound && (
+        {(isGenerating || !initialCheckDone) && !currentRound && (
             <p>Loading...</p>
         )}
 
-        {!isGenerating && activeUnit && !currentRound && (
+        {!isGenerating && initialCheckDone && activeUnit && !currentRound && (
             <div className="empty-warning">
                 <h1>Unit is found, but no active round found!</h1>
-                <button onCLick={createRound}>Quickfix -- Create a new round for this unit</button>
+                <button onClick={createRound}>Quickfix -- Create a new round for this unit</button>
             </div>
         )}
 
-        {!isGenerating && !activeUnit && !currentRound && (
+        {!isGenerating && initialCheckDone && !activeUnit && !currentRound && (
             <div className="empty-warning">
                 <h1>No active unit nor round found!</h1>
                 <button onClick={createUnit}>Quickstart -- create a new unit!</button>
