@@ -1,0 +1,31 @@
+.play-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+    margin-bottom: 2vw;
+    padding-left: 2vw;
+}
+
+.play-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    background: rgb(51, 146, 255);
+    border: none;
+    border-radius: 2vw;
+    padding: 0.5vw 0.75vw;
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    font-weight: 500;
+    
+
+
+    color: white;
+    box-shadow: 0 0.2vw 0.6vw rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.play-btn-img{
+    width: 1.5vw;
+
+}

@@ -42,11 +42,11 @@
 }
 
 .auth-label {
-  font-family: var(--font-ui);
-  font-size: 0.9vw;   /* 13px */
-  font-weight: 500;
-  color: var(--ink);
-  opacity: 0.8;
+    font-family: var(--font-ui);
+    font-size: 0.9vw;   /* 13px */
+    font-weight: 500;
+    color: var(--ink);
+    opacity: 0.8;
   
 }
 
@@ -61,11 +61,11 @@
 }
 
 .auth-error {
-  font-family: var(--font-ui);
-  font-size: 0.9vw;
-  color: var(--red);
-  text-align: center;
-  margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.9vw;
+    color: var(--red);
+    text-align: center;
+    margin: 0;
 }
 
 .auth-footer{
@@ -78,9 +78,9 @@
 }
 
 .auth-link {
-  color: var(--red);
-  font-weight: 600;
-  text-decoration: none;
+    color: var(--red);
+    font-weight: 600;
+    text-decoration: none;
 }
 
 .auth-input {

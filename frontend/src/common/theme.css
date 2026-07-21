@@ -1,3 +1,5 @@
+/*BUTTONS*/
+
 .btn-primary{
     background: var(--red);
     color: var(--white);
@@ -5,7 +7,7 @@
     transition:
         opacity 100ms ease;
     padding: 0vw 1vw;
-    
+    font-size: 1vw;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -21,128 +23,163 @@
     border-radius: 1.5vw;
 }
 
+.btn-secondary {
+    background: var(--jade);
+    color: var(--white);
 
-.card {
-    background: var(--white);
+    border: none;
     border-radius: 1.5vw;
-    box-shadow: 0 0.28vw 1.11vw black;
+    transition: opacity 100ms ease;
+}
+
+.btn-secondary:hover {
+    opacity: 80%;
 }
 
 
 
+/*CARDS*/
+.card {
+    background: var(--white);
+    border-radius: 1.5vw;
+    box-shadow: 0 0.2vw 0.6vw rgba(0, 0, 0, 0.5);
+}
+
+
+/*CORE PAGE INFO*/
 .page-title {
-  font-family: var(--font-display);
-  font-size: 3vw;
-  font-weight: 400;
-  color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 3vw;
+    font-weight: 400;
+    color: var(--ink);
 
 }
 
 .page-subtitle {
-  font-family: var(--font-ui);
-  font-size: 1vw;
-  color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    color: var(--ink);
 
-  opacity: 0.65;
+    opacity: 0.65;
   
 }
 
 
 
-.btn-secondary {
-  background: var(--jade);
-  color: var(--white);
-
-  border: none;
-  border-radius: 1.5vw;
-  transition: opacity 100ms ease;
-}
-
-.btn-secondary:hover {
-  opacity: 80%;
-}
 
 
 
+/*LINKS*/
 .link-quiet {
-  background: none;
-  border: none;
+    background: none;
+    border: none;
 
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 1vw;
-  color: var(--ink);
-  opacity: 0.6;
-  cursor: pointer;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1vw;
+    color: var(--ink);
+    opacity: 0.6;
+    cursor: pointer;
 }
 
 .link-quiet:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 
+
+/*CONTROL BAR*/
 .controls-bar {
-  display: flex;
-  align-items: center;
-  gap: 2vw;
-  flex-wrap: wrap;
-  background: var(--white);
-  border-radius: 2vw;
-  padding: 1vw 2vw;
-  margin: 0vw 2vw;
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    flex-wrap: wrap;
+    background: var(--white);
+    border-radius: 2vw;
+    padding: 1vw 2vw;
+    margin: 0vw 2vw;
 
 
-  box-shadow: 0 0.2vw 0.6vw black;
-  margin-bottom: 2vw;
+    box-shadow: 0 0.2vw 0.6vw rgba(0, 0, 0, 0.5);
+    margin-bottom: 2vw;
 }
 
 .controls-bar .divider {
-  width: 0.1vw;
-  align-self: stretch;
-  background: var(--ink);
-  opacity: 0.2;
+    width: 0.1vw;
+    align-self: stretch;
+    background: var(--ink);
+    opacity: 0.2;
 }
 
 
-
+/*TOGGLE SWITCHES*/
 .toggle {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 3vw;
-  height: 1.5vw;
-  border-radius: 2vw;
-  background: black;
-  position: relative;
-  cursor: pointer;
-  margin: 0;
-  transition: background 150ms ease;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 3vw;
+    height: 1.5vw;
+    border-radius: 2vw;
+    background: black;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    transition: background 150ms ease;
 }
 
 .toggle:checked {
-  background: var(--red);
+    background: var(--red);
 }
 
 .toggle::before {
 
-  content: '';
-  position: absolute;
+    content: '';
+    position: absolute;
 
-  top: 0.25vw;
-  left: 0.25vw;
-  
-  width: 1vw;
-  height: 1vw;
-  border-radius: 50%;
-  background: var(--white);
-  transition: transform 150ms ease;
+    top: 0.25vw;
+    left: 0.25vw;
+    
+    width: 1vw;
+    height: 1vw;
+    border-radius: 50%;
+    background: var(--white);
+    transition: transform 150ms ease;
 }
 
 .toggle:checked::before {
-  transform: translateX(1.5vw);
+    transform: translateX(1.5vw);
 }
 
+
+
+/*CORE FOR DRILL PAGES*/
 .drillpage-core{
     padding-top: 3vw;
     padding-left: 2vw;
     padding-bottom: 2vw;
+}
+
+
+
+
+/*HANZI DISPLAY*/
+.character-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+    margin-bottom: 2vw;
+    align-self: center;
+    padding-left: 2vw;
+}
+
+.character-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+    width: 15vw;
+    padding: 1.4vw;
+    background: var(--white);
+    border-radius: 1vw;
+
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.5);
 }

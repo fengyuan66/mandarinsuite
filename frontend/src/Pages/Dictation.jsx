@@ -3,11 +3,16 @@ import { useAppContext } from "../common/AppContext.jsx";
 import { NEXT_STATUS } from "../common/constants.js";
 import HanziWriter from "hanzi-writer";
 
+import PlayButton from "../assets/PlayButton.svg"
 
+
+import "../css/Dictation.css";
+import "../common/theme.css";
 
 
 function speak(text){
     const utterance = new SpeechSynthesisUtterance(text);
+    utterance.volume = 1;
     utterance.lang = "zh-CN";
     utterance.rate = 0.75;
     window.speechSynthesis.speak(utterance);
@@ -78,56 +83,84 @@ function Dictation(){
 
     return(
         <div>
-            <h1>Listen and write down each character / word</h1>
-            
-            <label>
-                <input
-                    type="checkbox"
-                    checked={useCohort}
-                    onChange={(state) => setUseCohort(state.target.checked)}
-                />
-                Use current cohort's characters
-            </label>
-            
+            <div className="drillpage-core">
+                <h1 className="page-title">Dictation</h1>
+                <p className="page-subtitle">Listen to each character or word, then write it down.</p>
+            </div>
+
+            <div className="controls-bar">
+                <label className="toggle-label">
+                    <input
+                        type="checkbox"
+                        className="toggle"
+                        checked={useCohort}
+                        onChange={(state) => setUseCohort(state.target.checked)}
+                    />
+                    Use current cohort's characters
+                </label>
+            </div>
+
+
+
             {!useCohort && (
+
                 <input
                 type="text"
-                value = {hanzi}
-                onChange = {(change) => setHanzi(change.target.value)}
+                className="manual-input"
+                value={hanzi}
+
+                onChange={(change) => setHanzi(change.target.value)}
+                placeholder="type characters to practice, e.g: 我爱你"
                 />
+            
             )}
             {useCohort && (
-                <div>
+                <div className="play-row">
                     {cohortCharacters.map((character, i) => (
-                        <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
+                        <button key={character.id ?? i} className="play-btn" onClick={() => speak(character.hanzi)}>
+                            <img src={PlayButton} className="play-btn-img" />
                             Play #{i + 1}
                         </button>
                     ))}
                 </div>
             )}
             {!useCohort && (
-                <div>
-                    
+                <div className="play-row">
                     {Array.from(hanzi).map((character, i) => (
-                        <button key={character.id ?? i} onClick={() => speak(character)}>Play #{i + 1}</button>
+                        <button key={character.id ?? i} className="play-btn" onClick={() => speak(character)}>
+                            <img src={PlayButton} className="play-btn-img" />
+                            Play #{i + 1}
+                        </button>
                     ))}
-                    
-
                 </div>
-                
             )}
-            <button onClick={() => setShowAnswers(!showAnswers)}>{showAnswers ? "hided answers" : "show answers"}</button>
-            
-            {showAnswers && (useCohort
-                ? cohortCharacters.map((character) => (
-                    <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
-                ))
-                : Array.from(hanzi).map((character, i) => (
-                    <HanziDisplay key={i} hanzi={character} />
-                ))
+
+
+            <div className="actions-row">
+                <button className="btn btn-primary" onClick={() => setShowAnswers(!showAnswers)}>
+                    {showAnswers ? "hided answers" : "show answers"}
+                </button>
+                <button className="link-quiet" onClick={Reset}>Reset!</button>
+            </div>
+
+            {showAnswers && (
+                <div className="character-grid">
+                    {(useCohort
+
+                        ? cohortCharacters.map((character) => (
+                            <div className="character-card" key={character.id ?? character.hanzi}>
+                                <HanziDisplay hanzi={character.hanzi} />
+                            </div>
+                        ))
+                        : Array.from(hanzi).map((character, i) => (
+                            <div className="character-card" key={i}>
+                                <HanziDisplay hanzi={character} />
+                            </div>
+                        ))
+
+                    )}
+                </div>
             )}
-            
-            <button onClick={Reset}>Reset!</button>
         </div>
     )
 }
