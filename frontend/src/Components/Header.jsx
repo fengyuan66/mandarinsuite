@@ -4,6 +4,12 @@ function Header(){
     const navRef = useRef(null);
     return(
         <div className="header">
+
+            <div className = "headercore">
+                <img src="../assets/RedDragon.svg" alt="big red Eastern Dragon with glasses" className="headercore-logo"/>
+                <span className="headercore-name">MandarinSuite</span>
+            </div>
+
             <nav ref={navRef}>
                 <NavLink to="/start" className={({ isActive }) => {
                     if (isActive){

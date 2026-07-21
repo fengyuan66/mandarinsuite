@@ -34,6 +34,7 @@ function App() {
   return (
     <>
     <Header />
+    <main className="page-content">
     <Routes>
       <Route path="/" element={<Navigate to="/start" replace />} />
       <Route path="/login" element={<Login />} />
@@ -48,6 +49,7 @@ function App() {
       <Route path="/fib" element={<RequireAuth><FIB /></RequireAuth>} />
       <Route path="/dictation" element={<RequireAuth><Dictation /></RequireAuth>} />
     </Routes>
+    </main>
     </>
     
   )
