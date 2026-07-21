@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../common/AuthContext.jsx";
+import RedDragon from "../assets/RedDragon.svg";
+
+import "../css/Auth.css"
+
+
 
 function Login() {
     const { login } = useAuth();
@@ -18,14 +23,41 @@ function Login() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Log in</h1>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit">Log in</button>
-            {error && <p>{error}</p>}
-            <p>No account? <Link to="/register">Register</Link></p>
-        </form>
+
+        <div className="auth-page">
+
+            <div className="auth-core">
+                <img src={RedDragon} className="auth-core-logo" />
+                <span className="auth-core-name">MandarinSuite</span>
+            </div>
+
+            <form className="card auth-card" onSubmit={handleSubmit}>
+                <label className="auth-field">
+
+                    <span className="auth-label">Email</span>
+                    <input className="input auth-input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+
+                </label>
+
+                <label className="auth-field">
+
+                    <span className="auth-label">Password</span>
+                    <input className="input auth-input" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    
+                </label>
+                
+                <button className="btn btn-primary auth-submit" type="submit">Log in</button>
+                {error && <p className="auth-error">{error}</p>}
+                
+                <p className="auth-footer">No account? <Link to="/register" className="auth-link">Register</Link></p>
+            </form>
+
+
+        </div>
+
+            
+
+
     );
 }
 

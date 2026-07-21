@@ -1,0 +1,89 @@
+.auth-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    min-height: 70vh;
+}
+
+.auth-core{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    gap: 0.3vw;
+}
+
+.auth-core-logo{
+    width: 5vw;
+    height: 5vw;
+}
+
+.auth-core-name{
+    font-family: var(--font-display);
+    font-size: 2vw;
+    color: var(--ink);
+}
+
+.auth-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4vw;
+
+    width: 28vw;
+    padding: 2.5vw;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vw;
+    
+}
+
+.auth-label {
+  font-family: var(--font-ui);
+  font-size: 0.9vw;   /* 13px */
+  font-weight: 500;
+  color: var(--ink);
+  opacity: 0.8;
+  
+}
+
+.auth-submit {
+    align-self: center;
+    width: 25%;
+    height: 4vh;
+
+    border: none;
+    outline: none;
+    
+}
+
+.auth-error {
+  font-family: var(--font-ui);
+  font-size: 0.9vw;
+  color: var(--red);
+  text-align: center;
+  margin: 0;
+}
+
+.auth-footer{
+    font-family: var(--font-ui);
+    font-size: 0.8vw;
+    color: var(--ink);
+    opacity: 0.6;
+    text-align: center;
+    margin: 0;
+}
+
+.auth-link {
+  color: var(--red);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-input {
+    height: 3vh;
+    
+}

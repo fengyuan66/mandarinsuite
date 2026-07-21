@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlmodel import Session, select
 from database import engine
 from models.user import User
@@ -10,6 +10,18 @@ router = APIRouter()
 class AuthBody(BaseModel):
     email: str
     password: str
+
+    @field_validator("email", "password")
+    @classmethod
+    def reject_invalids(cls, value: str) -> str:
+        if not value or not value.strip():
+            raise ValueError("Field cannot be blank")
+
+        if any(character.isspace() for character in value):
+            raise ValueError("Field cannot contain spaces")
+
+        return value
+    
 
 @router.post("/auth/register")
 def register(body: AuthBody):

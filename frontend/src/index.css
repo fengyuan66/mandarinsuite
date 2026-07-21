@@ -2,7 +2,7 @@
   --red: #B40036;
   --red-soft: #B33A2E;
   --red-glow: rgba(223, 60, 45, 0.24);
-  --paper: #FBF740;
+  --paper: #fffedc;
   --white: #FFFFFF;
   --ink: #27221F;
 
@@ -42,12 +42,12 @@ h1 {
   color: var(--ink);
   margin:0;
 
-  font-size: 5vw;
+  font-size: 2vw;
 }
 
 p{
   margin:0;
-  font-size: 2vw;
+  font-size: 1vw;
 }
 
 button {
@@ -58,4 +58,6 @@ button {
 
 input {
   font-family: var(--font-ui);
+  border-width: 0.1vw;
+  border-radius: 1vh;
 }

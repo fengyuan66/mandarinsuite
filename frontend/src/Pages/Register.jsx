@@ -2,6 +2,11 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../common/AuthContext.jsx";
 
+import RedDragon from "../assets/RedDragon.svg";
+
+import "../css/Auth.css"
+
+
 function Register() {
     const { register, login } = useAuth();
     const [email, setEmail] = useState("");
@@ -22,15 +27,31 @@ function Register() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Register</h1>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit">Register</button>
-            {error && <p>{error}</p>}
-            <p>Already have an account? <Link to="/login">Log in</Link></p>
+    <div className="auth-page">
+        <div className="auth-core">
+            <img src={RedDragon} alt="" className="auth-core-logo" />
+            <span className="auth-core-name">MandarinSuite</span>
+        </div>
+
+        <form className="card auth-card" onSubmit={handleSubmit}>
+            <label className="auth-field">
+                <span className="auth-label">Email</span>
+                <input className="input auth-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </label>
+
+            <label className="auth-field">
+                <span className="auth-label">Password</span>
+                <input className="input auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </label>
+
+            <button className="btn btn-primary auth-submit" type="submit">Register</button>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <p className="auth-footer">Already have an account? <Link to="/login" className="auth-link">Log in</Link></p>
         </form>
-    );
+    </div>
+);
 }
 
 export default Register;
