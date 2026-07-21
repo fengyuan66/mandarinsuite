@@ -1,0 +1,61 @@
+:root{
+  --red: #B40036;
+  --red-soft: #B33A2E;
+  --red-glow: rgba(223, 60, 45, 0.24);
+  --paper: #FBF740;
+  --white: #FFFFFF;
+  --ink: #27221F;
+
+  --jade: #5F7A54;
+  --gold: #B08A3E;
+
+
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-display: 'Newsreader';
+  --font-hanzi: 'Noto Serif SC';
+
+  font: 16px/1.5 var(--font-ui);
+  color: var(--ink);
+  background: var(--white);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--ink);
+  margin:0;
+
+  font-size: 5vw;
+}
+
+p{
+  margin:0;
+  font-size: 2vw;
+}
+
+button {
+  font-family: var(--font-ui);
+  cursor: pointer;
+
+}
+
+input {
+  font-family: var(--font-ui);
+}

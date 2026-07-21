@@ -1,0 +1,67 @@
+.header{
+    background: var(--red);
+    height: 10vh;
+    padding: 0 4vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.headercore{
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+.headercore-logo{
+    width: 4vw;
+    height: 4vw;
+}
+
+.headercore-name{
+    font-family: var(--font-display);
+    font-size: 3vw;
+    color: var(--white);
+}
+
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.header nav a {
+  font-family: var(--font-ui);
+  font-size: 1vw;
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 1vw;
+  opacity: 0.7;
+
+  transition:
+    opacity 250ms ease,
+    text-shadow 350ms ease,
+}
+
+.header nav a.active {
+  font-weight: 2vw;
+  opacity: 1;
+  text-shadow:
+    0 0 2px #ffff,
+    0 0 6px #ffff,
+    0 0 12px #ffff,
+    0 0 24px #ffff,
+    0 0 48px rgba(255, 176, 176, 0.95),
+    0 0 80px rgba(255, 181, 181, 0.8);
+}
+
+.header nav a:hover {
+  opacity: 0.9;
+  text-shadow:
+    0 0 2px #ffff,
+    0 0 6px #ffff,
+    0 0 12px #ffff,
+    0 0 24px #ffff,
+    0 0 48px rgba(255, 176, 176, 0.95),
+    0 0 80px rgba(255, 181, 181, 0.8);
+}

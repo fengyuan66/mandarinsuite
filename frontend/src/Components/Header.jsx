@@ -1,12 +1,16 @@
 import {NavLink, useLocation} from 'react-router-dom'
 import { useRef, useState, useEffect } from 'react'
+
+import "../css/Header.css"
+import RedDragon from "../assets/WhiteDragon.svg"
+
 function Header(){
     const navRef = useRef(null);
     return(
         <div className="header">
 
             <div className = "headercore">
-                <img src="../assets/RedDragon.svg" alt="big red Eastern Dragon with glasses" className="headercore-logo"/>
+                <img src={RedDragon} alt="big red Eastern Dragon with glasses" className="headercore-logo"/>
                 <span className="headercore-name">MandarinSuite</span>
             </div>
 
