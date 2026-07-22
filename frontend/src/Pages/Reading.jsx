@@ -4,14 +4,17 @@ import { NEXT_STATUS } from "../common/constants.js";
 import { apiFetch } from "../common/api.js";
 import HanziWriter from "hanzi-writer";
 
-
+import "../css/Reading.css"
 
 function Reading(){
     
+
+
+    const [isGenerating, setisGenerating] = useState(false);
     const [useCohort, setUseCohort] = useState(true);
     const [manualInput, setManualInput] = useState("");
     const [passage, setPassage] = useState(null)
-    const { currentRound, fetchActiveUnit } = useAppContext();
+    const { currentRound, fetchActiveUnit, } = useAppContext();
 
     useEffect(() => {
         fetchActiveUnit();
@@ -33,9 +36,12 @@ function Reading(){
             body: JSON.stringify(Array.from(manualInput).filter((ch) => ch.trim() !== ""))
         }
 
+        setisGenerating(true)
+
         apiFetch(url, options)
         .then((res) => res.json())
         .then((data) => setPassage(data.passage))
+        .finally(() => setisGenerating(false))
 
     }
 
@@ -45,22 +51,43 @@ function Reading(){
 
     return(
         <div>
-            <h1>Reading</h1>
+            <div className="drillpage-core">
+                <h1 className="page-title">Reading</h1>
+                <p className="page-subtitle">Generate a short passage using your practiced characters.</p>
 
-            <label>
-                <input type="checkbox" checked={useCohort} onChange={(change) => setUseCohort(change.target.checked)} />
-            </label>
-            {!useCohort &&(
-                <input
-                    type="text"
-                    value={manualInput}
-                    onChange={(change)=>setManualInput(change.target.value)}
-                />
+            </div>
+
+            <div className="controls-bar">
+                
+                <label className="toggle-label">
+                    <input className="toggle" type="checkbox" checked={useCohort} onChange={(change) => setUseCohort(change.target.checked)} />
+                    Use cohort characters
+                </label>
+            </div>
+                
+                {!useCohort &&(
+                    <input
+                        type="text"
+                        className="manual-input"
+                        placeholder="Enter your characters here, e.g: 我爱熊猫"
+                        value={manualInput}
+                        onChange={(change)=>setManualInput(change.target.value)}
+                    />
+                )}
+
+            <div className="actions-row">
+                <button className="btn btn-primary" onClick={generate} disabled={isGenerating}>{isGenerating ? "Generating..." : "Generate reading"}</button>
+                <button className="link-quiet" onClick={reset}>Reset</button>
+            </div>
+            
+
+            
+            {passage && (
+                <div className="card passage-card">
+                    <p className="passage-text">{passage}</p>
+                </div>
             )}
             
-            <button onClick={generate}>Generate reading</button>
-            {passage && <p>{passage}</p>}
-            <button onClick={reset}>Reset</button>
 
         </div>
     )

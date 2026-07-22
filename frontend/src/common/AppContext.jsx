@@ -305,7 +305,7 @@ export function AppProvider({ children }) {
     writingDictationContent, fibContent, unitReviewContent, freeWriteContent,
     fetchActiveUnit, fetchCurrentRound, fetchCurrentCohort, fetchCharacters,
     postCharacters, postCharactersAI, createUnit, createRound, advanceRound,
-    finishUnit, startNextUnit, wipeAllData, isGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw, HanziDisplay, fetchAllUnits, loadUnit, lookupCharacters
+    finishUnit, startNextUnit, wipeAllData, isGenerating, setIsGenerating, addPracticeEntry, createPracticeLog, createPracticeLogRaw, HanziDisplay, fetchAllUnits, loadUnit, lookupCharacters
     };
 
     return <AppContext.Provider value = {value}>{children}</AppContext.Provider>

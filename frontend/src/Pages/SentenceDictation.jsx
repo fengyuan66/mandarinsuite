@@ -72,9 +72,9 @@ function SentenceDictation(){
                     : (
                         <>
                             <p>{content.paragraph}</p>
-                            <button disabled={isSpeaking} onClick={() => playAt(0.2)}>🔊 Slow</button>
-                            <button disabled={isSpeaking} onClick={() => playAt(0.5)}>🔊 Normal</button>
-                            <button disabled={isSpeaking} onClick={() => playAt(0.7)}>🔊 Fast</button>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.2)}>Slow</button>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.5)}>Normal</button>
+                            <button disabled={isSpeaking} onClick={() => playAt(0.7)}>Fast</button>
                         </>
                     )
             )}
