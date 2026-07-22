@@ -1,0 +1,23 @@
+.speed-row {
+    display: flex;
+    gap: 1vw;
+    margin: 0vw 2vw;
+
+}
+
+.skipped-message {
+    margin: 0vw 2vw;
+    margin-bottom: 2vw;
+    color: var(--gold);
+    font-family: var(--font-ui);
+    font-size: 1vw;
+}
+
+.dragonhead{
+    position: absolute;
+    right: 0;
+}
+
+.pet{
+    width: 15vw;
+}

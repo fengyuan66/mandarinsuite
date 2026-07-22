@@ -188,7 +188,7 @@
 /* PASSAGE DISPLAY */
 
 .passage-card {
-    margin: 5vw 25%;
+    margin: 2vw 25%;
     padding: 2vw 2.5vw;
     max-width: 60vw;
     
@@ -200,4 +200,30 @@
     line-height: 1.8;
     color: var(--ink);
     margin: 0;
+}
+
+/* PLAY BUTTONS*/
+
+.play-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    background: rgb(51, 146, 255);
+    border: none;
+    border-radius: 2vw;
+    padding: 0.5vw 0.75vw;
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    font-weight: 500;
+    
+
+
+    color: white;
+    box-shadow: 0 0.2vw 0.6vw rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.play-btn-img{
+    width: 1.5vw;
+
 }

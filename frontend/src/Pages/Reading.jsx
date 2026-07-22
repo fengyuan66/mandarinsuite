@@ -61,7 +61,7 @@ function Reading(){
                 
                 <label className="toggle-label">
                     <input className="toggle" type="checkbox" checked={useCohort} onChange={(change) => setUseCohort(change.target.checked)} />
-                    Use cohort characters
+                    Use characters from current cohort
                 </label>
             </div>
                 

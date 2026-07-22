@@ -87,7 +87,7 @@ function FIB(){
             <div className="controls-bar">
                 <label className = "toggle-label">
                     <input className="toggle" type="checkbox" checked={useCohort} onChange={(e) => setUseCohort(e.target.checked)} />
-                    Use current cohort's characters
+                    Use characters from current cohort
                 </label>
             </div>
             
