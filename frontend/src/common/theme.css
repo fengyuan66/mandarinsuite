@@ -1,3 +1,10 @@
+/* IMPORTANT!! BROWSER DISPLAY SETTINGS */
+
+html, body {
+    overflow-x: hidden;
+}
+
+
 /*BUTTONS*/
 
 .btn-primary{

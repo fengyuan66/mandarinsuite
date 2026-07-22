@@ -8,6 +8,9 @@ import PlayButton from "../assets/PlayButton.svg"
 
 import DragonHead from "../assets/RedDragonHead.svg"
 import DragonHeadSilent from "../assets/RedDragonHeadUnspeaking.svg"
+
+import PetButton from "../assets/Glasses.png"
+
 function speak(text, rate = 1, onEnd = () => {}){
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "zh-CN";
@@ -27,6 +30,11 @@ function SentenceDictation(){
     const [showParagraph, setShowParagraph] = useState(false)
 
     const [skipped, setSkipped] = useState(false)
+
+
+    //PET STATES
+    const [pet, setPet] = useState(false)
+    const [leaving, setLeaving] = useState(false)
 
     function playAt(rate){
         setIsSpeaking(true);
@@ -64,11 +72,30 @@ function SentenceDictation(){
         setShowParagraph(false)
     }
 
+    function closePet(){
+        setLeaving(true)
+        setTimeout(() => {
+            setPet(false)
+            setLeaving(false)
+        }, 400)
+    }
+
     return(
         <div>
 
             <div className="dragonhead">
-                <img className="pet" src={DragonHead}></img>
+                
+                {pet || leaving
+                ?
+                    isSpeaking
+                    ?<img className={`pet${leaving ? " pet-exit" : ""}`} src={DragonHead} onClick={closePet}></img>
+                    :<img className={`pet${leaving ? " pet-exit" : ""}`} src={DragonHeadSilent} onClick={closePet}></img>
+                    
+                :
+                    <img className="petbutton" src={PetButton} onClick={() => setPet(true)} />   
+                }
+                
+                
             </div>
 
             <div className="drillpage-core">
