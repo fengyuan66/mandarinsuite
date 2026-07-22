@@ -4,6 +4,7 @@ import { apiFetch } from "../common/api.js";
 
 import "../common/theme.css";
 import "../css/SentenceDictation.css";
+import "../css/DragonPet.css";
 import PlayButton from "../assets/PlayButton.svg"
 
 import DragonHead from "../assets/RedDragonHead.svg"

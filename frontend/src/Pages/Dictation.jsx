@@ -9,12 +9,19 @@ import PlayButton from "../assets/PlayButton.svg"
 import "../css/Dictation.css";
 import "../common/theme.css";
 
+import DragonHead from "../assets/RedDragonHead.svg"
+import DragonHeadSilent from "../assets/RedDragonHeadUnspeaking.svg"
+import PetButton from "../assets/Glasses.png"
 
-function speak(text){
+import "../css/DragonPet.css"
+
+function speak(text, onEnd = () => {}){
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.volume = 1;
     utterance.lang = "zh-CN";
     utterance.rate = 0.75;
+    utterance.onend = onEnd;
+    utterance.onerror = onEnd;
     window.speechSynthesis.speak(utterance);
 }
 
@@ -42,6 +49,12 @@ function Dictation(){
     const [showAnswers, setShowAnswers] = useState(false);
     const [hanzi, setHanzi] = useState("");
     const [useCohort, setUseCohort] = useState(true);
+
+    //PET STATES:
+
+    const [pet, setPet] = useState(false)
+    const [leaving, setLeaving] = useState(false)
+    const [isSpeaking, setIsSpeaking] = useState(false)
 
     useEffect(() => {
         
@@ -81,8 +94,30 @@ function Dictation(){
     }
 
 
+    function closePet(){
+    setLeaving(true)
+    setTimeout(() => {
+        setPet(false)
+        setLeaving(false)
+    }, 400)
+}
+
+
     return(
         <div>
+
+            <div className="dragonhead">
+                {pet || leaving
+                ?
+                    isSpeaking
+                    ?<img className={`pet${leaving ? " pet-exit" : ""}`} src={DragonHead} onClick={closePet}></img>
+                    :<img className={`pet${leaving ? " pet-exit" : ""}`} src={DragonHeadSilent} onClick={closePet}></img>
+                    
+                :
+                    <img className="petbutton" src={PetButton} onClick={() => setPet(true)} />   
+                }
+            </div>
+
             <div className="drillpage-core">
                 <h1 className="page-title">Dictation</h1>
                 <p className="page-subtitle">Listen to each character or word, then write it down.</p>
@@ -122,7 +157,7 @@ function Dictation(){
             {useCohort && (
                 <div className="play-row">
                     {cohortCharacters.map((character, i) => (
-                        <button key={character.id ?? i} className="play-btn" onClick={() => speak(character.hanzi)}>
+                        <button key={character.id ?? i} className="play-btn" onClick={() => { setIsSpeaking(true); speak(character.hanzi, () => setIsSpeaking(false)); }}>
                             <img src={PlayButton} className="play-btn-img" />
                             Play #{i + 1}
                         </button>
@@ -132,7 +167,7 @@ function Dictation(){
             {!useCohort && (
                 <div className="play-row">
                     {Array.from(hanzi).map((character, i) => (
-                        <button key={character.id ?? i} className="play-btn" onClick={() => speak(character)}>
+                        <button key={character.id ?? i} className="play-btn" onClick={() => { setIsSpeaking(true); speak(character, () => setIsSpeaking(false)); }}>
                             <img src={PlayButton} className="play-btn-img" />
                             Play #{i + 1}
                         </button>

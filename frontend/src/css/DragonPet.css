@@ -1,0 +1,50 @@
+.dragonhead{
+    position: absolute;
+    right: 0;
+    
+}
+
+
+.pet{
+    position: absolute;
+    animation: dragon-enter 0.4s ease-out;
+    width: 15vw;
+    cursor:pointer;
+    right: 0;
+    
+}
+
+
+@keyframes dragon-enter {
+    from{
+        transform: translateX(15vw);
+        opacity: 0;
+    }
+    to{
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes dragon-exit {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(15vw);
+        opacity: 0;
+    }
+}
+
+.pet-exit {
+    animation: dragon-exit 0.4s ease-in forwards;
+}
+
+
+.petbutton{
+    width: 4vw;
+    padding-top: 1vw;
+    padding-right: 1vw;
+    cursor:pointer;
+}
