@@ -74,7 +74,6 @@ function FIB(){
         apiFetch(url, options)
         .then((res) => res.json())
         .then((data) => setFibContent(data))
-        .then((data) => { console.log(data); setFibContent(data); })
         .finally(() => setIsGenerating(false))
     }
 

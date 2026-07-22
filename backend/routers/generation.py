@@ -11,18 +11,20 @@ from routers.ai import ai
 import json
 from fastapi import Body
 
+import re
+
 router = APIRouter()
 
-def safe_ai(prompt, model: str = "openai/gpt-oss-120b"):
-    """Returns the AI's raw text, or None if generation failed for any reason."""
+def safe_ai(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 1.0, response_format: dict | None = None):
+    """Returns the AI's raw text, OR None if generation failed for any reason."""
     try:
-        return ai(prompt, model)
+        return ai(prompt, model, temperature=temperature, response_format=response_format)
     except Exception:
         return None
 
 def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b"):
-    """Returns the AI's parsed JSON, or None if generation/parsing failed."""
-    text = safe_ai(prompt, model)
+    """Returns the AI's parsed JSON, OR None if generation/parsing failed."""
+    text = safe_ai(prompt, model, temperature=0.4, response_format={"type": "json_object"})
     if text is None:
         return None
     try:
@@ -223,20 +225,53 @@ Respond with ONLY the paragraph text, no other commentary.
     return {"skipped": False, "paragraph": paragraph}
 
 
-@router.post("/generation/fib-custom")
-def generate_fib_custom(hanzi_list: list[str], user: User = Depends(manager)):
-    prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {hanzi_list}. One should be able to infer the context of the sentence even with those characters removed.
-Then remove those characters from the sentence, replacing each with a blank ___.
+
+def build_fib_prompt(allowlist):
+    return f"""Write one natural, extremely simple, beginner-level Mandarin sentence using some (not necessarily all) of these characters: {allowlist}.
+Pick 1 to 3 WORDS in that sentence to turn into blanks — a word can be one character or multiple characters (e.g. "端午节" is ONE word, not three separate blanks).
+Replace each chosen word with exactly three underscores: ___
+
+Rules:
+- Each blank is exactly "___" (three underscores) — never more, never fewer.
+- Never put a space directly before or after a blank, and never put a space between two blanks.
+- The sentence should still make sense in context even with the blanks removed.
+- "answers" must have exactly one entry per blank, in left-to-right order, and each entry is the FULL word that was removed (which may be more than one character).
+
 Respond with ONLY a JSON object, no other text, in this exact format:
-{{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
+{{"sentence_with_blanks": "今天是___，我们要吃粽子。", "answers": ["端午节"]}}
 """
+
+def _fib_is_well_formed(result):
+    if not isinstance(result, dict):
+        return False
+    sentence = result.get("sentence_with_blanks")
+    answers = result.get("answers")
+    if not isinstance(sentence, str) or not isinstance(answers, list):
+        return False
+    blanks = re.findall(r"_+", sentence)
+    if len(blanks) != len(answers) or any(b != "___" for b in blanks):
+        return False
+    if re.search(r"___\s+___", sentence):
+        return False
+    return True
+
+def generate_fib_content(allowlist):
+    prompt = build_fib_prompt(allowlist)
     result = safe_ai_json(prompt)
-    if not isinstance(result, dict) or "sentence_with_blanks" not in result or "answers" not in result:
+    if not _fib_is_well_formed(result):
+        result = safe_ai_json(prompt)  # one retry on malformed output
+    if not _fib_is_well_formed(result):
         result = {
             "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
             "answers": ["(unavailable)"],
         }
     return result
+
+
+@router.post("/generation/fib-custom")
+def generate_fib_custom(hanzi_list: list[str], user: User = Depends(manager)):
+    
+    return generate_fib_content(hanzi_list)
 
 @router.post("/generation/writingdictation-custom")
 def generate_writing_dictation_custom(hanzi_list: list[str], user: User = Depends(manager)):
@@ -261,18 +296,8 @@ def generate_fib(round_id: int, user: User = Depends(manager)):
 
     allowlist = get_characters_in_round(round_id)
 
-    prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. One should be able to infer the context of the sentence even with those characters removed. 
-Then remove those characters from the sentence, replacing each with a blank ___.
-Respond with ONLY a JSON object, no other text, in this exact format:
-{{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
-"""
-    result = safe_ai_json(prompt)
-    if not isinstance(result, dict) or "sentence_with_blanks" not in result or "answers" not in result:
-        result = {
-            "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
-            "answers": ["(unavailable)"],
-        }
-    return result
+    
+    return generate_fib_content(allowlist)
 
 
 @router.post("/generation/unit_review/{unit_id}")
@@ -295,17 +320,7 @@ Respond with ONLY the paragraph text, no other commentary.
         if paragraph is None:
             paragraph = "AI generation is temporarily unavailable. Please try again shortly."
 
-        fib_prompt = f"""For a very simple fill-in-the-blank style question, write one natural, extremely simple, beginner-level Mandarin sentence that uses some, not necessarily all of these characters: {allowlist}. One should be able to infer the context of the sentence even with those characters removed.
-Then remove those characters from the sentence, replacing each with a blank ___.
-Respond with ONLY a JSON object, no other text, in this exact format:
-{{"sentence_with_blanks": "...", "answers": ["...", "..."]}}
-"""
-        fib_result = safe_ai_json(fib_prompt)
-        if not isinstance(fib_result, dict) or "sentence_with_blanks" not in fib_result or "answers" not in fib_result:
-            fib_result = {
-                "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
-                "answers": ["(unavailable)"],
-            }
+        fib_result = generate_fib_content(allowlist)
 
         return{
             "allowlist": allowlist,
