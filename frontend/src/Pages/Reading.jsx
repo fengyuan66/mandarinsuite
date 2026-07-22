@@ -63,6 +63,7 @@ function Reading(){
                     <input className="toggle" type="checkbox" checked={useCohort} onChange={(change) => setUseCohort(change.target.checked)} />
                     Use characters from current cohort
                 </label>
+                <div className="divider" />
                 <button className="btn btn-primary" onClick={generate} disabled={isGenerating}>{isGenerating ? "Generating..." : "Generate reading"}</button>
                 <button className="link-quiet" onClick={reset}>Reset</button>
             </div>

@@ -125,7 +125,7 @@ function SentenceDictation(){
                 )}
 
                 <button className="link-quiet" onClick={reset}>Reset</button>
-                <div className="divider" />
+                
             
                 
                 {content && !content.skipped && (

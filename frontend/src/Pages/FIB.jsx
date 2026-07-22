@@ -89,7 +89,7 @@ function FIB(){
                     <input className="toggle" type="checkbox" checked={useCohort} onChange={(e) => setUseCohort(e.target.checked)} />
                     Use characters from current cohort
                 </label>
-
+                <div className="divider" />
                 <button 
                     className="btn btn-primary" 
                     onClick={generate}

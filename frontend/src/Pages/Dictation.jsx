@@ -133,7 +133,7 @@ function Dictation(){
                     />
                     Use current cohort's characters
                 </label>
-
+                <div className="divider" />
                 <button className="btn btn-primary" onClick={() => setShowAnswers(!showAnswers)}>
                     {showAnswers ? "hided answers" : "show answers"}
                 </button>
