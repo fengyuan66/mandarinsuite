@@ -165,7 +165,10 @@ function Stats(){
                 {practiceLogs.map((log) => (
                     <div className="list-row" key={log.id}>
                         <span className="list-row-label">{log.session_time.split("T")[0]}</span>
-                        <button className="btn btn-secondary" onClick={() => viewPracticeLog(log.id)}>View</button>
+                        <button className="btn btn-load btn-anim" onClick={() => viewPracticeLog(log.id)}>
+                            <img className="use-icon" src={EyesButton} />
+                            <p>View</p>
+                        </button>
                     </div>
                 ))}
 

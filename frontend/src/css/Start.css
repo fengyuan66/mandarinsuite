@@ -1,0 +1,70 @@
+/* INTERMISSION STATE*/
+.intermission {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 8vw;
+    
+    gap: 1.2vw;
+
+}
+
+.intermission-button {
+    margin-top: 3vw;
+}
+
+.intermission-icon {
+    width: 6vw;
+    height: 6vw;
+}
+
+.intermission-icon {
+    width: 6vw;
+    height: 6vw;
+}
+
+.warningicon {
+    width: 6vw;
+    height: 6vw;
+}
+
+
+.start-round-status-core{
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+
+/* SMALL HEADER BADGE */
+.round-status-header {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+.round-status-icon {
+    width: 5vw;
+    height: 5vw;
+    flex-shrink: 0;
+    
+}
+
+.round_wizard {
+    position: relative;
+}
+
+.page-loading {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 5;
+    background: var(--white);
+    padding: 0.6vw 0;
+}

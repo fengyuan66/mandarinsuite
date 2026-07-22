@@ -8,6 +8,16 @@ import { NEXT_STATUS } from "../common/constants.js";
 
 import HanziWriter from "hanzi-writer";
 
+import "../common/theme.css";
+import "../css/Start.css";
+
+import PlayButton from "../assets/PlayButton.svg";
+import IconReady from "../assets/Start_Ready.svg";
+import IconPractice from "../assets/Start_Practice.svg";
+import IconDictation from "../assets/Start_Dictation.svg";
+import IconFIB from "../assets/Start_FIB.svg";
+import IconAdvance from "../assets/Start_Advance.svg";
+import Warning from "../assets/ExclamationMark.svg"
 
 
 
@@ -80,6 +90,7 @@ function Start(){
     const [showAnswers, setShowAnswers] = useState(false);
     const [showFibAnswers, setShowFibAnswers] = useState(false);
     const [showUnitFibAnswers, setShowUnitFibAnswers] = useState(false);
+    const [practiceLogged, setPracticeLogged] = useState(false);
     
     //input handle
 
@@ -117,7 +128,7 @@ function Start(){
             }))
             .filter((e) => e.times_written > 0);
 
-        appcontext.createPracticeLog(practiceEntries);
+        appcontext.createPracticeLog(practiceEntries).then(() => setPracticeLogged(true));
     }
 
 
@@ -127,11 +138,15 @@ function Start(){
     useEffect(() => {
         setInitialCheckDone(false)
         fetchActiveUnit().finally(() => setInitialCheckDone(true))
+    }, []);
+
+    useEffect(() => {
         appcontext.fetchCurrentCohort();
 
         setShowAnswers(false);
         setShowFibAnswers(false);
         setShowUnitFibAnswers(false);
+        setPracticeLogged(false);
 
         setCounts({})
         setTimesWritten("")
@@ -148,30 +163,31 @@ function Start(){
         </pre>*/}
 
         {!isGenerating && !activeUnit && currentRound && (
-            <div className="empty-warning">
-                <h1>No active unit found, but a round is found! Likely data glitch, please copy and wipe data</h1>
+            <div className="empty-warning intermission">
+                <h1 className="page-title">No active unit found, but a round is found! Likely data glitch, please copy and wipe data</h1>
                 
             </div>
         )}
 
         {(isGenerating || !initialCheckDone) && !currentRound && (
-            <p>Loading...</p>
+            <p className="page-subtitle intermission">Loading...</p>
         )}
 
         {!isGenerating && initialCheckDone && activeUnit && !currentRound && (
-            <div className="empty-warning">
-                <h1>Unit is found, but no active round found!</h1>
-                <button onClick={createRound}>Quickfix -- Create a new round for this unit</button>
+            <div className="empty-warning intermission">
+                <img className="warningicon" src={Warning}></img>
+                <h1 className="page-title">Unit is found, but no active round found!</h1>
+                <button className="btn-primary" onClick={createRound}>Quickfix -- Create a new round for this unit</button>
             </div>
         )}
 
         {!isGenerating && initialCheckDone && !activeUnit && !currentRound && (
-            <div className="empty-warning">
-                <h1>No active unit nor round found!</h1>
-                <button onClick={createUnit}>Quickstart -- create a new unit!</button>
+            <div className="empty-warning intermission">
+                <img className="warningicon" src={Warning}></img>
+                <h1 className="page-title">No active unit nor round found!</h1>
+                <button className="btn-primary" onClick={createUnit}>Quickstart -- create a new unit!</button>
             </div>
         )}
-
 
 
         
@@ -179,122 +195,232 @@ function Start(){
 
             <div className="round_wizard">
 
-                {isGenerating && <p>LOADING...</p>}
+                {isGenerating && <p className="page-subtitle page-loading">LOADING...</p>}
 
                 {currentRound.status === "cohort_ready" && (
-                    <div>
-                        <h1>COHORT ReaDY</h1>
-                        <button onClick={advanceRound}>Start Practicing </button>
+                    <div className="intermission">
+                        <img className="intermission-icon" src={IconReady} />
+                        <h1 className="page-title">Round Ready!</h1>
+                        <button className="btn-primary intermission-button" onClick={advanceRound}>Start Practicing </button>
                     </div>
                 )}
 
                 {currentRound.status === "practicing" && (
                     <div>
-                        <h1>Write each character 10-15 times and then a word with it</h1>
 
-                        {appcontext.cohortCharacters.map((character) => (
-                            <div key={character.id ?? character.hanzi}>
-                                <HanziDisplay hanzi={character.hanzi} />
+                        <div className="drillpage-core">
+                            <div className="round-status-header">
+                                
+                                <img className="round-status-icon" src={IconPractice} />
+
+                                    <div className="start-round-status-core">
+                                        <h1 className="page-title">Practice</h1>
+                                        <p>Write each character 10-15 times and then a word with it</p>
+                                    </div>
+                                
+
+                            </div>
+                        </div>
+                        
+                        <div className="controls-bar">
+                            <div className="bulk-apply">
+                                
                                 <input
                                     type="number"
-                                    min="0"
-                                    value={counts[character.id] ?? ""}
-                                    onChange={(e) => updateCount(character.id, e.target.value)}
-                                    placeholder="times written"
+                                    className="bulk-input"
+                                    value={timesWritten}
+                                    onChange={(event) => setTimesWritten(event.target.value)}
+                                    placeholder="times written (all characters)"
                                 />
+                                <button className="btn btn-secondary apply-btn" onClick={applyMasterCount}>Apply to all</button>
+
+
+
+
                             </div>
-                        ))}
+                        </div>
 
-                        <input
-                            type="number"
-                            value={timesWritten}
-                            onChange={(event) => setTimesWritten(event.target.value)}
-                            placeholder="times written (all characters)"
-                        />
-                        <button onClick={applyMasterCount}>Apply to all</button>
+                        <div className="character-grid">
 
-                        <button onClick={createCohortPracticeLog}>Save practice log</button>
-                        <button onClick={advanceRound}>Move on to dictation</button>
+                            {appcontext.cohortCharacters.map((character) => (
+                                <div className="character-card" key={character.id ?? character.hanzi}>
+                                    <HanziDisplay hanzi={character.hanzi} />
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={counts[character.id] ?? ""}
+                                        onChange={(e) => updateCount(character.id, e.target.value)}
+                                        placeholder="times written"
+                                    />
+                                </div>
+                            ))}
+
+                        </div>
+
+                        <div className="actions-row">
+                            
+                            <button className="btn btn-primary submit-btn" onClick={createCohortPracticeLog}>Save practice log</button>
+                            <button className="btn btn-primary" onClick={advanceRound}>Move on to dictation</button>
+                            {practiceLogged && <p className="success-popup">Logged!</p>}
+
+                        </div>
+
+                        
                     </div>
                 )}
+
+
                 {currentRound.status === "dictation_offered" && (
                     <div>
-                        <h1>Listen and write down each character / word</h1>
-                        {appcontext.cohortCharacters.map((character, i) => (
-                            <button key={character.id ?? i} onClick={() => speak(character.hanzi)}>
-                                Play #{i + 1}
-                            </button>
-                        ))}
-                        <button onClick={() => setShowAnswers(!showAnswers)}>show answers!</button>
+                        <div className="drillpage-core">
+                            <div className="round-status-header">
+                                <img className="round-status-icon" src={IconDictation} alt="" />
+                                <h1 className="page-title">Listen and write down each character / word</h1>
+                            </div>
+                        </div>
 
-                        {showAnswers && appcontext.cohortCharacters.map((character) => (
-                            <HanziDisplay key={character.id ?? character.hanzi} hanzi={character.hanzi} />
-                        ))}
-                        
-                        <button onClick={advanceRound}>continue</button>
+                        <div className="play-row">
+                            {appcontext.cohortCharacters.map((character, i) => (
+                                <button key={character.id ?? i} className="play-btn" onClick={() => speak(character.hanzi)}>
+                                    <img src={PlayButton} className="play-btn-img" />
+                                    Play #{i + 1}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="controls-bar">
+                            <button className="btn btn-primary" onClick={() => setShowAnswers(!showAnswers)}>show answers!</button>
+                            <button className="link-quiet" onClick={advanceRound}>continue</button>
+                        </div>
+
+                        {showAnswers && (
+                            <div className="character-grid">
+                                {appcontext.cohortCharacters.map((character) => (
+                                    <div className="character-card" key={character.id ?? character.hanzi}>
+                                        <HanziDisplay hanzi={character.hanzi} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
                     </div>
                 )}
 
                 {currentRound.status === "writing_dictation" && (
                     <div>
-                        {writingDictationContent && writingDictationContent.skipped
-                            ?<h1>Skipped! {writingDictationContent.reason}</h1>
-                            :<h1>{writingDictationContent && writingDictationContent.paragraph}</h1>
-                        }
-                        {writingDictationContent && !writingDictationContent.skipped && (
-                            <button onClick={() => speak(writingDictationContent.paragraph)}>🔊 Play</button>
+
+                        <div className="drillpage-core">
+                            <div className="round-status-header">
+                                <img className="round-status-icon" src={IconDictation} alt="" />
+                                <h1 className="page-title">Sentence Dictation</h1>
+                            </div>
+                            <p className="page-subtitle">Listen to the paragraph, then write down what you hear!</p>
+                        </div>
+
+                        <div className="controls-bar">
+                            {writingDictationContent && !writingDictationContent.skipped && (
+                                <button className="play-btn" onClick={() => speak(writingDictationContent.paragraph)}>
+                                    <img src={PlayButton} className="play-btn-img" />
+                                    Play
+                                </button>
+
+                            )}
+                            <button className="btn btn-primary" onClick={advanceRound}>Continue to FIB</button>
+                        </div>
+
+                        {writingDictationContent && writingDictationContent.skipped && (
+                            <p className="skipped-message">Skipped! {writingDictationContent.reason}</p>
                         )}
 
-                        <button onClick={advanceRound}>Continue to FIB</button>
+                        {writingDictationContent && !writingDictationContent.skipped && (
+                            <div className="card passage-card">
+                                <p className="passage-text">{writingDictationContent.paragraph}</p>
+                            </div>
+                        )}
 
                     </div>
                 )}
             
                 {currentRound.status === "fib" && (
                     <div>
-                        <h1>FIB</h1>
-                        
-                        <p>
-                            {showFibAnswers && fibContent
-                                ? fillInBlanks(
-                                    fibContent.sentence_with_blanks,
-                                    fibContent.answers
-                                )
-                                : fibContent && fibContent.sentence_with_blanks
-                            }
-                        </p>
-                        
-                        <button onClick={() => setShowFibAnswers(!showFibAnswers)}>Toggle answers</button>
+                        <div className="drillpage-core">
+                            <div className="round-status-header">
+                                <img className="round-status-icon" src={IconFIB} alt="" />
+                                <h1 className="page-title">FIB</h1>
+                            </div>
+                        </div>
 
-                        <button onClick={advanceRound}>Finish Round</button>
+                        <div className="controls-bar">
+                            <button className="btn btn-primary" onClick={() => setShowFibAnswers(!showFibAnswers)}>Toggle answers</button>
+                            <button className="link-quiet" onClick={advanceRound}>Finish Round</button>
+                        </div>
+
+                        <div className="card passage-card">
+                            <p className="passage-text">
+                                {showFibAnswers && fibContent
+                                    ? fillInBlanks(fibContent.sentence_with_blanks, fibContent.answers)
+                                    : fibContent && fibContent.sentence_with_blanks
+                                }
+                            </p>
+                        </div>
                     </div>
                 )}
 
                 {currentRound.status === "complete" && currentRound.progress < activeUnit.target_rounds &&(
-                    <div>
-                        <h1>Round complete!</h1>
-                        <button onClick={createRound}>next round</button>
+                    <div className="intermission">
+                        <img className="intermission-icon" src={IconAdvance} alt="" />
+                        <h1 className="page-title">Round complete!</h1>
+                        <button className="btn-primary intermission-button" onClick={createRound}>next round</button>
                     </div>
                 )}
 
                 {currentRound.status === "complete" && currentRound.progress >= activeUnit.target_rounds && (
 
                     <div>
-                        {!unitReviewContent && <button onClick={finishUnit}>Review this unit</button>}
+                        {!unitReviewContent && (
+                            
+                            <div className="intermission">
+                                <img className="intermission-icon" src={IconAdvance} alt="" />
+                                <h1 className="page-title">Unit complete!</h1>
+                                <button className="btn-primary intermission-button" onClick={finishUnit}>Review this unit</button>
+                            </div>
+                        
+                        )}
                         {unitReviewContent && (
 
                             <>
-                                <h1>{unitReviewContent.paragraph}</h1>
-                                <p>
-                                    {showUnitFibAnswers
-                                        ? fillInBlanks(unitReviewContent.fib.sentence_with_blanks, unitReviewContent.fib.answers)
-                                        : unitReviewContent.fib.sentence_with_blanks}
-                                </p>
-                                <button onClick={() => setShowUnitFibAnswers(!showUnitFibAnswers)}>
-                                    {showUnitFibAnswers ? "Hide answers" : "Show answers"}
-                                </button>
-                                <h1>{freeWriteContent && freeWriteContent.prompt}</h1>
-                                <button onClick={startNextUnit}>Start next unit!</button>
+                                <div className="drillpage-core">
+                                    <div className="round-status-header">
+                                        <img className="round-status-icon" src={IconAdvance} alt="" />
+                                        <h1 className="page-title">Unit complete!</h1>
+                                    </div>
+                                </div>
+
+
+                                <div className="card passage-card">
+                                    <p className="passage-text">{unitReviewContent.paragraph}</p>
+                                </div>
+
+                                <div className="controls-bar">
+                                    <button className="btn btn-primary" onClick={() => setShowUnitFibAnswers(!showUnitFibAnswers)}>
+                                        {showUnitFibAnswers ? "Hide answers" : "Show answers"}
+                                    </button>
+                                </div>
+
+                                <div className="card passage-card">
+                                    <p className="passage-text">
+                                        {showUnitFibAnswers
+                                            ? fillInBlanks(unitReviewContent.fib.sentence_with_blanks, unitReviewContent.fib.answers)
+                                            : unitReviewContent.fib.sentence_with_blanks}
+                                    </p>
+                                </div>
+
+                                <div className="drillpage-core">
+                                    <h1 className="page-title">{freeWriteContent && freeWriteContent.prompt}</h1>
+                                </div>
+
+                                <div className="controls-bar">
+                                    <button className="btn btn-primary" onClick={startNextUnit}>Start next unit!</button>
+                                </div>
                             </>
 
                         )}

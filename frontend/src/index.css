@@ -2,7 +2,8 @@
   --red: #B40036;
   --red-soft: #B33A2E;
   --red-glow: rgba(223, 60, 45, 0.24);
-  --paper: #fffedc;
+  
+  --paper: hsl(34, 29%, 91%);
   --white: #FFFFFF;
   --ink: #27221F;
 
