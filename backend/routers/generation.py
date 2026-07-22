@@ -10,7 +10,7 @@ from auth import manager
 from routers.ai import ai
 import json
 from fastapi import Body
-
+import random
 import re
 
 router = APIRouter()
@@ -22,9 +22,9 @@ def safe_ai(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 1.0
     except Exception:
         return None
 
-def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b"):
-    """Returns the AI's parsed JSON, OR None if generation/parsing failed."""
-    text = safe_ai(prompt, model, temperature=0.4, response_format={"type": "json_object"})
+def safe_ai_json_fib(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 0.4):
+    """FIB ONLY! Returns the AI's parsed JSON, OR None if generation/parsing failed."""
+    text = safe_ai(prompt, model, temperature=temperature, response_format={"type": "json_object"})
     if text is None:
         return None
     try:
@@ -226,19 +226,23 @@ Respond with ONLY the paragraph text, no other commentary.
 
 
 
+import random
+
+FIB_EXAMPLES = [
+    '{"sentence_with_blanks": "今天是___，我们要吃粽子。", "answers": ["端午节"]}',
+    '{"sentence_with_blanks": "他每天早上都___去公园跑步。", "answers": ["喜欢"]}',
+    '{"sentence_with_blanks": "这家___的服务员非常___。", "answers": ["餐厅", "友好"]}',  # keep answers Chinese in real version
+]
+
 def build_fib_prompt(allowlist):
-    return f"""Write one natural, extremely simple, beginner-level Mandarin sentence using some (not necessarily all) of these characters: {allowlist}.
-Pick 1 to 3 WORDS in that sentence to turn into blanks — a word can be one character or multiple characters (e.g. "端午节" is ONE word, not three separate blanks).
-Replace each chosen word with exactly three underscores: ___
-
-Rules:
-- Each blank is exactly "___" (three underscores) — never more, never fewer.
-- Never put a space directly before or after a blank, and never put a space between two blanks.
-- The sentence should still make sense in context even with the blanks removed.
-- "answers" must have exactly one entry per blank, in left-to-right order, and each entry is the FULL word that was removed (which may be more than one character).
-
+    example = random.choice(FIB_EXAMPLES)
+    return f"""Write one natural, beginner-to-intermediate-level Mandarin sentence using some (not necessarily all) of these characters: {allowlist}.
+Vary the sentence length and topic each time — do not default to the shortest possible sentence. Aim for roughly 10-20 characters, using a natural clause structure (this can include time expressions, locations, or simple reasons/conjunctions).
+Pick a topic at random from everyday life: school, food, weather, family, hobbies, shopping, travel, work, health — avoid always defaulting to festivals or greetings.
+Pick 1 to 3 WORDS in that sentence to turn into blanks...
+...
 Respond with ONLY a JSON object, no other text, in this exact format:
-{{"sentence_with_blanks": "今天是___，我们要吃粽子。", "answers": ["端午节"]}}
+{example}
 """
 
 def _fib_is_well_formed(result):
@@ -257,9 +261,9 @@ def _fib_is_well_formed(result):
 
 def generate_fib_content(allowlist):
     prompt = build_fib_prompt(allowlist)
-    result = safe_ai_json(prompt)
+    result = safe_ai_json_fib(prompt, temperature=0.8)
     if not _fib_is_well_formed(result):
-        result = safe_ai_json(prompt)  # one retry on malformed output
+        result = safe_ai_json_fib(prompt, temperature=0.8) # one retry on malformed output
     if not _fib_is_well_formed(result):
         result = {
             "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",

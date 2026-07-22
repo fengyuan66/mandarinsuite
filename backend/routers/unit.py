@@ -15,17 +15,17 @@ from auth import manager
 
 router = APIRouter()
 
-def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b"):
+def safe_ai_json(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 1.0):
     """Returns the AI's parsed JSON, or None if generation/parsing failed."""
     try:
-        text = ai(prompt, model)
+        text = ai(prompt, model, temperature=temperature)
     except Exception:
         return None
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         return None
-
+    
 def deactivate_all_units(session: Session, user_id: int):
 
     active_units = session.exec(select(Unit).where(Unit.is_active==True, Unit.user_id==user_id))
@@ -103,7 +103,7 @@ def create_unit(themechosen: str = None, roundcount: int = None, user: User = De
         Respond with ONLY a JSON object, no other text, in this exact format:
         {{"theme": "food", "target_rounds": 4}}
         """
-        response = safe_ai_json(prompt) or {}
+        response = safe_ai_json(prompt, temperature=1.5) or {}
         theme = response.get("theme") or random.choice(["family", "food", "travel", "daily life", "hobbies"])
         target_rounds = response.get("target_rounds") or 4
 
