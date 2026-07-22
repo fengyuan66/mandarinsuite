@@ -4,6 +4,10 @@ import {apiFetch} from "../common/api.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../common/AuthContext.jsx";
 
+import "../common/theme.css";
+import "../css/Stats.css"
+
+import UseButton from "../assets/Use.svg"
 
 function Stats(){
 
@@ -86,73 +90,82 @@ function Stats(){
     }
 
     return (
-        <div>
+        <div className="stat-contents">
 
-            <div>
-                <p>Currently logged in as: {username}</p>
-                <button onClick = {handleLogout}>Log out</button>
+            <div className="top-row">
+                <h1 className="page-title">Stats</h1>
+                <div className="account-bar">
+                    <span className="account-email">Logged in as {username}</span>
+                    <button className="btn-outline" onClick={handleLogout}>Log out</button>
+                </div>
             </div>
 
-            <div>
-                <h1>Units</h1>
-                <button onClick={createUnit} disabled={isGenerating}>
-                    {isGenerating ? "Generating..." : "Create a new unit!"}
-                </button>
-                <ul>
-                    {units.map((unit => (
-                        <li key={unit.id}>
-                            {unit.theme} {unit.is_active && "(active)"}
-                            <button onClick={() => loadUnit(unit.id)}>Load</button>
-                        </li>
-                    )))}
-                </ul>
-                <h1>View your past cohorts</h1>
+                        <div className="card stat-card">
+                <div className="stat-card-header">
+                    <span className="stat-card-title">Units</span>
+                    <button className="btn btn-primary sqr-btn" onClick={createUnit} disabled={isGenerating}>
+                        {isGenerating ? "Generating..." : "Create a new unit!"}
+                    </button>
+                </div>
+                {units.map((unit => (
+                    <div className="list-row" key={unit.id}>
+                        <span className="list-row-label">
+                            {unit.theme} {unit.is_active && <span className="badge">Active</span>}
+                        </span>
+                        <button className="btn btn-load" onClick={() => loadUnit(unit.id)}>Load</button>
+                    </div>
+                )))}
+            </div>
+
+            <div className="card stat-card">
+                <div className="stat-card-header">
+                    <span className="stat-card-title">Your Past Cohorts</span>
+                </div>
                 
                 
                 
-                <ul>
-                    {cohorts.map((cohort, index) => (
-                        <li key={cohort.id}>
-                            Cohort {index + 1}
-                            <button onClick={() => viewCohort(cohort.id)}>View cohort</button>
-                        </li>
-                    ))}
-                </ul>
-                
+                                {cohorts.map((cohort, index) => (
+                    <div className="list-row" key={cohort.id}>
+                        <span className="list-row-label">Cohort {index + 1}</span>
+                        <button className="btn btn-secondary" onClick={() => viewCohort(cohort.id)}>View cohort</button>
+                    </div>
+                ))}
+
                 {viewedCohort && (
-                    <div>
-                        <h2>Cohort {cohorts.findIndex(cohort => cohort.id === viewedCohort.cohort.id) + 1}</h2>
-                        <ul>
+                    <div className="detail-panel">
+                        <span className="stat-card-title">Cohort {cohorts.findIndex(cohort => cohort.id === viewedCohort.cohort.id) + 1}</span>
+                        <div>
                             {viewedCohort.characters.map((character) => (
-                                <li key={character.id}>{character.hanzi} | {character.pinyin} | {character.meaning}</li>
+                                <span className="chip" key={character.id}>
+                                    <span className="chip-hanzi">{character.hanzi}</span>
+                                    <span className="chip-detail">{character.pinyin} · {character.meaning}</span>
+                                </span>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                 )}
-
             </div>
 
-            <div>
-                <h1>Your practice logs</h1>
-                    <ul>
-                        {practiceLogs.map((log) => (
-                            <li key={log.id}>
-                                {log.session_time.split("T")[0]}
-                                <button onClick={() => viewPracticeLog(log.id)}>View</button>
-                            </li>
+
+            <div className="card stat-card">
+                <div className="stat-card-header">
+                    <span className="stat-card-title">Your Practice Logs</span>
+                </div>
+                {practiceLogs.map((log) => (
+                    <div className="list-row" key={log.id}>
+                        <span className="list-row-label">{log.session_time.split("T")[0]}</span>
+                        <button className="btn btn-secondary" onClick={() => viewPracticeLog(log.id)}>View</button>
+                    </div>
+                ))}
+
+                {viewedLog && (
+                    <div className="detail-panel">
+                        <span className="stat-card-title">Log {viewedLog.id} — {viewedLog.session_time.split("T")[0]}</span>
+                        {viewedLog.entries.map((entry) => (
+                            <div key={entry.id}>{entry.hanzi} — written {entry.times_written} times</div>
                         ))}
-                    </ul>
-
-                    {viewedLog && (
-                        <div>
-                            <h2>Log {viewedLog.id} — {viewedLog.session_time.split("T")[0]}</h2>
-                            <ul>
-                                {viewedLog.entries.map((entry) => (
-                                    <li key={entry.id}>{entry.hanzi} — written {entry.times_written} times</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+                    </div>
+                )}
             </div>
 
 
@@ -162,14 +175,49 @@ function Stats(){
 
 
 
-            <div className="characterbankPage">
-            <div className="getcharacters">
-            <button onClick={fetchCharacters}>Click to fetch Mandarin characterbank</button>
-            <button onClick={() => { setViewedLog(null); setViewedCohort(null); wipeAllData().then(refreshCohorts).then(refreshUnits).then(refreshPracticeLogs); }}>
-                Wipe all data
-            </button>
+            <div className="card stat-card">
+                <div className="stat-card-header">
+                    <span className="stat-card-title">Character Bank</span>
+                    <p>Your total vocab domain</p>
+                </div>
+                <div className="list-row">
+                    <button className="btn-outline" onClick={() => fetchCharacters().then(refreshCohorts)}>Click to fetch Mandarin characterbank</button>
+                    
+                    <button className="btn-outline" onClick={() => postCharactersAI().then(refreshCohorts)}>Click to discover new characters using AI</button>
+
+                    <button className="btn-danger" onClick={() => { setViewedLog(null); setViewedCohort(null); wipeAllData().then(refreshCohorts).then(refreshUnits).then(refreshPracticeLogs); }}>
+                        Wipe all data
+                    </button>
+                </div>
             
-            <ul>
+
+                <div className="char-table-header">
+
+                    <span className="char-table-hanzi">Hanzi</span>
+                    <span className="char-table-pinyin">Pinyin</span>
+                    <span className="char-table-meaning">Meaning</span>
+                    <span className="char-table-strokes">Strokes</span>
+
+                    {
+                        characters.map((character) => (
+                            <div className="char-table-row" key={character.id}>
+                                <span className="char-table-hanzi">{character.hanzi}</span>
+                                <span className="char-table-pinyin">{character.pinyin}</span>
+                                <span className="char-table-meaning">{character.meaning}</span>
+                                <span className="char-table-strokes">{character.strokes}</span>
+                            </div>
+                        ))
+                    }
+
+                </div>
+           
+            </div>
+
+
+
+            {/* Archived raw display
+            
+             <ul>
                 {
                     characters.map((character) => (
                         <li key={character.id}>
@@ -177,8 +225,17 @@ function Stats(){
                         </li>
                     ))
                 }
-            </ul>
-            </div>
+            </ul>*/
+            
+            }
+
+
+
+
+
+
+
+
             {/* Archived: manual add character form
                 Disabled until that's reworked...
             <div className="addcharacters">
@@ -209,12 +266,10 @@ function Stats(){
                 </button>
             </div>
             */}
-            <div className="aiexplorecharacters">
-                <button onClick={() => postCharactersAI().then(refreshCohorts)}>Click to discover new characters using AI</button>
-            </div>
+            
             
         </div>
-        </div>
+        
     )
 
 }

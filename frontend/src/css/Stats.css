@@ -1,0 +1,170 @@
+.stat-contents{
+    padding: 2vw 20vw;
+}
+
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.account-bar {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.account-email {
+    font-family: var(--font-ui);
+    font-size: 0.9vw;
+    color: var(--ink);
+    opacity: 0.6;
+}
+
+
+
+
+.btn-outline {
+    background: var(--white);
+    color: var(--ink);
+    border: 0.1vw solid rgba(0, 0, 0, 0.2);
+    border-radius: 1vw;
+    padding: 0.5vw 1vw;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.9vw;
+    cursor: pointer;
+}
+
+
+.btn-danger {
+    background: darkred;
+    color: red;
+    border: 0.05vw solid red;
+    border-radius: 1vw;
+    padding: 0.5vw 1vw;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.9vw;
+    cursor: pointer;
+}
+
+
+.btn-load{
+    background-color: var(--jade);
+    color:white;
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    border-radius: 0.5vw;
+    border: none;
+    height: 2vw;
+    width: 5vw;
+}
+
+.sqr-btn{
+    border-radius: 0.7vw;
+}
+.sqr-btn:hover{
+    border-radius: 0.7vw;
+}
+.sqr-btn{
+    border-radius: 0.7vw;
+}
+
+
+.stat-card {
+    padding: 2vw;
+    margin: 0vw 2vw 2vw;
+}
+
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1vw;
+}
+
+.stat-card-title {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 1.3vw;
+    color: var(--ink);
+}
+
+
+.list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8vw 0;
+}
+
+.list-row-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    font-family: var(--font-ui);
+    font-size: 1vw;
+    color: var(--ink);
+}
+
+.badge {
+    background: var(--gold);
+    color: var(--white);
+    font-size: 0.7vw;
+    font-weight: 600;
+    padding: 0.2vw 0.7vw;
+    border-radius: 1vw;
+}
+
+.detail-panel {
+    background: var(--paper);
+    border-radius: 1vw;
+    padding: 1vw 1.5vw;
+    margin-top: 0.5vw;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    background: var(--white);
+    border-radius: 1vw;
+    padding: 0.5vw 0.8vw;
+    margin: 0.2vw;
+}
+
+.chip-hanzi {
+    font-family: var(--font-hanzi);
+    font-weight: 600;
+}
+
+.chip-detail {
+    font-size: 0.8vw;
+    opacity: 0.6;
+}
+
+.char-table-header, .char-table-row {
+    display: flex;
+    gap: 2vw;
+    padding: 0.6vw 0;
+}
+
+.char-table-header {
+    font-weight: 600;
+    opacity: 0.5;
+    font-size: 0.8vw;
+    border-bottom: 0.1vw solid rgba(0, 0, 0, 0.1);
+}
+
+.char-table-row {
+    font-size: 0.9vw;
+    border-bottom: 0.1vw solid rgba(0, 0, 0, 0.06);
+}
+
+.char-table-hanzi { width: 3vw; font-family: var(--font-hanzi); }
+.char-table-pinyin { width: 6vw; }
+.char-table-meaning { flex: 1; }
+.char-table-strokes { width: 4vw; }
