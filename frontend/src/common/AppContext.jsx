@@ -3,10 +3,12 @@ import { NEXT_STATUS } from "./constants.js";
 import { apiFetch } from "./api.js";
 import HanziWriter from "hanzi-writer";
 import { useEffect } from "react";
+import { useAuth } from "./AuthContext.jsx";
 
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
+    const { user } = useAuth();
 
     //USESTATES
 
@@ -33,6 +35,20 @@ export function AppProvider({ children }) {
     
     const [unitReviewContent, setUnitReviewContent] = useState(null);
     const [freeWriteContent, setFreeWriteContent] = useState(null);
+
+    //ENSURANCE: Wipe all per-user state whenever the logged-in user changes
+    useEffect(() => {
+        setActiveUnit(null);
+        setCurrentRound(null);
+        setCurrentCohort(null);
+        setCohortCharacters([]);
+        setCharacters([]);
+        setWritingDictationContent(null);
+        setFibContent(null);
+        setUnitReviewContent(null);
+        setFreeWriteContent(null);
+    }, [user]);
+
 
 
     //REFRESHER
