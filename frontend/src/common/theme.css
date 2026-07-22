@@ -183,3 +183,21 @@
 
     box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.5);
 }
+
+
+/* PASSAGE DISPLAY */
+
+.passage-card {
+    margin: 5vw 25%;
+    padding: 2vw 2.5vw;
+    max-width: 60vw;
+    
+}
+
+.passage-text {
+    font-family: var(--font-hanzi);
+    font-size: 1.4vw;
+    line-height: 1.8;
+    color: var(--ink);
+    margin: 0;
+}

@@ -1,0 +1,10 @@
+.fib-blank {
+    display: inline-block;
+    min-width: 2.5vw;
+    padding: 0.2vw 0.6vw;
+    background: var(--red-soft);
+    border: 0.1vw solid var(--red);
+    border-radius: 0.4vw;
+    color: var(--red);
+    font-weight: 600;
+}
