@@ -25,10 +25,12 @@ def discover_themed_characters(theme: str, unit_id: int, count: int = 15) -> lis
     existing_hanzi_list = get_characters_in_unit(unit_id)
     prompt = f"""Suggest {count} new single Mandarin characters related to the theme "{theme}", suitable for a learner.
     Do NOT include any of these existing characters: {existing_hanzi_list}.
-    Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
+    Respond with ONLY a JSON object, no other text, in this exact format:
+    {{"characters": ["你", "好", "是", "不", "在"]}}
     """
 
-    candidates = safe_ai_json(prompt)
+    response = safe_ai_json(prompt)
+    candidates = response.get("characters") if isinstance(response, dict) else None
     print(f"[DEBUG] discover_themed_characters raw candidates: {candidates!r}")
     if not isinstance(candidates, list):
         candidates = []

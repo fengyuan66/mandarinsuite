@@ -29,9 +29,11 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
         existing_hanzi_list = capped_hanzi_list(user.id)
         explore_prompt = f"""Suggest 5 new single Mandarin characters suitable for a learner to study next, preferably some that can combine into words together.
         Do NOT include any of these existing characters: {existing_hanzi_list}.
-        Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
+        Respond with ONLY a JSON object, no other text, in this exact format:
+        {{"characters": ["你", "好", "是", "不", "在"]}}
         """
-        candidates = safe_ai_json(explore_prompt)
+        response = safe_ai_json(explore_prompt)
+        candidates = response.get("characters") if isinstance(response, dict) else None
         if not isinstance(candidates, list):
             return {"created": [], "error": True, "message": "AI discovery temporarily unavailable, please try again."}
 
@@ -67,10 +69,12 @@ def ai_add_characters(cohort: bool = True, user: User = Depends(manager)):
         existing_hanzi_list = capped_hanzi_list(user.id)
         explore_prompt = f"""Suggest 5 new single Mandarin characters suitable for a learner to study next, preferably some that can combine into words together.
         Do NOT include any of these existing characters: {existing_hanzi_list}.
-        Respond with ONLY a JSON array of the characters themselves, no other text, e.g.: ["你", "好", "是", "不", "在"]
+        Respond with ONLY a JSON object, no other text, in this exact format:
+        {{"characters": ["你", "好", "是", "不", "在"]}}
         """
 
-        candidates = safe_ai_json(explore_prompt)
+        response = safe_ai_json(explore_prompt)
+        candidates = response.get("characters") if isinstance(response, dict) else None
         if not isinstance(candidates, list):
             return {"created": [], "error": True, "message": "AI discovery temporarily unavailable, please try again."}
         
