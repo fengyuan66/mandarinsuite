@@ -51,6 +51,10 @@
     cursor: pointer;
 }
 
+.btn-danger:hover{
+    background: rgb(0, 0, 0);
+}
+
 
 .btn-load{
     background-color: var(--jade);
@@ -61,7 +65,14 @@
     border: none;
     height: 2vw;
     width: 5vw;
+    display: flex;
+    align-items: center;
+    padding-left: 0.6vw;
+    gap: 0.2vw;
 }
+
+
+
 
 .sqr-btn{
     border-radius: 0.7vw;
@@ -71,6 +82,14 @@
 }
 .sqr-btn{
     border-radius: 0.7vw;
+}
+
+
+.use-icon{
+    
+    
+    width: 1vw;
+    
 }
 
 
@@ -110,6 +129,7 @@
     color: var(--ink);
 }
 
+
 .badge {
     background: var(--gold);
     color: var(--white);
@@ -146,6 +166,10 @@
     opacity: 0.6;
 }
 
+
+
+/*Charbank table*/
+
 .char-table-header, .char-table-row {
     display: flex;
     gap: 2vw;
@@ -164,7 +188,10 @@
     border-bottom: 0.1vw solid rgba(0, 0, 0, 0.06);
 }
 
-.char-table-hanzi { width: 3vw; font-family: var(--font-hanzi); }
-.char-table-pinyin { width: 6vw; }
-.char-table-meaning { flex: 1; }
-.char-table-strokes { width: 4vw; }
+.char-table-hanzi {width: 3vw; font-family: var(--font-hanzi); color:black;}
+.char-table-pinyin {width: 6vw;}
+.char-table-pinyin-title {width: 6vw; font-family: var(--font-hanzi);color:black;}
+.char-table-meaning {flex: 1;}
+.char-table-meaning-title {flex: 1; font-family: var(--font-hanzi);color:black;}
+.char-table-strokes {width: 4vw;}
+.char-table-strokes-title {width: 4vw; font-family: var(--font-hanzi);color:black;}

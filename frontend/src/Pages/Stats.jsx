@@ -8,6 +8,7 @@ import "../common/theme.css";
 import "../css/Stats.css"
 
 import UseButton from "../assets/Use.svg"
+import EyesButton from "../assets/Eyes.svg"
 
 function Stats(){
 
@@ -112,7 +113,14 @@ function Stats(){
                         <span className="list-row-label">
                             {unit.theme} {unit.is_active && <span className="badge">Active</span>}
                         </span>
-                        <button className="btn btn-load" onClick={() => loadUnit(unit.id)}>Load</button>
+                        <button className="btn btn-load btn-anim" onClick={() => loadUnit(unit.id)}>
+                            
+                                <img className="use-icon" src={UseButton} />
+                                <p>Load</p>
+                            
+                            
+                            
+                            </button>
                     </div>
                 )))}
             </div>
@@ -127,7 +135,10 @@ function Stats(){
                                 {cohorts.map((cohort, index) => (
                     <div className="list-row" key={cohort.id}>
                         <span className="list-row-label">Cohort {index + 1}</span>
-                        <button className="btn btn-secondary" onClick={() => viewCohort(cohort.id)}>View cohort</button>
+                        <button className="btn btn-load btn-anim" onClick={() => viewCohort(cohort.id)}>
+                            <img className="use-icon" src={EyesButton} />
+                            <p>View</p>
+                        </button>
                     </div>
                 ))}
 
@@ -160,9 +171,9 @@ function Stats(){
 
                 {viewedLog && (
                     <div className="detail-panel">
-                        <span className="stat-card-title">Log {viewedLog.id} — {viewedLog.session_time.split("T")[0]}</span>
+                        <span className="stat-card-title">Log {viewedLog.id} - {viewedLog.session_time.split("T")[0]}</span>
                         {viewedLog.entries.map((entry) => (
-                            <div key={entry.id}>{entry.hanzi} — written {entry.times_written} times</div>
+                            <div key={entry.id}>{entry.hanzi} - written {entry.times_written} times</div>
                         ))}
                     </div>
                 )}
@@ -192,24 +203,21 @@ function Stats(){
             
 
                 <div className="char-table-header">
-
                     <span className="char-table-hanzi">Hanzi</span>
-                    <span className="char-table-pinyin">Pinyin</span>
-                    <span className="char-table-meaning">Meaning</span>
-                    <span className="char-table-strokes">Strokes</span>
-
-                    {
-                        characters.map((character) => (
-                            <div className="char-table-row" key={character.id}>
-                                <span className="char-table-hanzi">{character.hanzi}</span>
-                                <span className="char-table-pinyin">{character.pinyin}</span>
-                                <span className="char-table-meaning">{character.meaning}</span>
-                                <span className="char-table-strokes">{character.strokes}</span>
-                            </div>
-                        ))
-                    }
-
+                    <span className="char-table-pinyin-title">Pinyin</span>
+                    <span className="char-table-meaning-title">Meaning</span>
+                    <span className="char-table-strokes-title">Strokes</span>
                 </div>
+                {
+                    characters.map((character) => (
+                        <div className="char-table-row" key={character.id}>
+                            <span className="char-table-hanzi">{character.hanzi}</span>
+                            <span className="char-table-pinyin">{character.pinyin}</span>
+                            <span className="char-table-meaning">{character.meaning}</span>
+                            <span className="char-table-strokes">{character.strokec}</span>
+                        </div>
+                    ))
+                }
            
             </div>
 

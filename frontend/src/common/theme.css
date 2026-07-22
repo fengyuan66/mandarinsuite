@@ -44,6 +44,17 @@ html, body {
 }
 
 
+.btn-anim {
+   
+    opacity: 100%;
+    transition: opacity 100ms ease;
+}
+
+.btn-anim:hover {
+    opacity: 80%;
+}
+
+
 
 /*CARDS*/
 .card {
