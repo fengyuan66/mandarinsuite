@@ -89,6 +89,16 @@ function FIB(){
                     <input className="toggle" type="checkbox" checked={useCohort} onChange={(e) => setUseCohort(e.target.checked)} />
                     Use characters from current cohort
                 </label>
+
+                <button 
+                    className="btn btn-primary" 
+                    onClick={generate}
+                    disabled={isGenerating}
+                >
+                {isGenerating ? "Generating..." : "Generate FIB"}
+                </button>
+                
+                <button className="link-quiet" onClick = {reset}>Reset</button>
             </div>
             
             
@@ -103,18 +113,6 @@ function FIB(){
                 />
             )}
 
-            <div className="actions-row">
-                <button 
-                    className="btn btn-primary" 
-                    onClick={generate}
-                    disabled={isGenerating}
-                >
-                {isGenerating ? "Generating..." : "Generate FIB"}
-                </button>
-                
-                <button className="link-quiet" onClick = {reset}>Reset</button>
-
-            </div>
 
             
 

@@ -98,6 +98,11 @@ function Dictation(){
                     />
                     Use current cohort's characters
                 </label>
+
+                <button className="btn btn-primary" onClick={() => setShowAnswers(!showAnswers)}>
+                    {showAnswers ? "hided answers" : "show answers"}
+                </button>
+                <button className="link-quiet" onClick={Reset}>Reset!</button>
             </div>
 
 
@@ -137,10 +142,7 @@ function Dictation(){
 
 
             <div className="actions-row">
-                <button className="btn btn-primary" onClick={() => setShowAnswers(!showAnswers)}>
-                    {showAnswers ? "hided answers" : "show answers"}
-                </button>
-                <button className="link-quiet" onClick={Reset}>Reset!</button>
+                
             </div>
 
             {showAnswers && (
