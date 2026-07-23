@@ -8,6 +8,7 @@ import "../css/Auth.css"
 
 
 function Register() {
+    const [submitting, setSubmitting] = useState(false);
     const { register, login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,14 +17,17 @@ function Register() {
 
     function handleSubmit(e) {
         e.preventDefault();
+        if (submitting) return;
         setError(null);
+        setSubmitting(true);
         register(email, password)
             .then((res) => {
                 if (!res.ok) throw new Error("Registration failed");
                 return login(email, password);
             })
             .then(() => navigate("/start"))
-            .catch(() => setError("Could not register (email may already be in use)"));
+            .catch(() => setError("Could not register (email may already be in use)"))
+            .finally(() => setSubmitting(false));
     }
 
     return (
@@ -44,7 +48,9 @@ function Register() {
                 <input className="input auth-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
 
-            <button className="btn btn-primary auth-submit" type="submit">Register</button>
+            <button className="btn btn-primary auth-submit" type="submit" disabled={submitting}>
+                {submitting ? "Registering..." : "Register"}
+            </button>            
 
             {error && <p className="auth-error">{error}</p>}
 

@@ -12,14 +12,19 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    
     const navigate = useNavigate();
 
     function handleSubmit(e) {
         e.preventDefault();
+        if (submitting) return;
         setError(null);
+        setSubmitting(true);
         login(email, password)
             .then(() => navigate("/start"))
-            .catch(() => setError("Invalid email or password"));
+            .catch(() => setError("Invalid email or password"))
+            .finally(() => setSubmitting(false));
     }
 
     return (
@@ -46,7 +51,11 @@ function Login() {
                     
                 </label>
                 
-                <button className="btn btn-primary auth-submit" type="submit">Log in</button>
+                <button className="btn btn-primary auth-submit" type="submit" disabled={submitting}>
+                    {submitting ? "Logging in..." : "Log in"}
+                </button>
+
+
                 {error && <p className="auth-error">{error}</p>}
                 
                 <p className="auth-footer">No account? <Link to="/register" className="auth-link">Register</Link></p>
