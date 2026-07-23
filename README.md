@@ -101,21 +101,23 @@ In fact, you could probably extend this intention to learning any other language
 **Login**
 >You do not have to use your actual email / password to log in! For >instance, you may sign up with the below credentials:
 
->Email: review@gmail.com
->Password: review
+>**Email: review@gmail.com**
+
+>**Password: review**
 
 **Mandarin**
 
 >Not everyone has Mandarin typing installed, so here are some characters to copy/paste while testing:
->天地山水日月星辰风云
 
->春,夏,秋,冬,花,草,树,木,鸟,鱼
+- 天地山水日月星辰风云
 
->和平快乐
+- 春,夏,秋,冬,花,草,树,木,鸟,鱼
 
->学,习,进,步
+- 和平快乐
 
->健康幸福
+- 学,习,进,步
+
+- 健康幸福
 
 **Site**
 
