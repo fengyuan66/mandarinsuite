@@ -1,6 +1,11 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from database import engine_create_tables
+
+load_dotenv()
+
 from routers import characterbank
 from routers import discover
 from routers import cohort
@@ -29,9 +34,11 @@ app.include_router(auth.router)
 def on_startup():
     engine_create_tables()
 
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
