@@ -29,6 +29,7 @@ def wipe_my_data(user: User = Depends(manager)):
         rounds = session.exec(select(Round).where(Round.user_id == user.id)).all()
         for round in rounds:
             session.delete(round)
+        session.flush()
 
         for cohort in cohorts:
             session.delete(cohort)

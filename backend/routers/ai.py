@@ -34,14 +34,16 @@ def safe_ai(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 1.0
     
     try:
         return ai(prompt, model, temperature=temperature, response_format=response_format)
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] ai() call failed: {e}")
         return None
-    
+
 def safe_ai_json(msg, model: str = "openai/gpt-oss-120b"):
     text = safe_ai(msg, model, temperature=0.4, response_format={"type": "json_object"})
     if text is None:
         return None
-    try: 
+    try:
         return json.loads(text)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        print(f"[ERROR] safe_ai_json: failed to parse response as JSON: {e}")
         return None
