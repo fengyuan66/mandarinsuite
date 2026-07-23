@@ -5,7 +5,7 @@
     >
 </p>
 
-<small>This was an alternative proposed logo, the dragons look like M.S (MandarinSuite)</small>
+<sup>This is secondary information.This was an alternative proposed logo, the dragons look like M.S (MandarinSuite)</sup>
 
 # MandarinSuite
 
