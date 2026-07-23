@@ -12,7 +12,7 @@
 **A software suite to facilitate my Mandarin learning this summer and beyond**
 
 >[!NOTE]
->##Reship notes
+>**Reship notes**
 >
 >When reviewing, please:
 >
