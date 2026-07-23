@@ -93,6 +93,25 @@ This project had to go through a lot of debugging, mainly from these 5 factors:
 4. Adding multiuser system midway through was a headache because everything needed to be scoped to the user level now and anything that wasn't was out of sync
 5. Stale refresh issues were also prevelant, especially in the frontend where updating useEffect() was crucial for it to stay in sync with the everchanging backend
 
+## Development timeline:
+
+This project was planned to be 20 hours and completed in 4 days. However, it ended up being 50 hours and completed in 10 days... I couldn't remember the exact dates' activities so here's the journey from what I remembered
+
+1. Decide on what stack to use, brainstorm, create model of character and characterbank, migrate to current router/model pattern
+2. Connect backend db to frontend
+3. Add AI character generation 
+3. (3.5): listen everything's just built ontop of this character object so by making the endpoints for Character and Characterlist objects robust we are basically like 50% done (NO WE ARE NOT)
+4. Add concepts like units, rounds, and cohorts and generalise AI generation to everything
+5. Add more routers to robustly get-set each of these concepts and to facilitate frontend
+6. Add more frontend using the new endpoints I just created
+7. Find out there's a bunch of bugs so I go and fix everything up, splitting up AI generation in the process partly because I have to tune it for individual tasks (this goes on for 2-3 days)
+7. (7.5): hmm maybe I should add multi-user auth. How do I do that? Oh shoot I need to migrate everything
+8. Finally fixes most errors
+9. Robustness test from Claude and my boisterous friends to make sure there's no bugs / robustness issue (like softlocking) left for review
+10. Style everything up
+11. Write this README and submit
+
+
 # For user
 
 *Enough! Show us what is even in there!*
