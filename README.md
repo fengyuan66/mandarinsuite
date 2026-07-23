@@ -99,7 +99,7 @@ In fact, you could probably extend this intention to learning any other language
 ## Site Review
 
 **Login**
->You do not have to use your actual email / password to log in! For >instance, you may sign up with the below credentials:
+You do not have to use your actual email / password to log in! For instance, you may sign up with the below credentials:
 
 >**Email: review@gmail.com**
 
@@ -107,7 +107,7 @@ In fact, you could probably extend this intention to learning any other language
 
 **Mandarin**
 
->Not everyone has Mandarin typing installed, so here are some characters to copy/paste while testing:
+Not everyone has Mandarin typing installed, so here are some characters to copy/paste while testing:
 
 - 天地山水日月星辰风云
 
@@ -131,7 +131,26 @@ You can view the site here: https://mandarinsuite.vercel.app/
 
 ## AI declaration
 
+I attached Claude Code to this project due to it being able to instantly get the full context of my project.
 
+1. Guide for new concepts
+
+As mentioned in my motivations, a big goal of this project for me is to build on my recent React frontend experience and have a "standard" full stack I can work with. For parts like backend or database, I would have Claude as a mentor who would be able to have a context of what is next and teach me with examples of new concepts. However, because I asked Claude to generalise and many parts of the development involve patterns, I am able to build parts on my own after some guidance, albeit sometimes with bugs (ex: creating unit and round data models after being led on cohort model). I feel like that this method genuinely made me work and learn more efficiently during this project. I wouldn't say I'm fluent in backend after this, but if I was to build another project using this stack I'd be confident enough to know my way around and draft autonomously.
+
+2. Debugging tool
+
+This project had to go through a lot of debugging, mainly from these 4 factors:
+1. Many layers (units, rounds, cohorts) and their respective functions (adding units, for example) makes logic complicated and easy for sync issues that result in softlocks
+2. AI is non-deterministic and can generate broken / undesirable things. It is important that broken outputs are safely handled and distinguished from my code errors
+3. I'm simply not good at it because this is my first time on this backend. Sometimes I fail to consider a logic mistake or I misinterpret a pattern.
+
+Along with my friends and myself, Claude's ability to simulate as a user and interact with the browser / send requests to backend server allowed it to check a lot of possible scenarios in this system with so many input possibilities (like water rinsing through a pipe system). Because it had full context to the code, it also made it easy for me to know exactly where the errors occured, why, and its implications
+---
+However, at the end of the day (save for a few instances, like the tedious job of small refactoring to every function when adding auth), every line of code was put into the editor by me with intention and understanding.
+
+All inspiration, asset, or structural design was directed / created by me (Canva/Figma/paper plans)
+
+So at the end of the day, I feel like that, with the intention put into it, this project is definitely not a sloppy one and I've definitely put 10 days of lockin efforts into this. 
 
 # For developer
 
