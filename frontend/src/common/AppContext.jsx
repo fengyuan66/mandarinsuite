@@ -231,10 +231,11 @@ export function AppProvider({ children }) {
             setActiveUnit(data)
             if (data != null){ //check for request URL formatting reasons
                 return fetchCurrentRound(data.id)
+            } else {
+                setCurrentRound(null)
             }
         })
     }
-
     function createRound(){
         setIsGenerating(true);
         setWritingDictationContent(null);

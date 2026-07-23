@@ -90,6 +90,8 @@ In fact, you could probably extend this intention to learning any other language
 
 # For reviewer
 
+Hello reviewer! You can review my project through 2 ways, depending on your time.
+
 ## Video Review
 >**https://youtu.be/-Frcy3R3iyc**
 
@@ -128,8 +130,6 @@ You can view the site here: https://mandarinsuite.vercel.app/
 > - Please be gentle with the buttons and wait for generations to finish! I've had my friends test this out but there may still be patchy areas where spamming can cause errors!
 > - AI is non-deterministic, which means that it could make mistakes. I've tried my best to make them handle well, but if something goes wrong in generation, 99% of the time ctrl+shift+R (hard refresh) and click to try again will do the job. If it is something serious (I haven't seen one so far but hypothetically) you may want to wipe all data in Stats page
 
-**Checklist**
-
 ## AI declaration
 
 I attached Claude Code to this project due to it being able to instantly get the full context of my project.
@@ -158,7 +158,7 @@ So at the end of the day, I feel like that, with the intention put into it, this
 
 # For developer
 
-## Tech stack
+## Tech stack / What was this made with?
 
 >This project uses the following tech stack:
 >
@@ -171,6 +171,9 @@ So at the end of the day, I feel like that, with the intention put into it, this
 >- **Hanzi Database source material**  [Make-me-a-hanzi](https://github.com/skishore/makemeahanzi)
 >
 >- **Deployment:** Render (backend) + Vercel (Frontend) + Neon (Postgres database)
+>-----------------------------------
+>- **IDE:** VSCode
+>- **AI agent assist:** Claude Code Sonnet
 
 ## What was built
 
