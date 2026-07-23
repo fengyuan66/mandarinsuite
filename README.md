@@ -2,7 +2,7 @@
 
 **A software suite to facilitate my Mandarin learning this summer and beyond**
 
-# For me
+# For me (Motivations)
 **Why did I build this project?**
 
 I immigrated to Canada when I was in grade 3. Prior to that, I attended school in China, where I actually excelled in language arts at the elementary school level.
@@ -90,11 +90,13 @@ In fact, you could probably extend this intention to learning any other language
 
 # For reviewer
 
-## Video
->https://youtu.be/-Frcy3R3iyc
+## Video Review
+>**https://youtu.be/-Frcy3R3iyc**
+
 >There's a lot of niche things about the logic behind this project, so if walking through it is too tiring (given the huge review queue), here is a video. Feel free to play it at 2X speed (or whatever speed you'd like) with subtitles!
 
----
+
+## Site Review
 
 **Login**
 >You do not have to use your actual email / password to log in! For >instance, you may sign up with the below credentials:
@@ -106,12 +108,17 @@ In fact, you could probably extend this intention to learning any other language
 
 >Not everyone has Mandarin typing installed, so here are some characters to copy/paste while testing:
 >天地山水日月星辰风云
+
 >春,夏,秋,冬,花,草,树,木,鸟,鱼
+
 >和平快乐
+
 >学,习,进,步
+
 >健康幸福
 
 **Site**
+
 You can view the site here: https://mandarinsuite.vercel.app/
 
 > [!TIP]
@@ -160,7 +167,7 @@ You can view the site here: https://mandarinsuite.vercel.app/
 
 **Backend**
 
-- **Units, rounds, cohorts as database objects:** Concepts connected by structure for an organized learning agenda
+- **Units, rounds, cohorts as database objects:** Concepts connected by structure for an organized learning agenda. Backend logic to easily facilitate adding/removing/viewing objects
 - **Hanzi character list:** reference database of ~9000 hanzi characters built from the Github repo "Write me a Hanzi"
 - **Multiuser authentication system**
-- **AI learning material generation:** uses lightweight LLM for generative things. Involves fallback measures to prevent crash
+- **AI learning material generation:** Centralised use of lightweight LLM for generative elements. Involves fallback measures to prevent crash
