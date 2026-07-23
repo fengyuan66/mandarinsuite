@@ -6,12 +6,16 @@ from groq import Groq
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 
-def ai(msg, model: str = "openai/gpt-oss-120b", temperature: float = 1.0, response_format: dict | None = None):
+def ai(msg, model: str = "openai/gpt-oss-120b", temperature: float = 1.0, response_format: dict | None = None, reasoning_effort: str | None = None, max_completion_tokens: int | None = None):
     client = Groq(api_key=groq_api_key)
 
     kwargs = {}
     if response_format is not None:
         kwargs["response_format"] = response_format
+    if reasoning_effort is not None:
+        kwargs["reasoning_effort"] = reasoning_effort
+    if max_completion_tokens is not None:
+        kwargs["max_completion_tokens"] = max_completion_tokens
 
     response = client.chat.completions.create(
         model=model,
@@ -19,7 +23,6 @@ def ai(msg, model: str = "openai/gpt-oss-120b", temperature: float = 1.0, respon
         temperature=temperature,
         **kwargs,
     )
-
     content = response.choices[0].message.content
     print (f"[AI RAW INPUT] input = {msg}")
     print(f"[AI RAW OUTPUT] model={model} output={content!r}")

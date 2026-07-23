@@ -22,6 +22,19 @@ def safe_ai(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 1.0
     except Exception:
         return None
 
+def generate_reading_passage(prompt):
+    """USE FOR READING ONLY BECAUSE PREVENTS OVERTHINKING FROM GROQ"""
+    def _attempt():
+        try:
+            return ai(prompt, reasoning_effort="low", max_completion_tokens=800)
+        except Exception:
+            return None
+
+    text = _attempt()
+    if not text or not text.strip():
+        text = _attempt()
+    return text if text and text.strip() else None
+
 def safe_ai_json_fib(prompt, model: str = "openai/gpt-oss-120b", temperature: float = 0.4):
     """FIB ONLY! Returns the AI's parsed JSON, OR None if generation/parsing failed."""
     text = safe_ai(prompt, model, temperature=temperature, response_format={"type": "json_object"})
@@ -157,14 +170,13 @@ Requirements:
 * Do not force every target item into the passage. Omit an item when using it would make the passage unnatural.
 * Use simple, beginner-friendly vocabulary and sentence structures.
 * Include a clear situation, event, or idea so the passage feels coherent and engaging.
-* Aim for approximately 100–150 Chinese characters, excluding punctuation.
+* Aim for approximately 100-150 Chinese characters, excluding punctuation.
 * Use Simplified Chinese and proper punctuation such as ，。！？
-* Check that every sentence is natural Mandarin before responding.
 
 Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
 
-    content = safe_ai(prompt)
+    content = generate_reading_passage(prompt)
     if content is None:
         content = "AI generation is temporarily unavailable. Please try again shortly."
     return {"passage": content}
@@ -188,16 +200,14 @@ Requirements:
 * Include a clear situation, event, or idea so the passage feels coherent and engaging.
 * Aim for approximately 100–150 Chinese characters, excluding punctuation.
 * Use Simplified Chinese and proper punctuation such as ，。！？
-* Check that every sentence is natural Mandarin before responding.
 
 Respond with only the passage text and no commentary, title, translation, notes, or formatting.
 """
 
-    passage = safe_ai(prompt)
+    passage = generate_reading_passage(prompt)
     if passage is None:
         passage = "AI generation is temporarily unavailable. Please try again shortly."
     return {"passage": passage}
-
 
 @router.post("/generation/writing-dication/{round_id}")
 def generate_writing_dictation(round_id: int, user: User = Depends(manager)):
@@ -228,6 +238,8 @@ Respond with ONLY the paragraph text, no other commentary.
 
 import random
 
+
+
 FIB_EXAMPLES = [
     '{"sentence_with_blanks": "今天是___，我们要吃粽子。", "answers": ["端午节"]}',
     '{"sentence_with_blanks": "他每天早上都___去公园跑步。", "answers": ["喜欢"]}',
@@ -236,11 +248,19 @@ FIB_EXAMPLES = [
 
 def build_fib_prompt(allowlist):
     example = random.choice(FIB_EXAMPLES)
-    return f"""Write one natural, beginner-to-intermediate-level Mandarin sentence using some (not necessarily all) of these characters: {allowlist}.
-Vary the sentence length and topic each time — do not default to the shortest possible sentence. Aim for roughly 10-20 characters, using a natural clause structure (this can include time expressions, locations, or simple reasons/conjunctions).
-Pick a topic at random from everyday life: school, food, weather, family, hobbies, shopping, travel, work, health — avoid always defaulting to festivals or greetings.
-Pick 1 to 3 WORDS in that sentence to turn into blanks...
-...
+    sample_size = min(10, len(allowlist))
+    sample = random.sample(allowlist, sample_size) if sample_size else allowlist
+
+    return f"""You are a fluent Chinese speaker living in China today. Write one natural sentence you'd actually say in daily life.
+
+Target characters (use at least 1, and only when they make sense or can form actual words that make sense in the given context): {sample}
+
+Rules:
+* Every word must be a REAL, existing Mandarin word. never invent one, and never swap in a target character just because it looks or sounds similar to the character a real word actually needs (e.g. don't write 磁器 when the real word is 瓷器 — 磁 and 瓷 are different characters). If a target character doesn't cleanly form a real word here, use it alone as a single-character word instead, or leave it out — never force a fabricated combination.
+* Making complete, natural, everyday Mandarin sense matters more than anything else — never force in a target word if it breaks that.
+* Vary length (~10-20 characters), topic, and structure each time — pick randomly from things like school, food, weather, family, hobbies, shopping, travel, work, health.
+* Turn 1-3 of the target words you actually used into blanks (___) — the blanked word(s) must be target words, not unrelated common words.
+
 Respond with ONLY a JSON object, no other text, in this exact format:
 {example}
 """
@@ -261,9 +281,9 @@ def _fib_is_well_formed(result):
 
 def generate_fib_content(allowlist):
     prompt = build_fib_prompt(allowlist)
-    result = safe_ai_json_fib(prompt, temperature=0.8)
+    result = safe_ai_json_fib(prompt, temperature=0.6)
     if not _fib_is_well_formed(result):
-        result = safe_ai_json_fib(prompt, temperature=0.8) # one retry on malformed output
+        result = safe_ai_json_fib(prompt, temperature=0.5) # one retry on malformed output
     if not _fib_is_well_formed(result):
         result = {
             "sentence_with_blanks": "AI generation is temporarily unavailable. Please try again shortly. ___",
