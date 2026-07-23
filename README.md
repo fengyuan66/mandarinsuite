@@ -26,7 +26,7 @@
 >
 >2. Render server
 >Due to my free plan on Render's backend hosting, the site will take up >to a minute to load up. The site should say "Loading..." during the time >but idk what happened
-
+>
 >The register mechanism seems to work when I tested it on mine and my >dad's device. My friends also signed up
 
 >[!TIP]
