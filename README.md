@@ -20,6 +20,7 @@
 >1. Wait for at least 60 second after entering the Demo URL before interacting with anything. You can read the README meanwhile :)
 >2. After any interaction (e.g., button press), wait for at most 15 seconds, especially for generative elements. 
 >3. If an error was to occur, please note what you did leading up to the error and describe what was on screen. This will help me better understand where the bug is, thanks :)
+>4. The authentication system is cookie-based, please enable your cookies! Incog windows that reject cookies will not work for that reason through me testing
 >
 >Previous ship could not be processed because it was reported that register button did not work no matter how many times pressed. I concluded that there may be two problems: 
 >
