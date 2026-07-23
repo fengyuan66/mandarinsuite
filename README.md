@@ -82,6 +82,17 @@ For example, if I have a dictation, I would have to write out the pinyin on a pi
 
 In fact, you could probably extend this intention to learning any other language! (Ooo teaser?!!)
 
+## Big bugs I encountered while making this
+
+I want to stop writing but I just checked readme guide and it said I should include this. This is expanded from my AI declaration
+
+This project had to go through a lot of debugging, mainly from these 5 factors:
+1. Many layers (units, rounds, cohorts) and their respective functions (adding units, for example) makes logic complicated and easy for sync issues that result in softlocks
+2. AI is non-deterministic and can generate broken / undesirable things. It is important that broken outputs are safely handled, tuned, and distinguished from my code errors
+3. I'm simply not good at it because this is my first time on this backend. Sometimes I fail to consider a logic mistake or I misinterpret a pattern.
+4. Adding multiuser system midway through was a headache because everything needed to be scoped to the user level now and anything that wasn't was out of sync
+5. Stale refresh issues were also prevelant, especially in the frontend where updating useEffect() was crucial for it to stay in sync with the everchanging backend
+
 # For user
 
 *Enough! Show us what is even in there!*
@@ -229,3 +240,79 @@ So at the end of the day, I feel like that, with the intention put into it, this
 - **Hanzi character list:** reference database of ~9000 hanzi characters built from the Github repo "Write me a Hanzi"
 - **Multiuser authentication system**
 - **AI learning material generation:** Centralised use of lightweight LLM for generative elements. Involves fallback measures to prevent crash
+
+## How to add onto this (Windows)
+
+**Prerequisites**
+
+- Python 3.11+
+- Node.js 18+ and npm
+- A Groq API key (Free tier is fine!)
+
+**Setup (from repo root)**
+
+**Backend**
+
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+Create a file `backend/.env` with:
+```
+GROQ_API_KEY=your_groq_api_key_here
+AUTH_SECRET_KEY=any_random_string_here
+```
+(Leave `DATABASE_URL` unset to default to SQLite for local dev)
+
+Run the server:
+```bash
+uvicorn main:app --reload
+```
+Backend is now live at `http://localhost:8000`
+
+**Frontend**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend is now live at `http://localhost:5173`
+
+Now open up `http://localhost:5173` on a modern browser and you should be able to see it
+
+**Structure**
+
+As mentioned, there are **many** room for improvement for this app! You can add your own drills that you would find to be good. You could even adapt this app to learning a different language, OR ALL OF THEM?!
+
+Anyways, the file system is quite intuitive
+
+You got frontend in frontend, backend in backend.
+
+**Frontend**
+
+Common react pattern, Header is in Components folder. common folder includes JSX content that are mainly shared functions, backend API callers, and constants that are used across many different pages, authentication stuff, and shared css theme
+
+In general, index.css defines the basics (say shapes or general sizes) of types of elements (buttons, h1 texts, labels, etc)
+
+theme.css defines the particular color and decorations, like the theme of this site.
+
+Individual pages may override or add onto these shared css. Page-dependent css can be found in /css. Their respective pages can be found in /Pages
+
+**Backend**
+
+Database models are under /models
+
+Routers to database are under /routers
+
+Essentially, edit models to change the data's structure. Edit routers to change the handling of the data and see references when connecting frontend to backend
+
+**VENV**
+
+All required libraries are installed in venv.
+
+To begin working, please 
