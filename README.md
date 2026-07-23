@@ -152,11 +152,11 @@ This project had to go through a lot of debugging, mainly from these 4 factors:
 3. I'm simply not good at it because this is my first time on this backend. Sometimes I fail to consider a logic mistake or I misinterpret a pattern.
 
 
-Along with my friends and myself, Claude's ability to simulate as a user and interact with the browser / send requests to backend server allowed it to check a lot of possible scenarios in this system with so many input possibilities (like water rinsing through a pipe system). Because it had full context to the code, it also made it easy for me to know exactly where the errors occured, why, and its implications
+Along with my friends and myself, Claude's ability to simulate as a user and interact with the browser / send requests to backend server allowed it to check a lot of possible scenarios in this system with so many input possibilities (like water rinsing through a pipe system). Because it had full context to the code, it also made it easy for me to know exactly where the errors occured, why, and its implications. This saved me a lot of time and burnout on debugging
 
 ---
 
-However, at the end of the day (save for a few instances, like the tedious job of small refactoring to every function when adding auth), every line of code was put into the editor by me with intention and understanding.
+However, at the end of the day (save for a few instances, like the tedious job of small refactoring to every function when adding auth), every line of code was put into the editor by me with intention and understanding (no "Claude just implement this feature for me pls" / without care of code).
 
 All inspiration, asset, or structural design was directed / created by me (Canva/Figma/paper plans)
 
