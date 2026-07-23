@@ -163,7 +163,7 @@ This project was planned to be 20 hours and completed in 4 days. However, it end
 
 # For reviewer
 
-Hello reviewer! You can review my project through 2 ways, depending on your time.
+Hello reviewer! You can review my project through 2 ways, depending on your time. However, in the video walkthrough I get to demo and explain some mechanisms in the project that would be difficult to explain via text without reference
 
 **This project is a web-based project. It was tested to work on a modern browser**
 
