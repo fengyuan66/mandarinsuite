@@ -1,3 +1,10 @@
+<p align="center">
+    <img
+    src="README-assets/Dragons.png"
+    width="900"
+    >
+</p>
+
 # MandarinSuite
 
 **A software suite to facilitate my Mandarin learning this summer and beyond**
