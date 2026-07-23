@@ -5,6 +5,8 @@
     >
 </p>
 
+<small>This was an alternative proposed logo, the dragons look like M.S (MandarinSuite)</small>
+
 # MandarinSuite
 
 **A software suite to facilitate my Mandarin learning this summer and beyond**
