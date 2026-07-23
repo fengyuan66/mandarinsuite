@@ -17,6 +17,8 @@
 >"For Developers" includes a list of "What was built"
 
 >[!IMPORTANT]
+>The site will take its sweet time (~ or < than 1 minute to load due to backend being hosted on Render free plan)
+>Please be gentle with the buttons and wait for things to finish generating / loading. I got my boisterous friends to test them but culd still be a risk.
 >Also, if the site fails for whatever reason, please do leave details regarding the failure and how you got to there. It will help me fix it later. However, if video demo is sufficient, I would greatly appreciate it if review could be continued via video demo (all of my friends are going to Polaris so I really wanna get approved to go)
 
 # For me (Motivations)
