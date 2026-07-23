@@ -11,6 +11,24 @@
 
 **A software suite to facilitate my Mandarin learning this summer and beyond**
 
+>[!NOTE]
+>When reviewing, please:
+>
+>
+>1. Wait for at least 60 second after entering the Demo URL before >interacting with anything. You can read the README meanwhile :)
+>2. After any interaction (e.g., button press), wait for at most 15 >seconds, especially for generative elements. 
+>3. If an error was to occur, please note what you did leading up to the >error and describe what was on screen. This will help me better >understand where the bug is, thanks :)
+>
+>Previous ship could not be processed because it was reported that >register button did not work no matter how many times pressed. I >concluded that there may be two problems: 
+>
+>1. Register guard missing
+>Without the register button being disabled, pressing it in quick >succession could result in a softlock where the account is created but >one could not be directed to the start page. I've since added such a >guard so this should no longer happen.
+>
+>2. Render server
+>Due to my free plan on Render's backend hosting, the site will take up >to a minute to load up. The site should say "Loading..." during the time >but idk what happened
+
+>The register mechanism seems to work when I tested it on mine and my >dad's device. My friends also signed up
+
 >[!TIP]
 >If you'd rather skip to the important bits (due to long review queue), you can skip over the "For Me" and "For User" sections (Head down to For Reviewer and For Developers). However, I put some time into "For Me" as there is a genuine inspiration behind this project so for more context you know where to loop
 >
