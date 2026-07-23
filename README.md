@@ -285,6 +285,9 @@ Frontend is now live at `http://localhost:5173`
 
 Now open up `http://localhost:5173` on a modern browser and you should be able to see it
 
+It is important that you activate venv via `venv/Scripts/activate` from backend whenever you want to launch backend!
+
+---
 **Structure**
 
 As mentioned, there are **many** room for improvement for this app! You can add your own drills that you would find to be good. You could even adapt this app to learning a different language, OR ALL OF THEM?!
@@ -293,7 +296,7 @@ Anyways, the file system is quite intuitive
 
 You got frontend in frontend, backend in backend.
 
-**Frontend**
+- **Frontend**
 
 Common react pattern, Header is in Components folder. common folder includes JSX content that are mainly shared functions, backend API callers, and constants that are used across many different pages, authentication stuff, and shared css theme
 
@@ -303,16 +306,10 @@ theme.css defines the particular color and decorations, like the theme of this s
 
 Individual pages may override or add onto these shared css. Page-dependent css can be found in /css. Their respective pages can be found in /Pages
 
-**Backend**
+- **Backend**
 
 Database models are under /models
 
 Routers to database are under /routers
 
 Essentially, edit models to change the data's structure. Edit routers to change the handling of the data and see references when connecting frontend to backend
-
-**VENV**
-
-All required libraries are installed in venv.
-
-To begin working, please 
