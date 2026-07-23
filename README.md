@@ -134,16 +134,17 @@ You can view the site here: https://mandarinsuite.vercel.app/
 
 ![alt text](/README-assets/Login.png)
 ![alt text](/README-assets/Dictation.png)
+![alt text](/README-assets/Practice.png)
 
 ## AI declaration
 
 I attached Claude Code to this project due to it being able to instantly get the full context of my project.
 
-1. Guide for new concepts
+**1. Guide for new concepts**
 
 As mentioned in my motivations, a big goal of this project for me is to build on my recent React frontend experience and have a "standard" full stack I can work with. For parts like backend or database, I would have Claude as a mentor who would be able to have a context of what is next and teach me with examples of new concepts. However, because I asked Claude to generalise and many parts of the development involve patterns, I am able to build parts on my own after some guidance, albeit sometimes with bugs (ex: creating unit and round data models after being led on cohort model). I feel like that this method genuinely made me work and learn more efficiently during this project. I wouldn't say I'm fluent in backend after this, but if I was to build another project using this stack I'd be confident enough to know my way around and draft autonomously.
 
-2. Debugging tool
+**2. Debugging tool**
 
 This project had to go through a lot of debugging, mainly from these 4 factors:
 1. Many layers (units, rounds, cohorts) and their respective functions (adding units, for example) makes logic complicated and easy for sync issues that result in softlocks
