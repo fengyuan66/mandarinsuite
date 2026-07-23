@@ -128,6 +128,7 @@ You can view the site here: https://mandarinsuite.vercel.app/
 > - Please be gentle with the buttons and wait for generations to finish! I've had my friends test this out but there may still be patchy areas where spamming can cause errors!
 > - AI is non-deterministic, which means that it could make mistakes. I've tried my best to make them handle well, but if something goes wrong in generation, 99% of the time ctrl+shift+R (hard refresh) and click to try again will do the job. If it is something serious (I haven't seen one so far but hypothetically) you may want to wipe all data in Stats page
 
+**Checklist**
 
 ## AI declaration
 
@@ -144,8 +145,11 @@ This project had to go through a lot of debugging, mainly from these 4 factors:
 2. AI is non-deterministic and can generate broken / undesirable things. It is important that broken outputs are safely handled and distinguished from my code errors
 3. I'm simply not good at it because this is my first time on this backend. Sometimes I fail to consider a logic mistake or I misinterpret a pattern.
 
+
 Along with my friends and myself, Claude's ability to simulate as a user and interact with the browser / send requests to backend server allowed it to check a lot of possible scenarios in this system with so many input possibilities (like water rinsing through a pipe system). Because it had full context to the code, it also made it easy for me to know exactly where the errors occured, why, and its implications
+
 ---
+
 However, at the end of the day (save for a few instances, like the tedious job of small refactoring to every function when adding auth), every line of code was put into the editor by me with intention and understanding.
 
 All inspiration, asset, or structural design was directed / created by me (Canva/Figma/paper plans)
