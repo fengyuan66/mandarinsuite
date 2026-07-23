@@ -130,6 +130,11 @@ You can view the site here: https://mandarinsuite.vercel.app/
 > - Please be gentle with the buttons and wait for generations to finish! I've had my friends test this out but there may still be patchy areas where spamming can cause errors!
 > - AI is non-deterministic, which means that it could make mistakes. I've tried my best to make them handle well, but if something goes wrong in generation, 99% of the time ctrl+shift+R (hard refresh) and click to try again will do the job. If it is something serious (I haven't seen one so far but hypothetically) you may want to wipe all data in Stats page
 
+## Pictures
+
+![alt text](/README-assets/Login.png)
+![alt text](/README-assets/Dictation.png)
+
 ## AI declaration
 
 I attached Claude Code to this project due to it being able to instantly get the full context of my project.
